@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Отели Узбекистана 2026 — Прайс-лист</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Core palette */
+    --primary:       #0F5C7A;
+    --primary-mid:   #1A7FA8;
+    --primary-light: #2AA0CE;
+    --primary-pale:  #D6EDF5;
+    --primary-bg:    #EBF6FB;
+
+    /* Page surfaces — graduated halftones */
+    --bg-base:    #E8EDF3;   /* page background */
+    --bg-card:    #FFFFFF;   /* card / panel */
+    --bg-header:  #F0F4F8;   /* header fill */
+    --bg-strip:   #F5F8FB;   /* filter/legend bar */
+    --bg-tint1:   #EBF0F6;   /* subtle inset, address block */
+    --bg-tint2:   #DDE4EE;   /* stronger tint, alt rows */
+    --bg-hover:   #E0EFF7;   /* hover surface */
+
+    /* Borders — 3 levels */
+    --border-soft:   #C8D5E3;
+    --border-mid:    #A8BDD0;
+    --border-strong: #7A9AB8;
+
+    /* Text — 4 levels */
+    --text-h:   #0A1E30;   /* headings, hotel names */
+    --text-b:   #1E3448;   /* body text */
+    --text-s:   #4A6880;   /* secondary */
+    --text-m:   #7A96B0;   /* muted / placeholder */
+
+    /* City accents */
+    --city-tashkent:  #8A5A10;
+    --city-samarkand: #0F5C7A;
+    --city-bukhara:   #8A2C10;
+    --city-khiva:     #1E6B36;
+
+    /* Semantic price colors — saturated for contrast */
+    --clr-low:      #1B6E32;
+    --clr-low-bg:   #D4EDDA;
+    --clr-mid:      #7A5200;
+    --clr-mid-bg:   #FFF3C4;
+    --clr-high:     #A63000;
+    --clr-high-bg:  #FFE4D0;
+    --clr-prem:     #5A2080;
+    --clr-prem-bg:  #EDD9FF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg-base);
+    color: var(--text-b);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-header) 100%);
+    border-bottom: 2px solid var(--border-mid);
+    padding: 18px 40px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 3px 14px rgba(15,92,122,0.12);
+  }
+
+  .header-left h1 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.01em;
+  }
+
+  .header-left span {
+    font-size: 11px;
+    color: var(--text-m);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .header-stats { display: flex; gap: 28px; }
+
+  .stat-pill {
+    text-align: center;
+    background: var(--primary-pale);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 6px 18px;
+  }
+
+  .stat-pill .num {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+    display: block;
+    line-height: 1.1;
+  }
+
+  .stat-pill .lbl {
+    font-size: 10px;
+    color: var(--text-s);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  /* ── FILTERS BAR ── */
+  .filters-bar {
+    background: var(--bg-strip);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 9px 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-s);
+    white-space: nowrap;
+    font-weight: 700;
+  }
+
+  .filter-btn {
+    padding: 5px 14px;
+    border-radius: 5px;
+    border: 1.5px solid var(--border-mid);
+    background: var(--bg-card);
+    color: var(--text-s);
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--primary-light);
+    color: var(--primary);
+    background: var(--primary-bg);
+  }
+  .filter-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(15,92,122,0.25);
+  }
+
+  .filter-sep { width: 1px; height: 20px; background: var(--border-mid); margin: 0 4px; }
+
+  .search-input {
+    padding: 5px 14px;
+    border: 1.5px solid var(--border-mid);
+    background: var(--bg-card);
+    color: var(--text-b);
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    border-radius: 5px;
+    outline: none;
+    width: 210px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    margin-left: auto;
+  }
+
+  .search-input::placeholder { color: var(--text-m); }
+  .search-input:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(15,92,122,0.12);
+  }
+
+  /* ── LEGEND ── */
+  .legend-bar {
+    background: var(--bg-tint1);
+    padding: 7px 40px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-s);
+    font-weight: 500;
+  }
+
+  .legend-dot { width: 11px; height: 11px; border-radius: 2px; }
+
+  /* ── MAIN GRID ── */
+  .main { padding: 22px 40px 60px; max-width: 100%; }
+
+  .city-section { margin-bottom: 38px; }
+
+  .city-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .city-name {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .city-name.tashkent  { color: var(--city-tashkent); }
+  .city-name.samarkand { color: var(--city-samarkand); }
+  .city-name.bukhara   { color: var(--city-bukhara); }
+  .city-name.khiva     { color: var(--city-khiva); }
+
+  .city-count {
+    font-size: 12px;
+    color: var(--text-m);
+    font-weight: 500;
+    background: var(--bg-tint1);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 2px 10px;
+  }
+
+  /* ── HOTEL CARDS GRID ── */
+  .hotels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(560px, 1fr));
+    gap: 12px;
+  }
+
+  .hotel-card {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-soft);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+  }
+
+  .hotel-card:hover {
+    border-color: var(--primary-mid);
+    box-shadow: 0 6px 22px rgba(15,92,122,0.13);
+    transform: translateY(-1px);
+  }
+
+  .hotel-card.hidden { display: none; }
+
+  /* ── CARD HEADER ── */
+  .card-header {
+    padding: 12px 16px 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--border-soft);
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-strip) 100%);
+    transition: background 0.15s;
+  }
+
+  .card-header:hover { background: var(--bg-hover); }
+
+  .hotel-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-h);
+    line-height: 1.3;
+    flex: 1;
+  }
+
+  .hotel-meta {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .badge {
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+  }
+
+  .badge-board  { background: var(--clr-low-bg);  color: var(--clr-low);  border-color: #A8D8B8; }
+  .badge-usd    { background: var(--primary-pale); color: var(--primary);  border-color: #A0CCE0; }
+  .badge-nodata { background: #EAEAEA;             color: #666;            border-color: #C8C8C8; }
+
+  .toggle-icon {
+    color: var(--text-m);
+    font-size: 16px;
+    transition: transform 0.22s, color 0.15s;
+    margin-left: 6px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .card-header:hover .toggle-icon { color: var(--primary); }
+  .hotel-card.expanded .toggle-icon { transform: rotate(180deg); color: var(--primary); }
+
+  /* ── PRICE RANGE MINI ── */
+  .price-range {
+    font-size: 11px;
+    color: var(--text-m);
+    margin-top: 3px;
+    display: block;
+    font-weight: 400;
+  }
+
+  .price-range .from { color: var(--primary); font-weight: 700; }
+
+  /* ── CARD BODY ── */
+  .card-body { display: none; padding: 0 14px 14px; }
+  .hotel-card.expanded .card-body { display: block; }
+
+  /* ── SEASON HEADERS ── */
+  .seasons-header {
+    display: grid;
+    gap: 3px;
+    margin: 12px 0 2px;
+  }
+
+  .season-label {
+    padding: 7px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #fff;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 1.3;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  /* ── PRICE TABLE ── */
+  .price-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .price-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--bg-tint2);
+    vertical-align: middle;
+  }
+
+  .price-table tr:last-child td { border-bottom: none; }
+  .price-table tr:nth-child(even) td { background: var(--bg-tint1); }
+
+  .room-name-cell {
+    color: var(--text-b);
+    line-height: 1.3;
+    font-weight: 400;
+  }
+
+  .price-cell {
+    text-align: right;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .price-amount {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    border: 1px solid transparent;
+  }
+
+  /* price heat-map — high contrast */
+  .price-low     { background: var(--clr-low-bg);  color: var(--clr-low);  border-color: #A8D8B8; }
+  .price-mid     { background: var(--clr-mid-bg);  color: var(--clr-mid);  border-color: #F0D880; }
+  .price-high    { background: var(--clr-high-bg); color: var(--clr-high); border-color: #F0B090; }
+  .price-premium { background: var(--clr-prem-bg); color: var(--clr-prem); border-color: #C8A0E8; }
+
+  .price-na { color: var(--text-m); font-size: 11px; padding: 2px 7px; }
+
+  .price-table tr:hover td { background: var(--primary-bg) !important; }
+
+  /* ── NO DATA CARD ── */
+  .no-data-msg {
+    padding: 14px;
+    font-size: 12px;
+    color: var(--text-m);
+    font-style: italic;
+  }
+
+  /* ── SEASON COLORS ── */
+  .sc0 { background: linear-gradient(135deg, #1B6E32, #2E9E50); }
+  .sc1 { background: linear-gradient(135deg, #8A5200, #C07800); }
+  .sc2 { background: linear-gradient(135deg, #0F5C7A, #1A88B0); }
+  .sc3 { background: linear-gradient(135deg, #5A2080, #8840C0); }
+
+  /* ── CITY ACCENT BORDER ── */
+  .hotel-card[data-city="Ташкент"]   { border-left: 4px solid #C8920A; }
+  .hotel-card[data-city="Самарканд"] { border-left: 4px solid #0F6A90; }
+  .hotel-card[data-city="Бухара"]    { border-left: 4px solid #B03010; }
+  .hotel-card[data-city="Хива"]      { border-left: 4px solid #1A6B30; }
+
+  /* ── ADDRESS ── */
+  .hotel-address {
+    font-size: 11px;
+    color: var(--text-s);
+    margin-top: 8px;
+    line-height: 1.5;
+    padding: 7px 10px;
+    background: var(--bg-tint1);
+    border: 1px solid var(--border-soft);
+    border-radius: 5px;
+  }
+
+  /* ── RESULTS COUNT ── */
+  .results-count {
+    font-size: 12px;
+    color: var(--text-m);
+    padding: 10px 40px 0;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 7px; }
+  ::-webkit-scrollbar-track { background: var(--bg-tint1); }
+  ::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+  @media (max-width: 768px) {
+    .header { padding: 12px 16px; }
+    .header-stats { gap: 10px; }
+    .filters-bar, .legend-bar, .main { padding-left: 14px; padding-right: 14px; }
+    .hotels-grid { grid-template-columns: 1fr; }
+    .search-input { width: 140px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Отели Узбекистана — Прайс-лист 2026</h1>
+    <span>Hotel Prices · All rates in USD · BB included</span>
+  </div>
+  <div class="header-stats">
+    <div class="stat-pill"><span class="num" id="total-hotels">39</span><span class="lbl">Отелей</span></div>
+    <div class="stat-pill"><span class="num" id="total-cities">4</span><span class="lbl">Города</span></div>
+    <div class="stat-pill"><span class="num" id="visible-count">39</span><span class="lbl">Показано</span></div>
+  </div>
+</div>
+
+<div class="filters-bar">
+  <span class="filter-label">Город:</span>
+  <button class="filter-btn active" data-filter="all" onclick="filterCity(this,'all')">Все</button>
+  <button class="filter-btn" data-filter="Ташкент" onclick="filterCity(this,'Ташкент')" style="border-color:#C8A060">Ташкент</button>
+  <button class="filter-btn" data-filter="Самарканд" onclick="filterCity(this,'Самарканд')" style="border-color:#1A6B8A">Самарканд</button>
+  <button class="filter-btn" data-filter="Бухара" onclick="filterCity(this,'Бухара')" style="border-color:#A0452A">Бухара</button>
+  <button class="filter-btn" data-filter="Хива" onclick="filterCity(this,'Хива')" style="border-color:#3A7D4A">Хива</button>
+  <div class="filter-sep"></div>
+  <button class="filter-btn" onclick="expandAll()">Раскрыть все</button>
+  <button class="filter-btn" onclick="collapseAll()">Свернуть все</button>
+  <input class="search-input" type="text" placeholder="🔍 Поиск отеля…" oninput="searchHotels(this.value)" id="searchInput">
+</div>
+
+<div class="legend-bar">
+  <span class="filter-label">Цена за ночь (USD):</span>
+  <div class="legend-item"><div class="legend-dot" style="background:#1B6E32;border:1px solid #A8D8B8"></div> до $120</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#8A5200;border:1px solid #F0D880"></div> $120–$250</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#A63000;border:1px solid #F0B090"></div> $250–$500</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#5A2080;border:1px solid #C8A0E8"></div> свыше $500</div>
+  <div class="filter-sep"></div>
+  <span class="filter-label">Сезоны:</span>
+  <div class="legend-item"><div class="legend-dot sc0"></div> High season</div>
+  <div class="legend-item"><div class="legend-dot sc1"></div> Middle season</div>
+  <div class="legend-item"><div class="legend-dot sc2"></div> Low season</div>
+  <div class="legend-item"><div class="legend-dot sc3"></div> Сезон 4</div>
+</div>
+
+<div class="main" id="main-container"></div>
+
+
+<script>
+const HOTELS = [{"name":"Hilton Tashkent City","full_name":"Hilton Tashkent City  5*","address":"100027, Republic of Uzbekistan, Tashkent city, Islom Karimov street, block-5, 1-2 buildings","currency":"USD","board":"BB","rooms":[{"name":"Guest room single","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":305.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":235.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":195.0}},{"name":"Guest room double","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":345.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":270.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":230.0}},{"name":"Guest room triple","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":400.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":325.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":285.0}},{"name":"Executive room single","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":365.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":295.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":255.0}},{"name":"Executive room double","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":400.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":330.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":290.0}},{"name":"Executive room triple","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":455.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":385.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":345.0}},{"name":"Corner suite single","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":535.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":465.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":425.0}},{"name":"Corner suite double","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":570.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":500.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":460.0}},{"name":"Corner suite triple","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":625.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":555.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":515.0}},{"name":"Presidential Suite single","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":2295.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":2125.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":1960.0}},{"name":"Presidential Suite double","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":2330.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":2160.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":1990.0}},{"name":"Presidential Suite triple","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":2385.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":2215.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":2045.0}}],"seasons":["31.03.2026-01.06.2026 01.09.2026-01.11.2026","23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026","01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026"],"city":"Ташкент"},{"name":"Holiday Inn","full_name":"Holiday Inn Tashkent City Hotel 4*","address":"100011, Uzbekistan, Tashkent, Ukchi Street, 3","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Courtyard View Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":130.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":165.0}},{"name":"Standart Room Courtyard View Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":155.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":190.0}},{"name":"Standart Room Courtyard View Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":200.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":235.0}},{"name":"Superior Single Room with two separate beds","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":155.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":190.0}},{"name":"Superior Double Room with two separate beds","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":180.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":215.0}},{"name":"Superior Triple Room with two separate beds","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":225.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":260.0}},{"name":"Standart with Tashkent City view Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":155.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":190.0}},{"name":"Standart with Tashkent City view Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":180.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":215.0}},{"name":"Standart with Tashkent City view Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":225.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":260.0}},{"name":"Premium Room Courtyard view Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":175.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":205.0}},{"name":"Premium Room Courtyard view Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":200.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":235.0}},{"name":"Premium Room Courtyard view Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":245.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":280.0}},{"name":"Premium Room City View Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":190.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":225.0}},{"name":"Premium Room City View Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":215.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":250.0}},{"name":"Premium Room City View Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":260.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":295.0}},{"name":"One Bedroom Suite Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":255.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":320.0}},{"name":"One Bedroom Suite Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":280.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":350.0}},{"name":"One Bedroom Suite Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":325.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":395.0}}],"seasons":["01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026","01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026"],"city":"Ташкент"},{"name":"Ramada Encore by Wyndham","full_name":"Ramada Encore by Wyndham Tashkent 4* ","address":" 100015, Uzbekistan, Tashkent city, Mironshox street 7","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Single","prices":{"01.01.2026-28.02.2026":85.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":115.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":90.0}},{"name":"Standart Twin / Double Room","prices":{"01.01.2026-28.02.2026":115.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":145.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":120.0}},{"name":"Standard Triple","prices":{"01.01.2026-28.02.2026":145.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":175.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":150.0}},{"name":"Deluxe Room Single","prices":{"01.01.2026-28.02.2026":95.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":125.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":100.0}},{"name":"Deluxe Twin / Double Room","prices":{"01.01.2026-28.02.2026":125.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":155.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":130.0}},{"name":"Deluxe Triple","prices":{"01.01.2026-28.02.2026":155.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":185.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":160.0}},{"name":"Suite Single Room","prices":{"01.01.2026-28.02.2026":100.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":135.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":115.0}},{"name":"Suite Twin / Double Room","prices":{"01.01.2026-28.02.2026":130.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":165.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":145.0}},{"name":"Suite Room Triple","prices":{"01.01.2026-28.02.2026":160.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":195.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":175.0}}],"seasons":["01.01.2026-28.02.2026","01.03.2026-30.06.2026 15.08.2026-15.11.2026","01.07.2026-14.08.2026 16.11.2026-31.12.2026"],"city":"Ташкент"},{"name":"Unique Hotel","full_name":"Unique Hotel 3*","address":"100121, Republic of Uzbekistan, Tashkent city, region Yakkasaray, Bogibuston street 60","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"January, February, July, December":55.0,"March, August, November":65.0,"April, May, June, September, October":80.0}},{"name":"Standard Room Double","prices":{"January, February, July, December":75.0,"March, August, November":85.0,"April, May, June, September, October":100.0}},{"name":"Standard Room Triple","prices":{"January, February, July, December":100.0,"March, August, November":110.0,"April, May, June, September, October":125.0}},{"name":"Deluxe Room Single","prices":{"January, February, July, December":65.0,"March, August, November":70.0,"April, May, June, September, October":85.0}},{"name":"Deluxe Room Double","prices":{"January, February, July, December":85.0,"March, August, November":95.0,"April, May, June, September, October":105.0}},{"name":"Deluxe Room Triple","prices":{"January, February, July, December":110.0,"March, August, November":120.0,"April, May, June, September, October":130.0}},{"name":"Suite Room Single","prices":{"January, February, July, December":85.0,"March, August, November":90.0,"April, May, June, September, October":105.0}},{"name":"Suite Room Double","prices":{"January, February, July, December":95.0,"March, August, November":115.0,"April, May, June, September, October":125.0}},{"name":"Suite Room Triple","prices":{"January, February, July, December":120.0,"March, August, November":140.0,"April, May, June, September, October":150.0}}],"seasons":["January, February, July, December","March, August, November","April, May, June, September, October"],"city":"Ташкент"},{"name":"Simma Hotel Spa & Waterpark","full_name":"Simma Hotel Spa & Waterpark 3*","address":"100088, Republic of Uzbekistan, Tashkent city, region Sergeli, Navruz street 22","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Double","prices":{"01.01.2026 - 31.12.2026":95.0}},{"name":"Standard Room Triple","prices":{"01.01.2026 - 31.12.2026":130.0}},{"name":"Studio Room Single","prices":{"01.01.2026 - 31.12.2026":85.0}},{"name":"Studio Room Double","prices":{"01.01.2026 - 31.12.2026":125.0}},{"name":"Studio Room Triple","prices":{"01.01.2026 - 31.12.2026":160.0}},{"name":"Superior Suit Room Single","prices":{"01.01.2026 - 31.12.2026":110.0}},{"name":"Superior Suit Room Double","prices":{"01.01.2026 - 31.12.2026":140.0}},{"name":"Superior Suit Room Triple","prices":{"01.01.2026 - 31.12.2026":175.0}},{"name":"Executive Suit Room Single","prices":{"01.01.2026 - 31.12.2026":145.0}},{"name":"Executive Suit Room Double","prices":{"01.01.2026 - 31.12.2026":175.0}},{"name":"Executive Suit Room Triple","prices":{"01.01.2026 - 31.12.2026":210.0}},{"name":"Grand Suit Room Single","prices":{"01.01.2026 - 31.12.2026":185.0}},{"name":"Grand Suit Room Double","prices":{"01.01.2026 - 31.12.2026":215.0}},{"name":"Grand Suit Room Triple","prices":{"01.01.2026 - 31.12.2026":250.0}}],"seasons":["01.01.2026 - 31.12.2026"],"city":"Ташкент"},{"name":"Bentley Hotel","full_name":"Bentley Hotel Tashkent 4*","address":"100097, Uzbekistan, Tashkent city, Mirzakalon Ismoiliy street, 2A","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026 - 01.03.2026":100.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":130.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":150.0}},{"name":"Standard Double","prices":{"01.01.2026 - 01.03.2026":120.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":150.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":170.0}},{"name":"Standard Triple","prices":{"01.01.2026 - 01.03.2026":165.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":195.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":215.0}},{"name":"Deluxe Room Single","prices":{"01.01.2026 - 01.03.2026":125.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":155.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":195.0}},{"name":"Deluxe Room Double","prices":{"01.01.2026 - 01.03.2026":145.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":175.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":215.0}},{"name":"Deluxe Room Triple","prices":{"01.01.2026 - 01.03.2026":190.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":220.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":260.0}}],"seasons":["01.01.2026 - 01.03.2026","01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026","01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026"],"city":"Ташкент"},{"name":"City Palace","full_name":"City Palace Hotel 4*","address":"100000, Republic of Uzbekistan, Tashkent city, Amir Temur Street, 15","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":100.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":115.0}},{"name":"Standard Double / Twin","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":105.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":120.0}},{"name":"Standard Triple","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":145.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":165.0}},{"name":"Junior Suite Single","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":155.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":165.0}},{"name":"Junior Suite Double","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":160.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":170.0}},{"name":"Junior Suite Triple","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":215.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":225.0}},{"name":"Senior Suite Single","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":195.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":220.0}},{"name":"Senior Suite Double","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":200.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":225.0}},{"name":"Senior Suite Triple","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":255.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":280.0}},{"name":"Presidential Apartment Single","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":1615.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":1615.0}},{"name":"Presidential Apartment Double","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":1620.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":1620.0}},{"name":"Presidential Apartment Triple","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":1680.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":1680.0}}],"seasons":["01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026","15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026"],"city":"Ташкент"},{"name":"Garnet Hotel","full_name":"Garnet Hotel 3*","address":"100093, Uzbekistan, Tashkent city, Anorzor st, 67","currency":"USD","board":"BB","rooms":[],"seasons":[],"city":"Ташкент"},{"name":"Stay Inn","full_name":"Stay Inn Hotel 3*","address":"100100, Tashkent, Uzbekistan, Rakat street, 25","currency":"USD","board":"BB","rooms":[{"name":"Standard Twin","prices":{"01.01.2026 - 31.12.2026":95.0}},{"name":"Standard Triple","prices":{"01.01.2026 - 31.12.2026":135.0}},{"name":"Superior Single","prices":{"01.01.2026 - 31.12.2026":90.0}},{"name":"Superior Double","prices":{"01.01.2026 - 31.12.2026":105.0}},{"name":"Superior Triple","prices":{"01.01.2026 - 31.12.2026":145.0}}],"seasons":["01.01.2026 - 31.12.2026"],"city":"Ташкент"},{"name":"Le Grande","full_name":"Le Grande Plaza 4*","address":"100047, Uzbekistan, City: Tashkent, District: Mirzo Ulugbek, Street Uzbekistan Ovozi, 2","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":60.0,"01.03.2025-30.11.2025":70.0}},{"name":"Standart Double","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":75.0,"01.03.2025-30.11.2025":85.0}},{"name":"Standart Triple","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":115.0,"01.03.2025-30.11.2025":125.0}},{"name":"Superior Single","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":75.0,"01.03.2025-30.11.2025":85.0}},{"name":"Superior Double","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":105.0,"01.03.2025-30.11.2025":115.0}},{"name":"Superior Triple","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":140.0,"01.03.2025-30.11.2025":150.0}},{"name":"Deluxe Single","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":90.0,"01.03.2025-30.11.2025":100.0}},{"name":"Deluxe Double","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":115.0,"01.03.2025-30.11.2025":125.0}},{"name":"Deluxe Double Triple","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":150.0,"01.03.2025-30.11.2025":160.0}}],"seasons":["01.01.2025-28.02.2025 01.12.2025-31.12.2025","01.03.2025-30.11.2025"],"city":"Ташкент"},{"name":"Lotte City","full_name":"Lotte City Hotels 4*","address":"100029, Uzbekistan, City: Tashkent, District: Yunusabad, Street Buyuk Turon, 56","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"September-October April-May":175.0,"March. June-August November.":145.0,"January-February. December.":125.0}},{"name":"Standart Double/Twin","prices":{"September-October April-May":215.0,"March. June-August November.":180.0,"January-February. December.":165.0}},{"name":"Standart Triple","prices":{"September-October April-May":255.0,"March. June-August November.":220.0,"January-February. December.":205.0}},{"name":"Deluxe Single","prices":{"September-October April-May":220.0,"March. June-August November.":185.0,"January-February. December.":175.0}},{"name":"Deluxe Double","prices":{"September-October April-May":260.0,"March. June-August November.":225.0,"January-February. December.":215.0}},{"name":"Deluxe Triple","prices":{"September-October April-May":300.0,"March. June-August November.":265.0,"January-February. December.":255.0}},{"name":"Junior Suite Single","prices":{"September-October April-May":280.0,"March. June-August November.":255.0,"January-February. December.":220.0}},{"name":"Junior Suite Double","prices":{"September-October April-May":320.0,"March. June-August November.":290.0,"January-February. December.":260.0}},{"name":"Junior Suite Triple","prices":{"September-October April-May":360.0,"March. June-August November.":330.0,"January-February. December.":300.0}},{"name":"Superior Suite Single","prices":{"September-October April-May":355.0,"March. June-August November.":320.0,"January-February. December.":270.0}},{"name":"Superior Suite Double","prices":{"September-October April-May":395.0,"March. June-August November.":360.0,"January-February. December.":310.0}},{"name":"Premier Suite Single","prices":{"September-October April-May":580.0,"March. June-August November.":525.0,"January-February. December.":525.0}},{"name":"Premier Suite Double","prices":{"September-October April-May":620.0,"March. June-August November.":565.0,"January-February. December.":565.0}},{"name":"Residence Suit with terrace Single","prices":{"September-October April-May":695.0,"March. June-August November.":620.0,"January-February. December.":620.0}},{"name":"Residence Suit with terrace Double","prices":{"September-October April-May":735.0,"March. June-August November.":660.0,"January-February. December.":660.0}}],"seasons":["September-October April-May","March. June-August November.","January-February. December."],"city":"Ташкент"},{"name":"Gur Emir Palace","full_name":"Gur Emir Palace Hotel 4*","address":"140100, Uzbekistan, Samarkand, Shokhrux street 126","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Single","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":60.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":65.0}},{"name":"Standart Room Double Single Use","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":65.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":85.0}},{"name":"Standart Room Double","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":75.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":110.0}},{"name":"Deluxe room Triple Double Use","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":85.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":125.0}},{"name":"Deluxe Room Triple","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":105.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":145.0}},{"name":"Junior Suite Single","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":65.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":120.0}},{"name":"Junior Suite Double","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":90.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":140.0}}],"seasons":["01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026","01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027"],"city":"Самарканд"},{"name":"Movenpick Hotel","full_name":"Movenpick Samarkand 5*","address":"140100, Republic of Uzbekistan, Samarkand city, Shokhrukh street, 53","currency":"USD","board":"BB","rooms":[{"name":"Standard Single room","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":95.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":120.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":160.0}},{"name":"Standard Double room","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":120.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":145.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":180.0}},{"name":"Standard Triple","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":170.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":195.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":230.0}},{"name":"Executive Suite Single","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":190.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":235.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":245.0}},{"name":"Executive Suite Double","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":210.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":255.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":265.0}},{"name":"Executive Suite Triple","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":260.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":305.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":315.0}},{"name":"Family Suite Double","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":190.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":240.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":300.0}},{"name":"Family Suite Triple","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":240.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":290.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":350.0}},{"name":"Apartment Single Use","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":460.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":480.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":510.0}},{"name":"Apartment Double Use","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":510.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":530.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":560.0}},{"name":"Apartment Triple Use","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":560.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":580.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":610.0}}],"seasons":["01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026","16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026","01.04.2026-15.06.2026 01.09.2026-15.11.2026"],"city":"Самарканд"},{"name":"Hilton Garden Inn Afrosiab","full_name":"Hilton Garden Inn Samarkand Afrosiyob 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard King Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":55.0,"01.07.2026-20.08.2026":65.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":75.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":100.0}},{"name":"Standard King/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"Standard Triple Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":90.0,"01.07.2026-20.08.2026":100.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":110.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":140.0}},{"name":"King Deluxe Room with kitchenette Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":60.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":120.0}},{"name":"King Deluxe Room with kitchenette Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":75.0,"01.07.2026-20.08.2026":85.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":100.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"King Deluxe Room with kitchenette Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":100.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":125.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":155.0}},{"name":"King One Bed Room Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"King One Bed Room Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"King One Bed Room Suite Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":130.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":170.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":205.0}},{"name":"King One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":140.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"King One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":175.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}},{"name":"King One Bedroom Deluxe Suite Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":175.0,"01.07.2026-20.08.2026":190.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":270.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Hilton Garden Inn Sogd","full_name":"Hilton Garden Inn Samarkand Sogd 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard King Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":55.0,"01.07.2026-20.08.2026":65.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":75.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":100.0}},{"name":"Standard King/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"Standard Triple Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":90.0,"01.07.2026-20.08.2026":100.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":110.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":140.0}},{"name":"King Deluxe Room kitchenette Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":60.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":120.0}},{"name":"King Deluxe Room kitchenette Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":75.0,"01.07.2026-20.08.2026":85.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":100.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"King One Bed Room Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"King One Bed Room Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"King One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":140.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"King One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":175.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}},{"name":"King One Bedroom Deluxe Suite Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":175.0,"01.07.2026-20.08.2026":190.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":270.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Wellness Park Bactria","full_name":"Wellness Park Hotel Bactria 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard King Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":55.0,"01.07.2026-20.08.2026":65.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":75.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":100.0}},{"name":"Standard King/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"King Deluxe Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":60.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":120.0}},{"name":"King Deluxe Room Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":75.0,"01.07.2026-20.08.2026":85.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":100.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"King One Bed Room Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"King One Bed Room Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"King One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":140.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"King One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":175.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Wellness Park Turon","full_name":"Wellness Park Hotel Turon 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard King Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":55.0,"01.07.2026-20.08.2026":65.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":75.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":100.0}},{"name":"Standard King/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"King Deluxe Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":60.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":120.0}},{"name":"King Deluxe Room Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":75.0,"01.07.2026-20.08.2026":85.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":100.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"King One Bed Room Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"King One Bed Room Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"King One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":140.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"King One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":175.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Savitsky Plaza","full_name":"Savitsky Plaza Hotel 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard Double Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":90.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"Standard Double/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":80.0,"01.07.2026-20.08.2026":90.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":105.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"Standard Double Room Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":115.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":140.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"Junior Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":100.0,"01.07.2026-20.08.2026":115.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"Junior Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":115.0,"01.07.2026-20.08.2026":130.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":130.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":185.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":235.0}},{"name":"Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":145.0,"01.07.2026-20.08.2026":175.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":250.0}},{"name":"Executive Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":155.0,"01.07.2026-20.08.2026":185.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":220.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":280.0}},{"name":"Executive Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":170.0,"01.07.2026-20.08.2026":200.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":235.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":295.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Stars of Ulugbek Lia! by Minyou","full_name":"Stars of Ulugbek Lia! by Minyoun 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard Double Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":90.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"Standard Double/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":80.0,"01.07.2026-20.08.2026":90.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":105.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"Junior Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":100.0,"01.07.2026-20.08.2026":115.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"Junior Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":115.0,"01.07.2026-20.08.2026":130.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":130.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":185.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":235.0}},{"name":"Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":145.0,"01.07.2026-20.08.2026":175.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":250.0}},{"name":"Executive Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":155.0,"01.07.2026-20.08.2026":185.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":220.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":280.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Silk Road by Minyoun Hotel","full_name":"Silk Road by Minyoun Hotel 5*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard Double Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":115.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":150.0}},{"name":"Standard Double/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":110.0,"01.07.2026-20.08.2026":130.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":150.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":170.0}},{"name":"Junior Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":180.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":215.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":285.0}},{"name":"Junior Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":170.0,"01.07.2026-20.08.2026":200.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":230.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":300.0}},{"name":"Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":200.0,"01.07.2026-20.08.2026":240.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":285.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":380.0}},{"name":"Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":215.0,"01.07.2026-20.08.2026":260.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":305.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":400.0}},{"name":"Executive Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":235.0,"01.07.2026-20.08.2026":290.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":340.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":455.0}},{"name":"Executive Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":255.0,"01.07.2026-20.08.2026":305.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":360.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":475.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Hilton Samarkand Regency","full_name":"Hilton Samarkand Regency 5*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"Standard Room Double/Twin","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":120.0,"01.07.2026-20.08.2026":145.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":185.0}},{"name":"Standard Room Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":170.0,"01.07.2026-20.08.2026":195.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":215.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":235.0}},{"name":"Executive Room Single (15-18F)","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":130.0,"01.07.2026-20.08.2026":155.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":180.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"Executive Room Double (15-18F)","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":145.0,"01.07.2026-20.08.2026":175.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}},{"name":"One Bedroom Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":155.0,"01.07.2026-20.08.2026":190.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":220.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":270.0}},{"name":"One Bedroom Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":175.0,"01.07.2026-20.08.2026":210.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":240.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":290.0}},{"name":"One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":290.0,"01.07.2026-20.08.2026":360.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":430.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":530.0}},{"name":"One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":310.0,"01.07.2026-20.08.2026":380.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":445.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":550.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Zarafshon Parkside","full_name":"Zarafshon Parkside Hotel 3*","address":"Uzbekistan, Samarkand city, Mirodilova street 32, 140100","currency":"USD","board":"BB","rooms":[{"name":"Classic Room single","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":115.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":105.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":90.0}},{"name":"Classic Room Double/Twin","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":160.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":145.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":130.0}},{"name":"Classic Room Triple","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":220.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":205.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":190.0}},{"name":"Junior Suite Room single","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":220.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":195.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":175.0}},{"name":"Junior Suite Room double","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":260.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":235.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":220.0}},{"name":"Deluxe Suite Room single","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":275.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":250.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":230.0}},{"name":"Deluxe Suite Room double","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":315.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":290.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":270.0}}],"seasons":["01.04.2026-31.05.2026 01.09.2026-31.10.2026","01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026","01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Shaxzoda Elite","full_name":"Shaxzoda Elite Hotel","address":"140108 Uzbekistan, Samarkand, Street Uzbekistan, 32","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Single","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":70.0,"16.06.2026-15.08.2026":65.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":60.0}},{"name":"Standart Room Twin","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":105.0,"16.06.2026-15.08.2026":95.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":90.0}},{"name":"Deluxe Room Single","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":80.0,"16.06.2026-15.08.2026":70.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":65.0}},{"name":"Deluxe Room Double/Twin","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":115.0,"16.06.2026-15.08.2026":105.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":95.0}},{"name":"Suite Room Single","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":90.0,"16.06.2026-15.08.2026":80.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":70.0}},{"name":"Suite Room Twin","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":125.0,"16.06.2026-15.08.2026":115.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":100.0}}],"seasons":["16.03.2026-15.06.2026 16.08.2026-15.11.2026","16.06.2026-15.08.2026","01.01.2026-15.03.2026 16.11.2026-31.12.2026"],"city":"Самарканд"},{"name":"Orient Star Samarkand","full_name":"Orient Star Samarkand","address":"Dakhbed Yuli Street. 33, Samarkand, 140120","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":65.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":80.0}},{"name":"Standard Double/Twin","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":90.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":105.0}},{"name":"Standard Triple","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":135.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":150.0}},{"name":"Deluxe Single","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":90.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":100.0}},{"name":"Deluxe Double/Twin","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":120.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":140.0}},{"name":"Family Room Single","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":135.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":150.0}},{"name":"Family Room Double/Twin","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":140.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":155.0}}],"seasons":["01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026","20.03.2026-15.06.2026 15.08.2026-31.10.2026"],"city":"Самарканд"},{"name":"Hilton Garden Inn Samarkand","full_name":"Hilton Garden Inn Samarkand 4*","address":"140130 Dagbed 2, Samarkand, Uzbekistan","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":75.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":100.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":135.0}},{"name":"Standard Room Double","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":100.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":120.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":160.0}},{"name":"Standart Room Triple","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":140.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":160.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":200.0}},{"name":"Deluxe Room Single","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":125.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":150.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":185.0}},{"name":"Deluxe Room Double","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":150.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":175.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":210.0}},{"name":"Suite Room Single","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":180.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":200.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":240.0}},{"name":"Suite Room Double","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":200.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":225.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":260.0}}],"seasons":["01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026","01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026","15.03.2026-31.05.2026 01.09.2026-31.10.2026"],"city":"Самарканд"},{"name":"Asia Samarkand","full_name":"Hotel Asia Samarkand 4*","address":"705000, Samarkand city, Kosh-khauz street, 50","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":65.0,"01.03.2026-31.10.2026":75.0}},{"name":"Standart Double/Twin","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":95.0,"01.03.2026-31.10.2026":105.0}},{"name":"Standart Triple","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":110.0,"01.03.2026-31.10.2026":125.0}},{"name":"Suite Single","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":150.0,"01.03.2026-31.10.2026":150.0}},{"name":"Suite Double","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":155.0,"01.03.2026-31.10.2026":155.0}}],"seasons":["01.01.2026-28.02.2026 01.11.2026-31.12.2026","01.03.2026-31.10.2026"],"city":"Самарканд"},{"name":"Emir's Garden","full_name":"Emirs Garden Residence 4*","address":"Khodzha Nurobod 104, Bukhara 200118 Uzbekistan","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Single","prices":{"01.01.2026-31.03.2026 16.11.2026-31.12.2026":85.0,"01.04.2026-15.11.2026":90.0}},{"name":"Standart Room Double","prices":{"01.01.2026-31.03.2026 16.11.2026-31.12.2026":115.0,"01.04.2026-15.11.2026":140.0}},{"name":"Standart Room Triple","prices":{"01.01.2026-31.03.2026 16.11.2026-31.12.2026":145.0,"01.04.2026-15.11.2026":170.0}},{"name":"Suite Room","prices":{"01.01.2026-31.03.2026 16.11.2026-31.12.2026":135.0,"01.04.2026-15.11.2026":160.0}}],"seasons":["01.01.2026-31.03.2026 16.11.2026-31.12.2026","01.04.2026-15.11.2026"],"city":"Бухара"},{"name":"Sahid Zarafshan","full_name":"Sahid Zarafshan Hotel 4*","address":"200100, Republic of Uzbekistan, Bukhara city, M.Iqbol street, 7","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"PRICE":105.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":90.0}},{"name":"Standard Double","prices":{"PRICE":125.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":110.0}},{"name":"Standard Triple","prices":{"PRICE":165.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":145.0}},{"name":"Superior Single","prices":{"PRICE":115.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":100.0}},{"name":"Superior Twin","prices":{"PRICE":135.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":115.0}},{"name":"Deluxe Single","prices":{"PRICE":125.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":110.0}},{"name":"Deluxe Twin","prices":{"PRICE":155.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":135.0}},{"name":"Grand Deluxe Single","prices":{"PRICE":155.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":135.0}},{"name":"Grand Deluxe Double","prices":{"PRICE":195.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":170.0}},{"name":"Suite Single","prices":{"PRICE":195.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":170.0}},{"name":"Suite Double","prices":{"PRICE":245.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":210.0}},{"name":"Executive Suite Single","prices":{"PRICE":370.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":315.0}},{"name":"Executive Suite Double","prices":{"PRICE":425.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":365.0}},{"name":"Presidential Suite Single","prices":{"PRICE":995.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":850.0}},{"name":"Presidential Suite Double","prices":{"PRICE":1085.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":925.0}}],"seasons":["PRICE","Special rates (Jan, Feb, Jun, Jul, Dec)"],"city":"Бухара"},{"name":"Atlas","full_name":"Atlas Hotel 3*","address":"200100, Republic of Uzbekistan, Bukhara city, Degrezi, 14","currency":"USD","board":"BB","rooms":[{"name":"Standard single small bed","prices":{"01.01.2026-31.12.2026":70.0}},{"name":"Standard King Size (1 person)","prices":{"01.01.2026-31.12.2026":80.0}},{"name":"Standard Double / Twin","prices":{"01.01.2026-31.12.2026":105.0}},{"name":"Standard Triple","prices":{"01.01.2026-31.12.2026":130.0}}],"seasons":["01.01.2026-31.12.2026"],"city":"Бухара"},{"name":"Garden Plaza","full_name":"Garden Plaza Bukhara 3*","address":"200104, Bukhara city, Dilkusho street, 334","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":70.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":60.0}},{"name":"Standart Double / Twin","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":105.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":90.0}},{"name":"Standart Triple","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":160.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":135.0}},{"name":"Junior Suite","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":160.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":135.0}},{"name":"Family room","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":210.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":195.0}},{"name":"Deluxe (garden view)","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":165.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":145.0}}],"seasons":["01.04.2026-31.05.2026 01.09.2026-31.10.2026","01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026"],"city":"Бухара"},{"name":"Orient Star Varahsha","full_name":"Orient Star Varahsha","address":"Muhammad Iqbol Street. 5, Bukhara, 140120","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":75.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":100.0}},{"name":"Standard Double/Twin","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":90.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":110.0}},{"name":"Standard Triple","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":125.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":140.0}},{"name":"Deluxe Single","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":90.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":110.0}},{"name":"Deluxe Double/Twin","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":105.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":120.0}},{"name":"Luxe Single","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":100.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":120.0}},{"name":"Luxe Double/Twin","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":115.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":135.0}}],"seasons":["01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026","20.03.2026-10.06.2026 15.08.2026-31.10.2026"],"city":"Бухара"},{"name":"Paradise Plaza","full_name":"Paradise Plaza Hotel","address":"200100, Uzbekistan, Bukhara city, B. Nakshband street 162","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"15.03.2026-15.11.2026":85.0,"15.06.2026-15.08.2026":70.0,"15.11.2026-15.03.2027":60.0}},{"name":"Standart Double / Twin","prices":{"15.03.2026-15.11.2026":115.0,"15.06.2026-15.08.2026":100.0,"15.11.2026-15.03.2027":90.0}},{"name":"Standard Triple","prices":{"15.03.2026-15.11.2026":155.0,"15.06.2026-15.08.2026":135.0,"15.11.2026-15.03.2027":120.0}},{"name":"Deluxe Single","prices":{"15.03.2026-15.11.2026":90.0,"15.06.2026-15.08.2026":80.0,"15.11.2026-15.03.2027":65.0}},{"name":"Deluxe Double / Twin","prices":{"15.03.2026-15.11.2026":130.0,"15.06.2026-15.08.2026":115.0,"15.11.2026-15.03.2027":95.0}},{"name":"VIP Double","prices":{"15.03.2026-15.11.2026":285.0,"15.06.2026-15.08.2026":265.0,"15.11.2026-15.03.2027":240.0}}],"seasons":["15.03.2026-15.11.2026","15.06.2026-15.08.2026","15.11.2026-15.03.2027"],"city":"Бухара"},{"name":"Shaxristan Hotel","full_name":"Shahriston Hotel","address":"220100, Republic of Uzbekistan, Bukhara city, X.Qozi Kalon Street, 48","currency":"USD","board":"BB","rooms":[{"name":"Standard Twin Room (Single use)","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":110.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":70.0}},{"name":"Standart Double/Twin","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":145.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":105.0}},{"name":"Standart Triple","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":175.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":150.0}},{"name":"Suite Single","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":175.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":140.0}},{"name":"Suite Double","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":200.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":165.0}},{"name":"Suite Triple","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":235.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":200.0}}],"seasons":["14.03.2026-14.06.2026 01.08.2026-14.11.2026","01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026"],"city":"Бухара"},{"name":"Farohat Ona Hotel","full_name":"Farohat Ona Hotel","address":"220900, Republic of Uzbekistan, Khiva City","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"01.03.2026-30.06.2026 01.08.2026-31.10.2026":75.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.11.2026-31.12.2026":65.0}},{"name":"Standart Room Double","prices":{"01.03.2026-30.06.2026 01.08.2026-31.10.2026":95.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.11.2026-31.12.2026":85.0}},{"name":"Standart Room Triple","prices":{"01.03.2026-30.06.2026 01.08.2026-31.10.2026":125.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.11.2026-31.12.2026":115.0}}],"seasons":["01.03.2026-30.06.2026 01.08.2026-31.10.2026","01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.11.2026-31.12.2026"],"city":"Хива"},{"name":"Farovon Khiva","full_name":"Farovon Khiva Hotel 4*","address":"Uzbekistan, Khorazm region, Khiva city, Buyuk yuli street, 1A","currency":"USD","board":"BB","rooms":[{"name":"Standard Double/Twin","prices":{"01.01.2026-31.12.2026":180.0}},{"name":"Standard Triple","prices":{"01.01.2026-31.12.2026":220.0}},{"name":"Deluxe Single","prices":{"01.01.2026-31.12.2026":200.0}},{"name":"Deluxe Double","prices":{"01.01.2026-31.12.2026":225.0}},{"name":"Suite Single","prices":{"01.01.2026-31.12.2026":415.0}},{"name":"Suite Double","prices":{"01.01.2026-31.12.2026":435.0}},{"name":"Executive Suite Single","prices":{"01.01.2026-31.12.2026":475.0}},{"name":"Executive Suite Double","prices":{"01.01.2026-31.12.2026":495.0}},{"name":"Presidential Suite (till 4 pax)","prices":{"01.01.2026-31.12.2026":2310.0}}],"seasons":["01.01.2026-31.12.2026"],"city":"Хива"},{"name":"Khiva Residence","full_name":"Khiva Residence 3*","address":"220900, Republic of Uzbekistan, Khiva city, Najmiddin Kubro street, 1","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"16.03.2026-15.06.2026 01.08.2026-15.11.2026":55.0,"01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026":50.0}},{"name":"Standard Double/Twin","prices":{"16.03.2026-15.06.2026 01.08.2026-15.11.2026":80.0,"01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026":70.0}},{"name":"Standard Triple","prices":{"16.03.2026-15.06.2026 01.08.2026-15.11.2026":110.0,"01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026":100.0}},{"name":"Deluxe Double","prices":{"16.03.2026-15.06.2026 01.08.2026-15.11.2026":115.0,"01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026":105.0}}],"seasons":["16.03.2026-15.06.2026 01.08.2026-15.11.2026","01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026"],"city":"Хива"},{"name":"New Star Khiva","full_name":"New Star Khiva Hotel 3*","address":"220900, Republic of Uzbekistan, Khiva city, Anash Xalfa Street, 23","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"Mar-Jun / Aug-Oct 2026":65.0,"Jan-Feb / Jul / Nov-Dec 2026":55.0}},{"name":"Standard Room Double/Twin","prices":{"Mar-Jun / Aug-Oct 2026":85.0,"Jan-Feb / Jul / Nov-Dec 2026":75.0}},{"name":"Standard Room Triple","prices":{"Mar-Jun / Aug-Oct 2026":105.0,"Jan-Feb / Jul / Nov-Dec 2026":95.0}},{"name":"Standard Room 4 pax","prices":{"Mar-Jun / Aug-Oct 2026":120.0,"Jan-Feb / Jul / Nov-Dec 2026":110.0}}],"seasons":["Mar-Jun / Aug-Oct 2026","Jan-Feb / Jul / Nov-Dec 2026"],"city":"Хива"},{"name":"Orient Star Khiva","full_name":"Orient Star Khiva 4*","address":"PAKHLAVAN MAHMUD STR. 1, Khiva, 220900","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"Mar-Jun / Aug-Nov 2026":75.0,"Jan-Mar / Jun-Jul / Nov-Dec 2026":60.0}},{"name":"Standard Double/Twin","prices":{"Mar-Jun / Aug-Nov 2026":100.0,"Jan-Mar / Jun-Jul / Nov-Dec 2026":80.0}},{"name":"Standard Triple","prices":{"Mar-Jun / Aug-Nov 2026":135.0,"Jan-Mar / Jun-Jul / Nov-Dec 2026":115.0}}],"seasons":["Mar-Jun / Aug-Nov 2026","Jan-Mar / Jun-Jul / Nov-Dec 2026"],"city":"Хива"},{"name":"Said Islom Khoja","full_name":"Said Islom Khoja Hotel 3*","address":"200118, Republic of Uzbekistan, Khorezm, Khiva City, Koy Darvaza","currency":"USD","board":"BB","rooms":[{"name":"Standard single","prices":{"Mar-Oct 2026":65.0,"Jan-Feb / Nov-Dec 2026":60.0}},{"name":"Standard double","prices":{"Mar-Oct 2026":90.0,"Jan-Feb / Nov-Dec 2026":80.0}},{"name":"Standard Triple room","prices":{"Mar-Oct 2026":110.0,"Jan-Feb / Nov-Dec 2026":100.0}},{"name":"Suite Room Single","prices":{"Mar-Oct 2026":100.0,"Jan-Feb / Nov-Dec 2026":90.0}},{"name":"Suite Room Double","prices":{"Mar-Oct 2026":125.0,"Jan-Feb / Nov-Dec 2026":115.0}},{"name":"Suite Room Triple","prices":{"Mar-Oct 2026":145.0,"Jan-Feb / Nov-Dec 2026":135.0}}],"seasons":["Mar-Oct 2026","Jan-Feb / Nov-Dec 2026"],"city":"Хива"}];
+
+function getPriceClass(v) {
+  if (v < 120) return 'price-low';
+  if (v < 250) return 'price-mid';
+  if (v < 500) return 'price-high';
+  return 'price-premium';
+}
+
+function getMinPrice(hotel) {
+  let min = Infinity;
+  for (const r of hotel.rooms)
+    for (const p of Object.values(r.prices))
+      if (p && p < min) min = p;
+  return min === Infinity ? null : min;
+}
+
+function getMaxPrice(hotel) {
+  let max = 0;
+  for (const r of hotel.rooms)
+    for (const p of Object.values(r.prices))
+      if (p && p > max) max = p;
+  return max === 0 ? null : max;
+}
+
+function getRoomClass(name) {
+  const n = name.toLowerCase();
+  if (/presidential|residence suit|premier suite/.test(n)) return 'rc-presidential';
+  if (/executive suite|executive suit|grand suit/.test(n)) return 'rc-executive';
+  if (/suite|apartment|lux/.test(n)) return 'rc-suite';
+  if (/deluxe|superior|premium|vip/.test(n)) return 'rc-deluxe';
+  if (/studio|family/.test(n)) return 'rc-family';
+  return 'rc-standard';
+}
+
+const ROOM_CLASS_ORDER = ['rc-standard','rc-family','rc-deluxe','rc-suite','rc-executive','rc-presidential'];
+const ROOM_CLASS_LABEL = {
+  'rc-standard':    {label:'Standard',             color:'#EBF3F8', accent:'#0F6A90'},
+  'rc-family':      {label:'Family / Studio',       color:'#EAF4ED', accent:'#1B6E32'},
+  'rc-deluxe':      {label:'Deluxe / Superior',     color:'#FFF8DC', accent:'#8A5200'},
+  'rc-suite':       {label:'Suite',                 color:'#FFF0E8', accent:'#A63000'},
+  'rc-executive':   {label:'Executive Suite',       color:'#F4EAFA', accent:'#5A2080'},
+  'rc-presidential':{label:'Presidential / Premier',color:'#FEF4DF', accent:'#7A4A00'},
+};
+
+function truncateLabel(s, max=38) {
+  const parts = s.split(/\s+/);
+  const first = parts.slice(0, 3).join(' ');
+  return first.length > max ? first.substring(0, max) + '…' : first;
+}
+
+function getSeasonLabel(i, n) {
+  if (n === 1) return 'High season';
+  if (n === 2) return i === 0 ? 'High season' : 'Low season';
+  if (n === 3) return i === 0 ? 'High season' : i === 1 ? 'Middle season' : 'Low season';
+  return 'Season ' + (i + 1);
+}
+
+function buildCard(hotel, idx) {
+  const minP = getMinPrice(hotel);
+  const maxP = getMaxPrice(hotel);
+  const hasData = hotel.rooms.length > 0;
+  const n = hotel.seasons.length;
+
+  let seasonsHTML = '';
+  if (n > 0) {
+    seasonsHTML = `<div class="seasons-header" style="grid-template-columns: 180px repeat(${n}, 1fr); margin-top:12px; margin-bottom:4px;">
+      <div></div>
+      ${hotel.seasons.map((s, i) =>
+        `<div class="season-label sc${i}" title="${s}">${getSeasonLabel(i, n)}<br>
+         <span style="font-size:9px;font-weight:300;opacity:0.85">${truncateLabel(s)}</span></div>`
+      ).join('')}
+    </div>`;
+  }
+
+  let tableHTML = '';
+  if (hasData) {
+    const sk = hotel.seasons;
+    const groups = {};
+    for (const room of hotel.rooms) {
+      const rc = getRoomClass(room.name);
+      if (!groups[rc]) groups[rc] = [];
+      groups[rc].push(room);
+    }
+
+    const rowsHTML = ROOM_CLASS_ORDER
+      .filter(rc => groups[rc])
+      .map(rc => {
+        const info = ROOM_CLASS_LABEL[rc];
+        const header = `<tr>
+          <td colspan="${sk.length + 1}" style="padding:5px 10px 4px;background:${info.color};border-left:3px solid ${info.accent};font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${info.accent};">${info.label}</td>
+        </tr>`;
+        const rows = groups[rc].map(room => {
+          const pkeys = Object.keys(room.prices);
+          const priceCells = sk.length > 0
+            ? sk.map(key => {
+                let val = room.prices[key];
+                if (val === undefined) {
+                  const mk = pkeys.find(k => k.trim() === key.trim());
+                  if (mk) val = room.prices[mk];
+                }
+                return val !== undefined && val !== null
+                  ? `<td class="price-cell"><span class="price-amount ${getPriceClass(val)}">$${val}</span></td>`
+                  : `<td class="price-cell"><span class="price-na">—</span></td>`;
+              }).join('')
+            : `<td class="price-cell"><span class="price-amount ${getPriceClass(Object.values(room.prices)[0])}">$${Object.values(room.prices)[0]}</span></td>`;
+          return `<tr style="border-left:3px solid ${info.accent}22;">
+            <td class="room-name-cell" style="padding-left:14px;">${room.name}</td>
+            ${priceCells}
+          </tr>`;
+        }).join('');
+        return header + rows;
+      }).join('');
+
+    tableHTML = `<table class="price-table">
+      <colgroup><col style="width:180px">${sk.map(() => '<col>').join('')}</colgroup>
+      <tbody>${rowsHTML}</tbody>
+    </table>`;
+  } else {
+    tableHTML = `<div class="no-data-msg">Данные по ценам не загружены</div>`;
+  }
+
+  const priceRangeHTML = hasData && minP
+    ? `<span class="price-range">от <span class="from">$${minP}</span> до $${maxP} / ночь · BB</span>`
+    : `<span class="price-range" style="color:#666">данные уточняются</span>`;
+
+  return `<div class="hotel-card" data-city="${hotel.city}" id="card-${idx}" onclick="toggleCard(${idx})">
+    <div class="card-header">
+      <div style="flex:1">
+        <div class="hotel-name">${hotel.full_name || hotel.name}</div>
+        ${priceRangeHTML}
+      </div>
+      <div class="hotel-meta">
+        ${hotel.board ? `<span class="badge badge-board">${hotel.board}</span>` : ''}
+        <span class="badge badge-usd">USD</span>
+        ${!hasData ? `<span class="badge badge-nodata">N/A</span>` : ''}
+        <span class="toggle-icon">▾</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="hotel-address">📍 ${hotel.address}</div>
+      ${seasonsHTML}
+      ${tableHTML}
+    </div>
+  </div>`;
+}
+
+function renderCities(filter = 'all', search = '') {
+  const cities = ['Ташкент','Самарканд','Бухара','Хива'];
+  const cityClass = {'Ташкент':'tashkent','Самарканд':'samarkand','Бухара':'bukhara','Хива':'khiva'};
+  const container = document.getElementById('main-container');
+  let html = '';
+  let totalVisible = 0;
+
+  for (const city of cities) {
+    if (filter !== 'all' && filter !== city) continue;
+    const cityHotels = HOTELS.map((h,i) => ({h,i})).filter(({h}) => h.city === city);
+    if (!cityHotels.length) continue;
+    const filtered = search
+      ? cityHotels.filter(({h}) =>
+          h.name.toLowerCase().includes(search.toLowerCase()) ||
+          (h.full_name||'').toLowerCase().includes(search.toLowerCase()))
+      : cityHotels;
+    if (!filtered.length) continue;
+    totalVisible += filtered.length;
+
+    html += `<div class="city-section" data-city-section="${city}">
+      <div class="city-header">
+        <span class="city-name ${cityClass[city]}">${city}</span>
+        <span class="city-count">${filtered.length} ${filtered.length===1?'отель':'отелей'}</span>
+      </div>
+      <div class="hotels-grid">
+        ${filtered.map(({h,i}) => buildCard(h,i)).join('')}
+      </div>
+    </div>`;
+  }
+
+  container.innerHTML = html || `<div style="padding:40px;text-align:center;color:#666">Ничего не найдено</div>`;
+  document.getElementById('visible-count').textContent = totalVisible;
+}
+
+function toggleCard(idx) {
+  const card = document.getElementById('card-' + idx);
+  if (card) card.classList.toggle('expanded');
+}
+
+let activeFilter = 'all';
+let activeSearch = '';
+
+function filterCity(btn, city) {
+  document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = city;
+  renderCities(activeFilter, activeSearch);
+}
+
+function searchHotels(q) {
+  activeSearch = q;
+  renderCities(activeFilter, activeSearch);
+}
+
+function expandAll() {
+  document.querySelectorAll('.hotel-card').forEach(c => c.classList.add('expanded'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.hotel-card').forEach(c => c.classList.remove('expanded'));
+}
+
+renderCities();
+</script>
+
+</body>
+</html>
