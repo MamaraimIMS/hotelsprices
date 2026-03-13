@@ -3,724 +3,794 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Отели Узбекистана 2026 — Прайс-лист</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<title>Waylo Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    /* Core palette */
-    --primary:       #0F5C7A;
-    --primary-mid:   #1A7FA8;
-    --primary-light: #2AA0CE;
-    --primary-pale:  #D6EDF5;
-    --primary-bg:    #EBF6FB;
-
-    /* Page surfaces — graduated halftones */
-    --bg-base:    #E8EDF3;   /* page background */
-    --bg-card:    #FFFFFF;   /* card / panel */
-    --bg-header:  #F0F4F8;   /* header fill */
-    --bg-strip:   #F5F8FB;   /* filter/legend bar */
-    --bg-tint1:   #EBF0F6;   /* subtle inset, address block */
-    --bg-tint2:   #DDE4EE;   /* stronger tint, alt rows */
-    --bg-hover:   #E0EFF7;   /* hover surface */
-
-    /* Borders — 3 levels */
-    --border-soft:   #C8D5E3;
-    --border-mid:    #A8BDD0;
-    --border-strong: #7A9AB8;
-
-    /* Text — 4 levels */
-    --text-h:   #0A1E30;   /* headings, hotel names */
-    --text-b:   #1E3448;   /* body text */
-    --text-s:   #4A6880;   /* secondary */
-    --text-m:   #7A96B0;   /* muted / placeholder */
-
-    /* City accents */
-    --city-tashkent:  #8A5A10;
-    --city-samarkand: #0F5C7A;
-    --city-bukhara:   #8A2C10;
-    --city-khiva:     #1E6B36;
-
-    /* Semantic price colors — saturated for contrast */
-    --clr-low:      #1B6E32;
-    --clr-low-bg:   #D4EDDA;
-    --clr-mid:      #7A5200;
-    --clr-mid-bg:   #FFF3C4;
-    --clr-high:     #A63000;
-    --clr-high-bg:  #FFE4D0;
-    --clr-prem:     #5A2080;
-    --clr-prem-bg:  #EDD9FF;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg-base);
-    color: var(--text-b);
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ── */
-  .header {
-    background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-header) 100%);
-    border-bottom: 2px solid var(--border-mid);
-    padding: 18px 40px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 3px 14px rgba(15,92,122,0.12);
-  }
-
-  .header-left h1 {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--primary);
-    letter-spacing: -0.01em;
-  }
-
-  .header-left span {
-    font-size: 11px;
-    color: var(--text-m);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: block;
-    margin-top: 2px;
-    font-weight: 500;
-  }
-
-  .header-stats { display: flex; gap: 28px; }
-
-  .stat-pill {
-    text-align: center;
-    background: var(--primary-pale);
-    border: 1px solid var(--border-soft);
-    border-radius: 8px;
-    padding: 6px 18px;
-  }
-
-  .stat-pill .num {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--primary);
-    display: block;
-    line-height: 1.1;
-  }
-
-  .stat-pill .lbl {
-    font-size: 10px;
-    color: var(--text-s);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 600;
-  }
-
-  /* ── FILTERS BAR ── */
-  .filters-bar {
-    background: var(--bg-strip);
-    border-bottom: 1px solid var(--border-soft);
-    padding: 9px 40px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .filter-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-s);
-    white-space: nowrap;
-    font-weight: 700;
-  }
-
-  .filter-btn {
-    padding: 5px 14px;
-    border-radius: 5px;
-    border: 1.5px solid var(--border-mid);
-    background: var(--bg-card);
-    color: var(--text-s);
-    font-family: 'Roboto', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .filter-btn:hover {
-    border-color: var(--primary-light);
-    color: var(--primary);
-    background: var(--primary-bg);
-  }
-  .filter-btn.active {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
-    font-weight: 700;
-    box-shadow: 0 2px 8px rgba(15,92,122,0.25);
-  }
-
-  .filter-sep { width: 1px; height: 20px; background: var(--border-mid); margin: 0 4px; }
-
-  .search-input {
-    padding: 5px 14px;
-    border: 1.5px solid var(--border-mid);
-    background: var(--bg-card);
-    color: var(--text-b);
-    font-family: 'Roboto', sans-serif;
-    font-size: 12px;
-    border-radius: 5px;
-    outline: none;
-    width: 210px;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    margin-left: auto;
-  }
-
-  .search-input::placeholder { color: var(--text-m); }
-  .search-input:focus {
-    border-color: var(--primary-light);
-    box-shadow: 0 0 0 3px rgba(15,92,122,0.12);
-  }
-
-  /* ── LEGEND ── */
-  .legend-bar {
-    background: var(--bg-tint1);
-    padding: 7px 40px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--border-soft);
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--text-s);
-    font-weight: 500;
-  }
-
-  .legend-dot { width: 11px; height: 11px; border-radius: 2px; }
-
-  /* ── MAIN GRID ── */
-  .main { padding: 22px 40px 60px; max-width: 100%; }
-
-  .city-section { margin-bottom: 38px; }
-
-  .city-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 14px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-soft);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-
-  .city-name {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-  }
-
-  .city-name.tashkent  { color: var(--city-tashkent); }
-  .city-name.samarkand { color: var(--city-samarkand); }
-  .city-name.bukhara   { color: var(--city-bukhara); }
-  .city-name.khiva     { color: var(--city-khiva); }
-
-  .city-count {
-    font-size: 12px;
-    color: var(--text-m);
-    font-weight: 500;
-    background: var(--bg-tint1);
-    border: 1px solid var(--border-soft);
-    border-radius: 12px;
-    padding: 2px 10px;
-  }
-
-  /* ── HOTEL CARDS GRID ── */
-  .hotels-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(560px, 1fr));
-    gap: 12px;
-  }
-
-  .hotel-card {
-    background: var(--bg-card);
-    border: 1.5px solid var(--border-soft);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
-  }
-
-  .hotel-card:hover {
-    border-color: var(--primary-mid);
-    box-shadow: 0 6px 22px rgba(15,92,122,0.13);
-    transform: translateY(-1px);
-  }
-
-  .hotel-card.hidden { display: none; }
-
-  /* ── CARD HEADER ── */
-  .card-header {
-    padding: 12px 16px 10px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    cursor: pointer;
-    user-select: none;
-    border-bottom: 1px solid var(--border-soft);
-    background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-strip) 100%);
-    transition: background 0.15s;
-  }
-
-  .card-header:hover { background: var(--bg-hover); }
-
-  .hotel-name {
-    font-size: 13.5px;
-    font-weight: 700;
-    color: var(--text-h);
-    line-height: 1.3;
-    flex: 1;
-  }
-
-  .hotel-meta {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-
-  .badge {
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    border: 1px solid transparent;
-  }
-
-  .badge-board  { background: var(--clr-low-bg);  color: var(--clr-low);  border-color: #A8D8B8; }
-  .badge-usd    { background: var(--primary-pale); color: var(--primary);  border-color: #A0CCE0; }
-  .badge-nodata { background: #EAEAEA;             color: #666;            border-color: #C8C8C8; }
-
-  .toggle-icon {
-    color: var(--text-m);
-    font-size: 16px;
-    transition: transform 0.22s, color 0.15s;
-    margin-left: 6px;
-    flex-shrink: 0;
-    line-height: 1;
-  }
-
-  .card-header:hover .toggle-icon { color: var(--primary); }
-  .hotel-card.expanded .toggle-icon { transform: rotate(180deg); color: var(--primary); }
-
-  /* ── PRICE RANGE MINI ── */
-  .price-range {
-    font-size: 11px;
-    color: var(--text-m);
-    margin-top: 3px;
-    display: block;
-    font-weight: 400;
-  }
-
-  .price-range .from { color: var(--primary); font-weight: 700; }
-
-  /* ── CARD BODY ── */
-  .card-body { display: none; padding: 0 14px 14px; }
-  .hotel-card.expanded .card-body { display: block; }
-
-  /* ── SEASON HEADERS ── */
-  .seasons-header {
-    display: grid;
-    gap: 3px;
-    margin: 12px 0 2px;
-  }
-
-  .season-label {
-    padding: 7px 8px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: #fff;
-    border-radius: 4px;
-    text-align: center;
-    line-height: 1.3;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  }
-
-  /* ── PRICE TABLE ── */
-  .price-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-
-  .price-table td {
-    padding: 6px 10px;
-    border-bottom: 1px solid var(--bg-tint2);
-    vertical-align: middle;
-  }
-
-  .price-table tr:last-child td { border-bottom: none; }
-  .price-table tr:nth-child(even) td { background: var(--bg-tint1); }
-
-  .room-name-cell {
-    color: var(--text-b);
-    line-height: 1.3;
-    font-weight: 400;
-  }
-
-  .price-cell {
-    text-align: right;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .price-amount {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-    border: 1px solid transparent;
-  }
-
-  /* price heat-map — high contrast */
-  .price-low     { background: var(--clr-low-bg);  color: var(--clr-low);  border-color: #A8D8B8; }
-  .price-mid     { background: var(--clr-mid-bg);  color: var(--clr-mid);  border-color: #F0D880; }
-  .price-high    { background: var(--clr-high-bg); color: var(--clr-high); border-color: #F0B090; }
-  .price-premium { background: var(--clr-prem-bg); color: var(--clr-prem); border-color: #C8A0E8; }
-
-  .price-na { color: var(--text-m); font-size: 11px; padding: 2px 7px; }
-
-  .price-table tr:hover td { background: var(--primary-bg) !important; }
-
-  /* ── NO DATA CARD ── */
-  .no-data-msg {
-    padding: 14px;
-    font-size: 12px;
-    color: var(--text-m);
-    font-style: italic;
-  }
-
-  /* ── SEASON COLORS ── */
-  .sc0 { background: linear-gradient(135deg, #1B6E32, #2E9E50); }
-  .sc1 { background: linear-gradient(135deg, #8A5200, #C07800); }
-  .sc2 { background: linear-gradient(135deg, #0F5C7A, #1A88B0); }
-  .sc3 { background: linear-gradient(135deg, #5A2080, #8840C0); }
-
-  /* ── CITY ACCENT BORDER ── */
-  .hotel-card[data-city="Ташкент"]   { border-left: 4px solid #C8920A; }
-  .hotel-card[data-city="Самарканд"] { border-left: 4px solid #0F6A90; }
-  .hotel-card[data-city="Бухара"]    { border-left: 4px solid #B03010; }
-  .hotel-card[data-city="Хива"]      { border-left: 4px solid #1A6B30; }
-
-  /* ── ADDRESS ── */
-  .hotel-address {
-    font-size: 11px;
-    color: var(--text-s);
-    margin-top: 8px;
-    line-height: 1.5;
-    padding: 7px 10px;
-    background: var(--bg-tint1);
-    border: 1px solid var(--border-soft);
-    border-radius: 5px;
-  }
-
-  /* ── RESULTS COUNT ── */
-  .results-count {
-    font-size: 12px;
-    color: var(--text-m);
-    padding: 10px 40px 0;
-  }
-
-  /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 7px; }
-  ::-webkit-scrollbar-track { background: var(--bg-tint1); }
-  ::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
-
-  @media (max-width: 768px) {
-    .header { padding: 12px 16px; }
-    .header-stats { gap: 10px; }
-    .filters-bar, .legend-bar, .main { padding-left: 14px; padding-right: 14px; }
-    .hotels-grid { grid-template-columns: 1fr; }
-    .search-input { width: 140px; }
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c0f;--surf:#141418;--surf2:#1c1c22;--surf3:#242430;
+  --b:#2a2a35;--b2:#35354a;--acc:#7c6dfa;--acc2:#a594ff;
+  --adim:rgba(124,109,250,.15);--tx:#f0f0f8;--tx2:#9898b0;--tx3:#5a5a72;
+  --grn:#22c55e;--amb:#f59e0b;--red:#ef4444;--sky:#38bdf8;--pink:#f472b6;
+  --ff:"DM Sans",sans-serif;--fm:"DM Mono",monospace
+}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--ff);font-size:14px}
+#lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999}
+.lcard{background:var(--surf);border:1px solid var(--b2);border-radius:20px;padding:48px 40px;width:360px;text-align:center}
+.llogo{width:56px;height:56px;background:var(--acc);border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;color:#fff;margin:0 auto 18px}
+.ltitle{font-size:20px;font-weight:600;margin-bottom:5px}
+.lsub{font-size:13px;color:var(--tx3);margin-bottom:26px}
+.linput{width:100%;background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:12px 16px;color:var(--tx);font-size:15px;font-family:var(--ff);outline:none;text-align:center;letter-spacing:4px}
+.linput:focus{border-color:var(--acc)}
+.lbtn{width:100%;margin-top:12px;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--ff)}
+.lbtn:hover{background:var(--acc2)}
+.lerr{font-size:12px;color:var(--red);margin-top:8px;opacity:0;transition:opacity .3s;min-height:16px}
+#app{display:none;height:100vh;overflow:hidden}
+.shell{display:flex;height:100%}
+.sb{width:230px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--b);display:flex;flex-direction:column;overflow-y:auto}
+.sb::-webkit-scrollbar{width:0}
+.sb-logo{padding:18px 16px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px}
+.sb-mark{width:30px;height:30px;background:var(--acc);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
+.sb-name{font-weight:600;font-size:14px}
+.sb-badge{font-size:9px;font-weight:500;background:var(--adim);color:var(--acc2);border:1px solid rgba(124,109,250,.3);border-radius:4px;padding:1px 5px;letter-spacing:.5px;margin-left:auto}
+.sb-sec{padding:14px 14px 5px;font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:1.4px;text-transform:uppercase}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;margin:1px 6px;border-radius:8px;cursor:pointer;color:var(--tx2);font-size:13px;transition:all .15s}
+.ni:hover{background:var(--surf2);color:var(--tx)}
+.ni.on{background:var(--adim);color:var(--acc2);font-weight:500}
+.ni-ico{width:22px;text-align:center;flex-shrink:0}
+.ni-cnt{margin-left:auto;font-size:10px;font-family:var(--fm);background:var(--surf3);color:var(--tx3);border-radius:4px;padding:1px 5px}
+.ni-ext{margin-left:auto;font-size:9px;color:var(--sky)}
+.sb-foot{margin-top:auto;padding:10px;border-top:1px solid var(--b)}
+.logout-btn{width:100%;margin-bottom:7px;padding:7px;background:rgba(239,68,68,.08);color:var(--red);border:1px solid rgba(239,68,68,.18);border-radius:7px;font-family:var(--ff);font-size:12px;cursor:pointer}
+.conn{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--surf2);border-radius:7px;font-size:12px;color:var(--tx2)}
+.cdot{width:6px;height:6px;border-radius:50%;background:var(--grn);box-shadow:0 0 5px var(--grn)}
+.cdot.off{background:var(--tx3);box-shadow:none}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:0 22px;height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);background:var(--surf);flex-shrink:0}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-title{font-weight:600;font-size:15px}
+.content{flex:1;overflow-y:auto;padding:20px 22px}
+.content::-webkit-scrollbar{width:5px}
+.content::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-family:var(--ff);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-ghost{background:transparent;color:var(--tx2);border:1px solid var(--b)}
+.btn-ghost:hover{background:var(--surf2);color:var(--tx)}
+.btn-primary{background:var(--acc);color:#fff}
+.btn-primary:hover{background:var(--acc2)}
+.btn-sky{background:rgba(56,189,248,.12);color:var(--sky);border:1px solid rgba(56,189,248,.25)}
+.btn-amb{background:rgba(245,158,11,.12);color:var(--amb);border:1px solid rgba(245,158,11,.25)}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-danger{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.btn-edit{background:rgba(34,197,94,.1);color:var(--grn);border:1px solid rgba(34,197,94,.2)}
+.notice{border-radius:10px;padding:11px 15px;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-size:13px}
+.notice-amb{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.22);color:#d97706}
+.notice-sky{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.22);color:var(--sky)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.scard{background:var(--surf);border:1px solid var(--b);border-radius:12px;padding:14px 16px}
+.slabel{font-size:9px;color:var(--tx3);font-weight:600;letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px}
+.sval{font-size:22px;font-weight:600;font-family:var(--fm)}
+.ssub{font-size:11px;color:var(--tx3);margin-top:3px}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:13px;flex-wrap:wrap}
+.sbox{display:flex;align-items:center;gap:7px;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:7px 11px;flex:1;min-width:150px;max-width:240px}
+.sbox input{background:none;border:none;outline:none;color:var(--tx);font-family:var(--ff);font-size:13px;width:100%}
+.sbox input::placeholder{color:var(--tx3)}
+select.fsel{background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:7px 10px;color:var(--tx2);font-family:var(--ff);font-size:13px;outline:none;cursor:pointer}
+.twrap{background:var(--surf);border:1px solid var(--b);border-radius:12px;overflow:hidden}
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:580px}
+thead tr{background:var(--surf2);border-bottom:1px solid var(--b)}
+th{padding:9px 13px;text-align:left;font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:.7px;text-transform:uppercase;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--surf2)}
+td{padding:9px 13px;font-size:13px;color:var(--tx2);vertical-align:middle}
+td.tdp{color:var(--tx);font-weight:500}
+.td-img{width:42px;height:32px;border-radius:5px;object-fit:cover}
+.td-img-ph{width:42px;height:32px;border-radius:5px;background:var(--surf3);display:flex;align-items:center;justify-content:center;font-size:13px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.bg{background:rgba(34,197,94,.12);color:var(--grn);border:1px solid rgba(34,197,94,.2)}
+.bgray{background:rgba(90,90,114,.15);color:var(--tx3);border:1px solid var(--b)}
+.bsky{background:rgba(56,189,248,.12);color:var(--sky)}
+.bamb{background:rgba(245,158,11,.12);color:var(--amb)}
+.bpink{background:rgba(244,114,182,.12);color:var(--pink)}
+.bacc{background:var(--adim);color:var(--acc2)}
+.pval{font-family:var(--fm);color:var(--grn);font-size:13px;font-weight:500}
+.racts{display:flex;gap:5px;opacity:0;transition:opacity .15s}
+tr:hover .racts{opacity:1}
+.tfoot{padding:9px 14px;border-top:1px solid var(--b);background:var(--surf2);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--tx3)}
+.pager{display:flex;gap:3px}
+.pgb{width:25px;height:25px;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--b);background:var(--surf);color:var(--tx2);font-size:12px;transition:all .15s}
+.pgb:hover,.pgb.act{background:var(--acc);color:#fff;border-color:var(--acc)}
+.empty{text-align:center;padding:44px 24px;color:var(--tx3)}
+.empty-ico{font-size:34px;margin-bottom:10px}
+.ext-wrap{background:var(--surf);border:1px solid var(--b);border-radius:14px;padding:24px}
+.ext-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.ext-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.route-card{background:var(--surf3);border-radius:8px;padding:10px 12px;cursor:pointer}
+.route-card:hover{background:var(--surf2)}
+.flight-card{background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.movl{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.movl.open{opacity:1;pointer-events:all}
+.modal{background:var(--surf);border:1px solid var(--b2);border-radius:16px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;transform:translateY(10px);transition:transform .2s}
+.movl.open .modal{transform:translateY(0)}
+.modal::-webkit-scrollbar{width:4px}
+.modal::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.mhead{padding:18px 22px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surf);z-index:1}
+.mtitle{font-size:15px;font-weight:600}
+.mx{width:27px;height:27px;border-radius:7px;background:var(--surf2);border:none;color:var(--tx2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mx:hover{background:var(--surf3);color:var(--tx)}
+.mbody{padding:18px 22px}
+.mfoot{padding:12px 22px 18px;border-top:1px solid var(--b);display:flex;justify-content:flex-end;gap:8px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ffull{grid-column:1/-1}
+.fg{display:flex;flex-direction:column;gap:4px}
+.flabel{font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:.6px;text-transform:uppercase}
+.fi,.fsel2,.fta{background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:8px 11px;color:var(--tx);font-family:var(--ff);font-size:13px;outline:none;transition:border-color .15s;width:100%}
+.fi:focus,.fsel2:focus,.fta:focus{border-color:var(--acc)}
+.fi::placeholder,.fta::placeholder{color:var(--tx3)}
+.fta{resize:vertical;min-height:72px}
+.fsel2 option{background:var(--surf)}
+.phprev{width:100%;height:105px;border-radius:8px;border:1px solid var(--b);background:var(--surf3);display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:12px;overflow:hidden;margin-bottom:6px}
+.phprev img{width:100%;height:100%;object-fit:cover}
+.ugrid{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.uthumb{width:60px;height:44px;border-radius:5px;object-fit:cover;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
+.uthumb:hover{border-color:var(--acc)}
+.uhint{font-size:11px;color:var(--tx3);padding:3px 0}
+.cfginfo{background:var(--surf2);border-radius:8px;padding:11px;font-size:12px;color:var(--tx3);line-height:1.7;margin-bottom:14px}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--surf);border:1px solid var(--b2);border-radius:10px;padding:10px 16px;font-size:13px;color:var(--tx);display:flex;align-items:center;gap:9px;transform:translateY(60px);opacity:0;transition:all .3s;z-index:3000;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <h1>Отели Узбекистана — Прайс-лист 2026</h1>
-    <span>Hotel Prices · All rates in USD · BB included</span>
+<div id="lock">
+  <div class="lcard">
+    <div class="llogo">W</div>
+    <div class="ltitle">Waylo Admin</div>
+    <div class="lsub">Введи пароль для входа</div>
+    <input class="linput" id="lpwd" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+    <button class="lbtn" onclick="doLogin()">Войти</button>
+    <div class="lerr" id="lerr">Неверный пароль</div>
   </div>
-  <div class="header-stats">
-    <div class="stat-pill"><span class="num" id="total-hotels">39</span><span class="lbl">Отелей</span></div>
-    <div class="stat-pill"><span class="num" id="total-cities">4</span><span class="lbl">Города</span></div>
-    <div class="stat-pill"><span class="num" id="visible-count">39</span><span class="lbl">Показано</span></div>
+</div>
+
+<div id="app">
+<div class="shell">
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-mark">W</div>
+    <div class="sb-name">Waylo</div>
+    <div class="sb-badge">ADMIN</div>
+  </div>
+  <div class="sb-sec">Каталог</div>
+  <div class="ni" id="ni-flights"     onclick="switchSec('flights')"><span class="ni-ico">&#x2708;</span>Авиабилеты<span class="ni-ext">API</span></div>
+  <div class="ni" id="ni-railway"     onclick="switchSec('railway')"><span class="ni-ico">&#x1F682;</span>Ж/Д билеты<span class="ni-ext">API</span></div>
+  <div class="ni" id="ni-hotels"      onclick="switchSec('hotels')"><span class="ni-ico">&#x1F3E8;</span>Отели<span class="ni-cnt" id="cnt-hotels">0</span></div>
+  <div class="ni" id="ni-transfers"   onclick="switchSec('transfers')"><span class="ni-ico">&#x1F697;</span>Трансфер<span class="ni-cnt" id="cnt-transfers">0</span></div>
+  <div class="ni" id="ni-sights"      onclick="switchSec('sights')"><span class="ni-ico">&#x1F3DB;</span>Достопримечательности<span class="ni-cnt" id="cnt-sights">0</span></div>
+  <div class="ni" id="ni-restaurants" onclick="switchSec('restaurants')"><span class="ni-ico">&#x1F35C;</span>Рестораны<span class="ni-cnt" id="cnt-restaurants">0</span></div>
+  <div class="ni" id="ni-food"        onclick="switchSec('food')"><span class="ni-ico">&#x1F37D;</span>Еда<span class="ni-cnt" id="cnt-food">0</span></div>
+  <div class="ni" id="ni-recreation"  onclick="switchSec('recreation')"><span class="ni-ico">&#x1F33F;</span>Отдых<span class="ni-cnt" id="cnt-recreation">0</span></div>
+  <div class="ni" id="ni-entertainment" onclick="switchSec('entertainment')"><span class="ni-ico">&#x1F3AA;</span>Развлечения<span class="ni-cnt" id="cnt-entertainment">0</span></div>
+  <div class="ni" id="ni-museums"     onclick="switchSec('museums')"><span class="ni-ico">&#x1F3FA;</span>Музеи<span class="ni-cnt" id="cnt-museums">0</span></div>
+  <div class="sb-sec">Туры</div>
+  <div class="ni on" id="ni-tour_packages" onclick="switchSec('tour_packages')"><span class="ni-ico">&#x1F4E6;</span>Тур-пакеты<span class="ni-cnt" id="cnt-tour_packages">0</span></div>
+  <div class="sb-foot">
+    <button class="logout-btn" onclick="doLogout()">Выйти</button>
+    <div class="conn"><div class="cdot off" id="cdot"></div><span id="clabel">Не подключено</span></div>
   </div>
 </div>
 
-<div class="filters-bar">
-  <span class="filter-label">Город:</span>
-  <button class="filter-btn active" data-filter="all" onclick="filterCity(this,'all')">Все</button>
-  <button class="filter-btn" data-filter="Ташкент" onclick="filterCity(this,'Ташкент')" style="border-color:#C8A060">Ташкент</button>
-  <button class="filter-btn" data-filter="Самарканд" onclick="filterCity(this,'Самарканд')" style="border-color:#1A6B8A">Самарканд</button>
-  <button class="filter-btn" data-filter="Бухара" onclick="filterCity(this,'Бухара')" style="border-color:#A0452A">Бухара</button>
-  <button class="filter-btn" data-filter="Хива" onclick="filterCity(this,'Хива')" style="border-color:#3A7D4A">Хива</button>
-  <div class="filter-sep"></div>
-  <button class="filter-btn" onclick="expandAll()">Раскрыть все</button>
-  <button class="filter-btn" onclick="collapseAll()">Свернуть все</button>
-  <input class="search-input" type="text" placeholder="🔍 Поиск отеля…" oninput="searchHotels(this.value)" id="searchInput">
+<div class="main">
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-title" id="sec-title">Тур-пакеты</div>
+      <span class="badge bgray" id="sec-type">Supabase</span>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="loadData()">Обновить</button>
+      <button class="btn btn-primary btn-sm" id="add-btn" onclick="openAdd()">+ Добавить</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="notice notice-amb" id="cfg-notice">
+      Укажи Supabase URL и API Key.
+      <button class="btn btn-sm" onclick="openCfg()" style="margin-left:auto;background:rgba(245,158,11,.15);color:#d97706;border:1px solid rgba(245,158,11,.3)">Настройки</button>
+    </div>
+    <div class="stats" id="stats-row">
+      <div class="scard"><div class="slabel">Записей</div><div class="sval" id="s-total">0</div><div class="ssub">в разделе</div></div>
+      <div class="scard"><div class="slabel">Активных</div><div class="sval" style="color:var(--grn)" id="s-active">0</div><div class="ssub">active=true</div></div>
+      <div class="scard"><div class="slabel">Ср. цена</div><div class="sval" style="color:var(--acc2)" id="s-price">$0</div><div class="ssub">по разделу</div></div>
+      <div class="scard"><div class="slabel">Разделов</div><div class="sval" style="color:var(--sky)">11</div><div class="ssub">в каталоге</div></div>
+    </div>
+    <div class="toolbar" id="toolbar-row">
+      <div class="sbox"><input type="text" id="q-search" placeholder="Поиск..." oninput="applyFilters()"></div>
+      <select class="fsel" id="q-city" onchange="applyFilters()">
+        <option value="">Все города</option>
+        <option>Самарканд</option><option>Бухара</option><option>Хива</option>
+        <option>Ташкент</option><option>Шахрисабз</option><option>Нукус</option>
+      </select>
+      <select class="fsel" id="q-active" onchange="applyFilters()">
+        <option value="">Все статусы</option>
+        <option value="1">Активные</option>
+        <option value="0">Неактивные</option>
+      </select>
+    </div>
+    <div class="twrap" id="table-wrap">
+      <div class="tscroll"><table><thead><tr id="t-head"></tr></thead><tbody id="t-body"></tbody></table></div>
+      <div class="tfoot"><span id="t-count">0 записей</span><div class="pager" id="t-pager"></div></div>
+    </div>
+    <div id="ext-sec" style="display:none"></div>
+  </div>
+</div>
+</div>
 </div>
 
-<div class="legend-bar">
-  <span class="filter-label">Цена за ночь (USD):</span>
-  <div class="legend-item"><div class="legend-dot" style="background:#1B6E32;border:1px solid #A8D8B8"></div> до $120</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#8A5200;border:1px solid #F0D880"></div> $120–$250</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#A63000;border:1px solid #F0B090"></div> $250–$500</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#5A2080;border:1px solid #C8A0E8"></div> свыше $500</div>
-  <div class="filter-sep"></div>
-  <span class="filter-label">Сезоны:</span>
-  <div class="legend-item"><div class="legend-dot sc0"></div> High season</div>
-  <div class="legend-item"><div class="legend-dot sc1"></div> Middle season</div>
-  <div class="legend-item"><div class="legend-dot sc2"></div> Low season</div>
-  <div class="legend-item"><div class="legend-dot sc3"></div> Сезон 4</div>
+<div class="movl" id="rec-ovl" onclick="if(event.target===this)closeRec()">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle" id="rec-title">Добавить</div><button class="mx" onclick="closeRec()">x</button></div>
+    <div class="mbody" id="rec-body"></div>
+    <div class="mfoot"><button class="btn btn-ghost" onclick="closeRec()">Отмена</button><button class="btn btn-primary" onclick="saveRec()">Сохранить</button></div>
+  </div>
 </div>
 
-<div class="main" id="main-container"></div>
+<div class="movl" id="cfg-ovl" onclick="if(event.target===this)closeCfg()">
+  <div class="modal" style="width:440px">
+    <div class="mhead"><div class="mtitle">Supabase подключение</div><button class="mx" onclick="closeCfg()">x</button></div>
+    <div class="mbody">
+      <div class="cfginfo">Supabase > Project Settings > API > anon public key</div>
+      <div class="fg" style="margin-bottom:11px"><label class="flabel">Supabase URL</label><input class="fi" id="cfg-url" placeholder="https://xxxx.supabase.co"></div>
+      <div class="fg"><label class="flabel">Anon API Key</label><input class="fi" id="cfg-key" placeholder="eyJhbGci..."></div>
+    </div>
+    <div class="mfoot"><button class="btn btn-ghost" onclick="closeCfg()">Отмена</button><button class="btn btn-primary" onclick="saveCfg()">Подключить</button></div>
+  </div>
+</div>
 
+<div class="toast" id="toast"><div class="tdot" id="tdot"></div><span id="tmsg"></span></div>
 
 <script>
-const HOTELS = [{"name":"Hilton Tashkent City","full_name":"Hilton Tashkent City  5*","address":"100027, Republic of Uzbekistan, Tashkent city, Islom Karimov street, block-5, 1-2 buildings","currency":"USD","board":"BB","rooms":[{"name":"Guest room single","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":305.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":235.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":195.0}},{"name":"Guest room double","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":345.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":270.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":230.0}},{"name":"Guest room triple","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":400.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":325.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":285.0}},{"name":"Executive room single","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":365.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":295.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":255.0}},{"name":"Executive room double","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":400.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":330.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":290.0}},{"name":"Executive room triple","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":455.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":385.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":345.0}},{"name":"Corner suite single","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":535.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":465.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":425.0}},{"name":"Corner suite double","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":570.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":500.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":460.0}},{"name":"Corner suite triple","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":625.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":555.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":515.0}},{"name":"Presidential Suite single","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":2295.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":2125.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":1960.0}},{"name":"Presidential Suite double","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":2330.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":2160.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":1990.0}},{"name":"Presidential Suite triple","prices":{"31.03.2026-01.06.2026 01.09.2026-01.11.2026":2385.0,"23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026":2215.0,"01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026":2045.0}}],"seasons":["31.03.2026-01.06.2026 01.09.2026-01.11.2026","23.03.2026-29.03.2026 01.06.2026-14.06.2026 24.08.2026-31.08.2026 02.11.2026-20.12.2026","01.01.2026-22.03.2026 15.06.2026-23.08.2026 21.12.2026-31.12.2026"],"city":"Ташкент"},{"name":"Holiday Inn","full_name":"Holiday Inn Tashkent City Hotel 4*","address":"100011, Uzbekistan, Tashkent, Ukchi Street, 3","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Courtyard View Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":130.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":165.0}},{"name":"Standart Room Courtyard View Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":155.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":190.0}},{"name":"Standart Room Courtyard View Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":200.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":235.0}},{"name":"Superior Single Room with two separate beds","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":155.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":190.0}},{"name":"Superior Double Room with two separate beds","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":180.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":215.0}},{"name":"Superior Triple Room with two separate beds","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":225.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":260.0}},{"name":"Standart with Tashkent City view Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":155.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":190.0}},{"name":"Standart with Tashkent City view Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":180.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":215.0}},{"name":"Standart with Tashkent City view Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":225.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":260.0}},{"name":"Premium Room Courtyard view Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":175.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":205.0}},{"name":"Premium Room Courtyard view Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":200.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":235.0}},{"name":"Premium Room Courtyard view Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":245.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":280.0}},{"name":"Premium Room City View Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":190.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":225.0}},{"name":"Premium Room City View Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":215.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":250.0}},{"name":"Premium Room City View Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":260.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":295.0}},{"name":"One Bedroom Suite Single","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":255.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":320.0}},{"name":"One Bedroom Suite Double","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":280.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":350.0}},{"name":"One Bedroom Suite Triple","prices":{"01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026":325.0,"01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026":395.0}}],"seasons":["01.01.2026 - 28.02.2026 16.06.2026 - 15.08.2026 26.11.2026 - 31.12.2026","01.03.2026 - 15.06.2026 16.08.2026 - 25.11.2026"],"city":"Ташкент"},{"name":"Ramada Encore by Wyndham","full_name":"Ramada Encore by Wyndham Tashkent 4* ","address":" 100015, Uzbekistan, Tashkent city, Mironshox street 7","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Single","prices":{"01.01.2026-28.02.2026":85.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":115.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":90.0}},{"name":"Standart Twin / Double Room","prices":{"01.01.2026-28.02.2026":115.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":145.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":120.0}},{"name":"Standard Triple","prices":{"01.01.2026-28.02.2026":145.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":175.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":150.0}},{"name":"Deluxe Room Single","prices":{"01.01.2026-28.02.2026":95.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":125.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":100.0}},{"name":"Deluxe Twin / Double Room","prices":{"01.01.2026-28.02.2026":125.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":155.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":130.0}},{"name":"Deluxe Triple","prices":{"01.01.2026-28.02.2026":155.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":185.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":160.0}},{"name":"Suite Single Room","prices":{"01.01.2026-28.02.2026":100.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":135.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":115.0}},{"name":"Suite Twin / Double Room","prices":{"01.01.2026-28.02.2026":130.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":165.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":145.0}},{"name":"Suite Room Triple","prices":{"01.01.2026-28.02.2026":160.0,"01.03.2026-30.06.2026 15.08.2026-15.11.2026":195.0,"01.07.2026-14.08.2026 16.11.2026-31.12.2026":175.0}}],"seasons":["01.01.2026-28.02.2026","01.03.2026-30.06.2026 15.08.2026-15.11.2026","01.07.2026-14.08.2026 16.11.2026-31.12.2026"],"city":"Ташкент"},{"name":"Unique Hotel","full_name":"Unique Hotel 3*","address":"100121, Republic of Uzbekistan, Tashkent city, region Yakkasaray, Bogibuston street 60","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"January, February, July, December":55.0,"March, August, November":65.0,"April, May, June, September, October":80.0}},{"name":"Standard Room Double","prices":{"January, February, July, December":75.0,"March, August, November":85.0,"April, May, June, September, October":100.0}},{"name":"Standard Room Triple","prices":{"January, February, July, December":100.0,"March, August, November":110.0,"April, May, June, September, October":125.0}},{"name":"Deluxe Room Single","prices":{"January, February, July, December":65.0,"March, August, November":70.0,"April, May, June, September, October":85.0}},{"name":"Deluxe Room Double","prices":{"January, February, July, December":85.0,"March, August, November":95.0,"April, May, June, September, October":105.0}},{"name":"Deluxe Room Triple","prices":{"January, February, July, December":110.0,"March, August, November":120.0,"April, May, June, September, October":130.0}},{"name":"Suite Room Single","prices":{"January, February, July, December":85.0,"March, August, November":90.0,"April, May, June, September, October":105.0}},{"name":"Suite Room Double","prices":{"January, February, July, December":95.0,"March, August, November":115.0,"April, May, June, September, October":125.0}},{"name":"Suite Room Triple","prices":{"January, February, July, December":120.0,"March, August, November":140.0,"April, May, June, September, October":150.0}}],"seasons":["January, February, July, December","March, August, November","April, May, June, September, October"],"city":"Ташкент"},{"name":"Simma Hotel Spa & Waterpark","full_name":"Simma Hotel Spa & Waterpark 3*","address":"100088, Republic of Uzbekistan, Tashkent city, region Sergeli, Navruz street 22","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Double","prices":{"01.01.2026 - 31.12.2026":95.0}},{"name":"Standard Room Triple","prices":{"01.01.2026 - 31.12.2026":130.0}},{"name":"Studio Room Single","prices":{"01.01.2026 - 31.12.2026":85.0}},{"name":"Studio Room Double","prices":{"01.01.2026 - 31.12.2026":125.0}},{"name":"Studio Room Triple","prices":{"01.01.2026 - 31.12.2026":160.0}},{"name":"Superior Suit Room Single","prices":{"01.01.2026 - 31.12.2026":110.0}},{"name":"Superior Suit Room Double","prices":{"01.01.2026 - 31.12.2026":140.0}},{"name":"Superior Suit Room Triple","prices":{"01.01.2026 - 31.12.2026":175.0}},{"name":"Executive Suit Room Single","prices":{"01.01.2026 - 31.12.2026":145.0}},{"name":"Executive Suit Room Double","prices":{"01.01.2026 - 31.12.2026":175.0}},{"name":"Executive Suit Room Triple","prices":{"01.01.2026 - 31.12.2026":210.0}},{"name":"Grand Suit Room Single","prices":{"01.01.2026 - 31.12.2026":185.0}},{"name":"Grand Suit Room Double","prices":{"01.01.2026 - 31.12.2026":215.0}},{"name":"Grand Suit Room Triple","prices":{"01.01.2026 - 31.12.2026":250.0}}],"seasons":["01.01.2026 - 31.12.2026"],"city":"Ташкент"},{"name":"Bentley Hotel","full_name":"Bentley Hotel Tashkent 4*","address":"100097, Uzbekistan, Tashkent city, Mirzakalon Ismoiliy street, 2A","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026 - 01.03.2026":100.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":130.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":150.0}},{"name":"Standard Double","prices":{"01.01.2026 - 01.03.2026":120.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":150.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":170.0}},{"name":"Standard Triple","prices":{"01.01.2026 - 01.03.2026":165.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":195.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":215.0}},{"name":"Deluxe Room Single","prices":{"01.01.2026 - 01.03.2026":125.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":155.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":195.0}},{"name":"Deluxe Room Double","prices":{"01.01.2026 - 01.03.2026":145.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":175.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":215.0}},{"name":"Deluxe Room Triple","prices":{"01.01.2026 - 01.03.2026":190.0,"01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026":220.0,"01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026":260.0}}],"seasons":["01.01.2026 - 01.03.2026","01.03.2026 - 31.03.2026 01.06.2026 - 31.08.2026 01.11.2026 - 30.11.2026","01.04.2026 - 31.05.2026 01.09.2026 - 31.10.2026"],"city":"Ташкент"},{"name":"City Palace","full_name":"City Palace Hotel 4*","address":"100000, Republic of Uzbekistan, Tashkent city, Amir Temur Street, 15","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":100.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":115.0}},{"name":"Standard Double / Twin","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":105.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":120.0}},{"name":"Standard Triple","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":145.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":165.0}},{"name":"Junior Suite Single","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":155.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":165.0}},{"name":"Junior Suite Double","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":160.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":170.0}},{"name":"Junior Suite Triple","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":215.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":225.0}},{"name":"Senior Suite Single","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":195.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":220.0}},{"name":"Senior Suite Double","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":200.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":225.0}},{"name":"Senior Suite Triple","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":255.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":280.0}},{"name":"Presidential Apartment Single","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":1615.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":1615.0}},{"name":"Presidential Apartment Double","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":1620.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":1620.0}},{"name":"Presidential Apartment Triple","prices":{"01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026":1680.0,"15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026":1680.0}}],"seasons":["01.01.2026 - 14.03.2026 16.06.2026 - 31.08.2026 16.11.2026 - 31.12.2026","15.03.2026 - 15.06.2026 01.09.2026 - 15.11.2026"],"city":"Ташкент"},{"name":"Garnet Hotel","full_name":"Garnet Hotel 3*","address":"100093, Uzbekistan, Tashkent city, Anorzor st, 67","currency":"USD","board":"BB","rooms":[],"seasons":[],"city":"Ташкент"},{"name":"Stay Inn","full_name":"Stay Inn Hotel 3*","address":"100100, Tashkent, Uzbekistan, Rakat street, 25","currency":"USD","board":"BB","rooms":[{"name":"Standard Twin","prices":{"01.01.2026 - 31.12.2026":95.0}},{"name":"Standard Triple","prices":{"01.01.2026 - 31.12.2026":135.0}},{"name":"Superior Single","prices":{"01.01.2026 - 31.12.2026":90.0}},{"name":"Superior Double","prices":{"01.01.2026 - 31.12.2026":105.0}},{"name":"Superior Triple","prices":{"01.01.2026 - 31.12.2026":145.0}}],"seasons":["01.01.2026 - 31.12.2026"],"city":"Ташкент"},{"name":"Le Grande","full_name":"Le Grande Plaza 4*","address":"100047, Uzbekistan, City: Tashkent, District: Mirzo Ulugbek, Street Uzbekistan Ovozi, 2","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":60.0,"01.03.2025-30.11.2025":70.0}},{"name":"Standart Double","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":75.0,"01.03.2025-30.11.2025":85.0}},{"name":"Standart Triple","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":115.0,"01.03.2025-30.11.2025":125.0}},{"name":"Superior Single","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":75.0,"01.03.2025-30.11.2025":85.0}},{"name":"Superior Double","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":105.0,"01.03.2025-30.11.2025":115.0}},{"name":"Superior Triple","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":140.0,"01.03.2025-30.11.2025":150.0}},{"name":"Deluxe Single","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":90.0,"01.03.2025-30.11.2025":100.0}},{"name":"Deluxe Double","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":115.0,"01.03.2025-30.11.2025":125.0}},{"name":"Deluxe Double Triple","prices":{"01.01.2025-28.02.2025 01.12.2025-31.12.2025":150.0,"01.03.2025-30.11.2025":160.0}}],"seasons":["01.01.2025-28.02.2025 01.12.2025-31.12.2025","01.03.2025-30.11.2025"],"city":"Ташкент"},{"name":"Lotte City","full_name":"Lotte City Hotels 4*","address":"100029, Uzbekistan, City: Tashkent, District: Yunusabad, Street Buyuk Turon, 56","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"September-October April-May":175.0,"March. June-August November.":145.0,"January-February. December.":125.0}},{"name":"Standart Double/Twin","prices":{"September-October April-May":215.0,"March. June-August November.":180.0,"January-February. December.":165.0}},{"name":"Standart Triple","prices":{"September-October April-May":255.0,"March. June-August November.":220.0,"January-February. December.":205.0}},{"name":"Deluxe Single","prices":{"September-October April-May":220.0,"March. June-August November.":185.0,"January-February. December.":175.0}},{"name":"Deluxe Double","prices":{"September-October April-May":260.0,"March. June-August November.":225.0,"January-February. December.":215.0}},{"name":"Deluxe Triple","prices":{"September-October April-May":300.0,"March. June-August November.":265.0,"January-February. December.":255.0}},{"name":"Junior Suite Single","prices":{"September-October April-May":280.0,"March. June-August November.":255.0,"January-February. December.":220.0}},{"name":"Junior Suite Double","prices":{"September-October April-May":320.0,"March. June-August November.":290.0,"January-February. December.":260.0}},{"name":"Junior Suite Triple","prices":{"September-October April-May":360.0,"March. June-August November.":330.0,"January-February. December.":300.0}},{"name":"Superior Suite Single","prices":{"September-October April-May":355.0,"March. June-August November.":320.0,"January-February. December.":270.0}},{"name":"Superior Suite Double","prices":{"September-October April-May":395.0,"March. June-August November.":360.0,"January-February. December.":310.0}},{"name":"Premier Suite Single","prices":{"September-October April-May":580.0,"March. June-August November.":525.0,"January-February. December.":525.0}},{"name":"Premier Suite Double","prices":{"September-October April-May":620.0,"March. June-August November.":565.0,"January-February. December.":565.0}},{"name":"Residence Suit with terrace Single","prices":{"September-October April-May":695.0,"March. June-August November.":620.0,"January-February. December.":620.0}},{"name":"Residence Suit with terrace Double","prices":{"September-October April-May":735.0,"March. June-August November.":660.0,"January-February. December.":660.0}}],"seasons":["September-October April-May","March. June-August November.","January-February. December."],"city":"Ташкент"},{"name":"Gur Emir Palace","full_name":"Gur Emir Palace Hotel 4*","address":"140100, Uzbekistan, Samarkand, Shokhrux street 126","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Single","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":60.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":65.0}},{"name":"Standart Room Double Single Use","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":65.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":85.0}},{"name":"Standart Room Double","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":75.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":110.0}},{"name":"Deluxe room Triple Double Use","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":85.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":125.0}},{"name":"Deluxe Room Triple","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":105.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":145.0}},{"name":"Junior Suite Single","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":65.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":120.0}},{"name":"Junior Suite Double","prices":{"01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026":90.0,"01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027":140.0}}],"seasons":["01.01.2026-28.02.2026 16.06.2026-14.08.2026 01.12.2026-25.12.2026","01.03.2026-15.06.2026 15.08.2026-30.11.2026 25.12.2026-10.01.2027"],"city":"Самарканд"},{"name":"Movenpick Hotel","full_name":"Movenpick Samarkand 5*","address":"140100, Republic of Uzbekistan, Samarkand city, Shokhrukh street, 53","currency":"USD","board":"BB","rooms":[{"name":"Standard Single room","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":95.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":120.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":160.0}},{"name":"Standard Double room","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":120.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":145.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":180.0}},{"name":"Standard Triple","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":170.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":195.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":230.0}},{"name":"Executive Suite Single","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":190.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":235.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":245.0}},{"name":"Executive Suite Double","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":210.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":255.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":265.0}},{"name":"Executive Suite Triple","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":260.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":305.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":315.0}},{"name":"Family Suite Double","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":190.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":240.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":300.0}},{"name":"Family Suite Triple","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":240.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":290.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":350.0}},{"name":"Apartment Single Use","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":460.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":480.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":510.0}},{"name":"Apartment Double Use","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":510.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":530.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":560.0}},{"name":"Apartment Triple Use","prices":{"01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026":560.0,"16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026":580.0,"01.04.2026-15.06.2026 01.09.2026-15.11.2026":610.0}}],"seasons":["01.01.2026-15.03.2026 01.07.2026-15.08.2026 01.12.2026-31.12.2026","16.03.2026-31.03.2026 16.06.2026-30.06.2026 16.08.2026-31.08.2026 16.11.2026-30.11.2026","01.04.2026-15.06.2026 01.09.2026-15.11.2026"],"city":"Самарканд"},{"name":"Hilton Garden Inn Afrosiab","full_name":"Hilton Garden Inn Samarkand Afrosiyob 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard King Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":55.0,"01.07.2026-20.08.2026":65.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":75.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":100.0}},{"name":"Standard King/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"Standard Triple Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":90.0,"01.07.2026-20.08.2026":100.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":110.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":140.0}},{"name":"King Deluxe Room with kitchenette Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":60.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":120.0}},{"name":"King Deluxe Room with kitchenette Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":75.0,"01.07.2026-20.08.2026":85.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":100.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"King Deluxe Room with kitchenette Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":100.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":125.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":155.0}},{"name":"King One Bed Room Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"King One Bed Room Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"King One Bed Room Suite Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":130.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":170.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":205.0}},{"name":"King One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":140.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"King One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":175.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}},{"name":"King One Bedroom Deluxe Suite Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":175.0,"01.07.2026-20.08.2026":190.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":270.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Hilton Garden Inn Sogd","full_name":"Hilton Garden Inn Samarkand Sogd 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard King Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":55.0,"01.07.2026-20.08.2026":65.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":75.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":100.0}},{"name":"Standard King/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"Standard Triple Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":90.0,"01.07.2026-20.08.2026":100.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":110.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":140.0}},{"name":"King Deluxe Room kitchenette Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":60.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":120.0}},{"name":"King Deluxe Room kitchenette Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":75.0,"01.07.2026-20.08.2026":85.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":100.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"King One Bed Room Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"King One Bed Room Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"King One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":140.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"King One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":175.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}},{"name":"King One Bedroom Deluxe Suite Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":175.0,"01.07.2026-20.08.2026":190.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":270.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Wellness Park Bactria","full_name":"Wellness Park Hotel Bactria 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard King Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":55.0,"01.07.2026-20.08.2026":65.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":75.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":100.0}},{"name":"Standard King/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"King Deluxe Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":60.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":120.0}},{"name":"King Deluxe Room Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":75.0,"01.07.2026-20.08.2026":85.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":100.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"King One Bed Room Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"King One Bed Room Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"King One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":140.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"King One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":175.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Wellness Park Turon","full_name":"Wellness Park Hotel Turon 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard King Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":55.0,"01.07.2026-20.08.2026":65.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":75.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":100.0}},{"name":"Standard King/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"King Deluxe Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":60.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":85.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":120.0}},{"name":"King Deluxe Room Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":75.0,"01.07.2026-20.08.2026":85.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":100.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"King One Bed Room Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":110.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"King One Bed Room Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"King One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":140.0,"01.07.2026-20.08.2026":150.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"King One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":175.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Savitsky Plaza","full_name":"Savitsky Plaza Hotel 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard Double Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":90.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"Standard Double/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":80.0,"01.07.2026-20.08.2026":90.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":105.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"Standard Double Room Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":115.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":140.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"Junior Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":100.0,"01.07.2026-20.08.2026":115.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"Junior Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":115.0,"01.07.2026-20.08.2026":130.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":130.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":185.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":235.0}},{"name":"Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":145.0,"01.07.2026-20.08.2026":175.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":250.0}},{"name":"Executive Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":155.0,"01.07.2026-20.08.2026":185.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":220.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":280.0}},{"name":"Executive Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":170.0,"01.07.2026-20.08.2026":200.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":235.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":295.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Stars of Ulugbek Lia! by Minyou","full_name":"Stars of Ulugbek Lia! by Minyoun 4*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard Double Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":65.0,"01.07.2026-20.08.2026":75.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":90.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":115.0}},{"name":"Standard Double/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":80.0,"01.07.2026-20.08.2026":90.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":105.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":130.0}},{"name":"Junior Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":100.0,"01.07.2026-20.08.2026":115.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"Junior Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":115.0,"01.07.2026-20.08.2026":130.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":180.0}},{"name":"Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":130.0,"01.07.2026-20.08.2026":165.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":185.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":235.0}},{"name":"Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":145.0,"01.07.2026-20.08.2026":175.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":250.0}},{"name":"Executive Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":155.0,"01.07.2026-20.08.2026":185.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":220.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":280.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Silk Road by Minyoun Hotel","full_name":"Silk Road by Minyoun Hotel 5*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard Double Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":95.0,"01.07.2026-20.08.2026":115.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":130.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":150.0}},{"name":"Standard Double/Twin Room","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":110.0,"01.07.2026-20.08.2026":130.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":150.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":170.0}},{"name":"Junior Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":150.0,"01.07.2026-20.08.2026":180.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":215.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":285.0}},{"name":"Junior Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":170.0,"01.07.2026-20.08.2026":200.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":230.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":300.0}},{"name":"Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":200.0,"01.07.2026-20.08.2026":240.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":285.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":380.0}},{"name":"Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":215.0,"01.07.2026-20.08.2026":260.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":305.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":400.0}},{"name":"Executive Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":235.0,"01.07.2026-20.08.2026":290.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":340.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":455.0}},{"name":"Executive Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":255.0,"01.07.2026-20.08.2026":305.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":360.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":475.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Hilton Samarkand Regency","full_name":"Hilton Samarkand Regency 5*","address":"140319, Republic of Uzbekistan, Samarkand city, Konigil block","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":105.0,"01.07.2026-20.08.2026":125.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":145.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":165.0}},{"name":"Standard Room Double/Twin","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":120.0,"01.07.2026-20.08.2026":145.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":165.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":185.0}},{"name":"Standard Room Triple","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":170.0,"01.07.2026-20.08.2026":195.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":215.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":235.0}},{"name":"Executive Room Single (15-18F)","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":130.0,"01.07.2026-20.08.2026":155.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":180.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":230.0}},{"name":"Executive Room Double (15-18F)","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":145.0,"01.07.2026-20.08.2026":175.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":200.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":245.0}},{"name":"One Bedroom Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":155.0,"01.07.2026-20.08.2026":190.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":220.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":270.0}},{"name":"One Bedroom Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":175.0,"01.07.2026-20.08.2026":210.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":240.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":290.0}},{"name":"One Bedroom Deluxe Suite Single","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":290.0,"01.07.2026-20.08.2026":360.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":430.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":530.0}},{"name":"One Bedroom Deluxe Suite Double","prices":{"05.01.2026-20.03.2026 16.11.2026-29.12.2026":310.0,"01.07.2026-20.08.2026":380.0,"21.03.2026-31.03.2026 01.06.2026-30.06.2026":445.0,"01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026":550.0}}],"seasons":["05.01.2026-20.03.2026 16.11.2026-29.12.2026","01.07.2026-20.08.2026","21.03.2026-31.03.2026 01.06.2026-30.06.2026","01.01.2026-04.01.2026 01.04.2026-31.05.2026 21.08.2026-15.11.2026 30.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Zarafshon Parkside","full_name":"Zarafshon Parkside Hotel 3*","address":"Uzbekistan, Samarkand city, Mirodilova street 32, 140100","currency":"USD","board":"BB","rooms":[{"name":"Classic Room single","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":115.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":105.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":90.0}},{"name":"Classic Room Double/Twin","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":160.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":145.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":130.0}},{"name":"Classic Room Triple","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":220.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":205.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":190.0}},{"name":"Junior Suite Room single","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":220.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":195.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":175.0}},{"name":"Junior Suite Room double","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":260.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":235.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":220.0}},{"name":"Deluxe Suite Room single","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":275.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":250.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":230.0}},{"name":"Deluxe Suite Room double","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":315.0,"01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026":290.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026":270.0}}],"seasons":["01.04.2026-31.05.2026 01.09.2026-31.10.2026","01.03.2026-31.03.2026 01.06.2026-30.06.2026 01.08.2026-31.08.2026 01.11.2026-30.11.2026","01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.12.2026-31.12.2026"],"city":"Самарканд"},{"name":"Shaxzoda Elite","full_name":"Shaxzoda Elite Hotel","address":"140108 Uzbekistan, Samarkand, Street Uzbekistan, 32","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Single","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":70.0,"16.06.2026-15.08.2026":65.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":60.0}},{"name":"Standart Room Twin","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":105.0,"16.06.2026-15.08.2026":95.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":90.0}},{"name":"Deluxe Room Single","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":80.0,"16.06.2026-15.08.2026":70.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":65.0}},{"name":"Deluxe Room Double/Twin","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":115.0,"16.06.2026-15.08.2026":105.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":95.0}},{"name":"Suite Room Single","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":90.0,"16.06.2026-15.08.2026":80.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":70.0}},{"name":"Suite Room Twin","prices":{"16.03.2026-15.06.2026 16.08.2026-15.11.2026":125.0,"16.06.2026-15.08.2026":115.0,"01.01.2026-15.03.2026 16.11.2026-31.12.2026":100.0}}],"seasons":["16.03.2026-15.06.2026 16.08.2026-15.11.2026","16.06.2026-15.08.2026","01.01.2026-15.03.2026 16.11.2026-31.12.2026"],"city":"Самарканд"},{"name":"Orient Star Samarkand","full_name":"Orient Star Samarkand","address":"Dakhbed Yuli Street. 33, Samarkand, 140120","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":65.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":80.0}},{"name":"Standard Double/Twin","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":90.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":105.0}},{"name":"Standard Triple","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":135.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":150.0}},{"name":"Deluxe Single","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":90.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":100.0}},{"name":"Deluxe Double/Twin","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":120.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":140.0}},{"name":"Family Room Single","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":135.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":150.0}},{"name":"Family Room Double/Twin","prices":{"01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026":140.0,"20.03.2026-15.06.2026 15.08.2026-31.10.2026":155.0}}],"seasons":["01.01.2026-19.03.2026 16.06.2026-14.08.2026 01.11.2026-31.12.2026","20.03.2026-15.06.2026 15.08.2026-31.10.2026"],"city":"Самарканд"},{"name":"Hilton Garden Inn Samarkand","full_name":"Hilton Garden Inn Samarkand 4*","address":"140130 Dagbed 2, Samarkand, Uzbekistan","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":75.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":100.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":135.0}},{"name":"Standard Room Double","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":100.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":120.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":160.0}},{"name":"Standart Room Triple","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":140.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":160.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":200.0}},{"name":"Deluxe Room Single","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":125.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":150.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":185.0}},{"name":"Deluxe Room Double","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":150.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":175.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":210.0}},{"name":"Suite Room Single","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":180.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":200.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":240.0}},{"name":"Suite Room Double","prices":{"01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026":200.0,"01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026":225.0,"15.03.2026-31.05.2026 01.09.2026-31.10.2026":260.0}}],"seasons":["01.01.2026-28.02.2026 16.06.2026-15.08.2026 16.11.2026-31.12.2026","01.03.2026-14.03.2026 01.06.2026-15.06.2026 16.08.2026-31.08.2026 01.11.2026-15.11.2026","15.03.2026-31.05.2026 01.09.2026-31.10.2026"],"city":"Самарканд"},{"name":"Asia Samarkand","full_name":"Hotel Asia Samarkand 4*","address":"705000, Samarkand city, Kosh-khauz street, 50","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":65.0,"01.03.2026-31.10.2026":75.0}},{"name":"Standart Double/Twin","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":95.0,"01.03.2026-31.10.2026":105.0}},{"name":"Standart Triple","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":110.0,"01.03.2026-31.10.2026":125.0}},{"name":"Suite Single","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":150.0,"01.03.2026-31.10.2026":150.0}},{"name":"Suite Double","prices":{"01.01.2026-28.02.2026 01.11.2026-31.12.2026":155.0,"01.03.2026-31.10.2026":155.0}}],"seasons":["01.01.2026-28.02.2026 01.11.2026-31.12.2026","01.03.2026-31.10.2026"],"city":"Самарканд"},{"name":"Emir's Garden","full_name":"Emirs Garden Residence 4*","address":"Khodzha Nurobod 104, Bukhara 200118 Uzbekistan","currency":"USD","board":"BB","rooms":[{"name":"Standart Room Single","prices":{"01.01.2026-31.03.2026 16.11.2026-31.12.2026":85.0,"01.04.2026-15.11.2026":90.0}},{"name":"Standart Room Double","prices":{"01.01.2026-31.03.2026 16.11.2026-31.12.2026":115.0,"01.04.2026-15.11.2026":140.0}},{"name":"Standart Room Triple","prices":{"01.01.2026-31.03.2026 16.11.2026-31.12.2026":145.0,"01.04.2026-15.11.2026":170.0}},{"name":"Suite Room","prices":{"01.01.2026-31.03.2026 16.11.2026-31.12.2026":135.0,"01.04.2026-15.11.2026":160.0}}],"seasons":["01.01.2026-31.03.2026 16.11.2026-31.12.2026","01.04.2026-15.11.2026"],"city":"Бухара"},{"name":"Sahid Zarafshan","full_name":"Sahid Zarafshan Hotel 4*","address":"200100, Republic of Uzbekistan, Bukhara city, M.Iqbol street, 7","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"PRICE":105.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":90.0}},{"name":"Standard Double","prices":{"PRICE":125.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":110.0}},{"name":"Standard Triple","prices":{"PRICE":165.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":145.0}},{"name":"Superior Single","prices":{"PRICE":115.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":100.0}},{"name":"Superior Twin","prices":{"PRICE":135.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":115.0}},{"name":"Deluxe Single","prices":{"PRICE":125.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":110.0}},{"name":"Deluxe Twin","prices":{"PRICE":155.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":135.0}},{"name":"Grand Deluxe Single","prices":{"PRICE":155.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":135.0}},{"name":"Grand Deluxe Double","prices":{"PRICE":195.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":170.0}},{"name":"Suite Single","prices":{"PRICE":195.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":170.0}},{"name":"Suite Double","prices":{"PRICE":245.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":210.0}},{"name":"Executive Suite Single","prices":{"PRICE":370.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":315.0}},{"name":"Executive Suite Double","prices":{"PRICE":425.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":365.0}},{"name":"Presidential Suite Single","prices":{"PRICE":995.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":850.0}},{"name":"Presidential Suite Double","prices":{"PRICE":1085.0,"Special rates (Jan, Feb, Jun, Jul, Dec)":925.0}}],"seasons":["PRICE","Special rates (Jan, Feb, Jun, Jul, Dec)"],"city":"Бухара"},{"name":"Atlas","full_name":"Atlas Hotel 3*","address":"200100, Republic of Uzbekistan, Bukhara city, Degrezi, 14","currency":"USD","board":"BB","rooms":[{"name":"Standard single small bed","prices":{"01.01.2026-31.12.2026":70.0}},{"name":"Standard King Size (1 person)","prices":{"01.01.2026-31.12.2026":80.0}},{"name":"Standard Double / Twin","prices":{"01.01.2026-31.12.2026":105.0}},{"name":"Standard Triple","prices":{"01.01.2026-31.12.2026":130.0}}],"seasons":["01.01.2026-31.12.2026"],"city":"Бухара"},{"name":"Garden Plaza","full_name":"Garden Plaza Bukhara 3*","address":"200104, Bukhara city, Dilkusho street, 334","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":70.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":60.0}},{"name":"Standart Double / Twin","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":105.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":90.0}},{"name":"Standart Triple","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":160.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":135.0}},{"name":"Junior Suite","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":160.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":135.0}},{"name":"Family room","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":210.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":195.0}},{"name":"Deluxe (garden view)","prices":{"01.04.2026-31.05.2026 01.09.2026-31.10.2026":165.0,"01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026":145.0}}],"seasons":["01.04.2026-31.05.2026 01.09.2026-31.10.2026","01.01.2026-31.03.2026 01.06.2026-31.08.2026 01.11.2026-31.12.2026"],"city":"Бухара"},{"name":"Orient Star Varahsha","full_name":"Orient Star Varahsha","address":"Muhammad Iqbol Street. 5, Bukhara, 140120","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":75.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":100.0}},{"name":"Standard Double/Twin","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":90.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":110.0}},{"name":"Standard Triple","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":125.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":140.0}},{"name":"Deluxe Single","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":90.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":110.0}},{"name":"Deluxe Double/Twin","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":105.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":120.0}},{"name":"Luxe Single","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":100.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":120.0}},{"name":"Luxe Double/Twin","prices":{"01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026":115.0,"20.03.2026-10.06.2026 15.08.2026-31.10.2026":135.0}}],"seasons":["01.01.2026-19.03.2026 11.06.2026-14.08.2026 01.11.2026-31.12.2026","20.03.2026-10.06.2026 15.08.2026-31.10.2026"],"city":"Бухара"},{"name":"Paradise Plaza","full_name":"Paradise Plaza Hotel","address":"200100, Uzbekistan, Bukhara city, B. Nakshband street 162","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"15.03.2026-15.11.2026":85.0,"15.06.2026-15.08.2026":70.0,"15.11.2026-15.03.2027":60.0}},{"name":"Standart Double / Twin","prices":{"15.03.2026-15.11.2026":115.0,"15.06.2026-15.08.2026":100.0,"15.11.2026-15.03.2027":90.0}},{"name":"Standard Triple","prices":{"15.03.2026-15.11.2026":155.0,"15.06.2026-15.08.2026":135.0,"15.11.2026-15.03.2027":120.0}},{"name":"Deluxe Single","prices":{"15.03.2026-15.11.2026":90.0,"15.06.2026-15.08.2026":80.0,"15.11.2026-15.03.2027":65.0}},{"name":"Deluxe Double / Twin","prices":{"15.03.2026-15.11.2026":130.0,"15.06.2026-15.08.2026":115.0,"15.11.2026-15.03.2027":95.0}},{"name":"VIP Double","prices":{"15.03.2026-15.11.2026":285.0,"15.06.2026-15.08.2026":265.0,"15.11.2026-15.03.2027":240.0}}],"seasons":["15.03.2026-15.11.2026","15.06.2026-15.08.2026","15.11.2026-15.03.2027"],"city":"Бухара"},{"name":"Shaxristan Hotel","full_name":"Shahriston Hotel","address":"220100, Republic of Uzbekistan, Bukhara city, X.Qozi Kalon Street, 48","currency":"USD","board":"BB","rooms":[{"name":"Standard Twin Room (Single use)","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":110.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":70.0}},{"name":"Standart Double/Twin","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":145.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":105.0}},{"name":"Standart Triple","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":175.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":150.0}},{"name":"Suite Single","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":175.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":140.0}},{"name":"Suite Double","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":200.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":165.0}},{"name":"Suite Triple","prices":{"14.03.2026-14.06.2026 01.08.2026-14.11.2026":235.0,"01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026":200.0}}],"seasons":["14.03.2026-14.06.2026 01.08.2026-14.11.2026","01.01.2026-15.03.2026 15.06.2026-31.07.2026 15.11.2026-31.12.2026"],"city":"Бухара"},{"name":"Farohat Ona Hotel","full_name":"Farohat Ona Hotel","address":"220900, Republic of Uzbekistan, Khiva City","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"01.03.2026-30.06.2026 01.08.2026-31.10.2026":75.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.11.2026-31.12.2026":65.0}},{"name":"Standart Room Double","prices":{"01.03.2026-30.06.2026 01.08.2026-31.10.2026":95.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.11.2026-31.12.2026":85.0}},{"name":"Standart Room Triple","prices":{"01.03.2026-30.06.2026 01.08.2026-31.10.2026":125.0,"01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.11.2026-31.12.2026":115.0}}],"seasons":["01.03.2026-30.06.2026 01.08.2026-31.10.2026","01.01.2026-28.02.2026 01.07.2026-31.07.2026 01.11.2026-31.12.2026"],"city":"Хива"},{"name":"Farovon Khiva","full_name":"Farovon Khiva Hotel 4*","address":"Uzbekistan, Khorazm region, Khiva city, Buyuk yuli street, 1A","currency":"USD","board":"BB","rooms":[{"name":"Standard Double/Twin","prices":{"01.01.2026-31.12.2026":180.0}},{"name":"Standard Triple","prices":{"01.01.2026-31.12.2026":220.0}},{"name":"Deluxe Single","prices":{"01.01.2026-31.12.2026":200.0}},{"name":"Deluxe Double","prices":{"01.01.2026-31.12.2026":225.0}},{"name":"Suite Single","prices":{"01.01.2026-31.12.2026":415.0}},{"name":"Suite Double","prices":{"01.01.2026-31.12.2026":435.0}},{"name":"Executive Suite Single","prices":{"01.01.2026-31.12.2026":475.0}},{"name":"Executive Suite Double","prices":{"01.01.2026-31.12.2026":495.0}},{"name":"Presidential Suite (till 4 pax)","prices":{"01.01.2026-31.12.2026":2310.0}}],"seasons":["01.01.2026-31.12.2026"],"city":"Хива"},{"name":"Khiva Residence","full_name":"Khiva Residence 3*","address":"220900, Republic of Uzbekistan, Khiva city, Najmiddin Kubro street, 1","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"16.03.2026-15.06.2026 01.08.2026-15.11.2026":55.0,"01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026":50.0}},{"name":"Standard Double/Twin","prices":{"16.03.2026-15.06.2026 01.08.2026-15.11.2026":80.0,"01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026":70.0}},{"name":"Standard Triple","prices":{"16.03.2026-15.06.2026 01.08.2026-15.11.2026":110.0,"01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026":100.0}},{"name":"Deluxe Double","prices":{"16.03.2026-15.06.2026 01.08.2026-15.11.2026":115.0,"01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026":105.0}}],"seasons":["16.03.2026-15.06.2026 01.08.2026-15.11.2026","01.01.2026-15.03.2026 16.06.2026-31.07.2026 16.11.2026-31.12.2026"],"city":"Хива"},{"name":"New Star Khiva","full_name":"New Star Khiva Hotel 3*","address":"220900, Republic of Uzbekistan, Khiva city, Anash Xalfa Street, 23","currency":"USD","board":"BB","rooms":[{"name":"Standard Room Single","prices":{"Mar-Jun / Aug-Oct 2026":65.0,"Jan-Feb / Jul / Nov-Dec 2026":55.0}},{"name":"Standard Room Double/Twin","prices":{"Mar-Jun / Aug-Oct 2026":85.0,"Jan-Feb / Jul / Nov-Dec 2026":75.0}},{"name":"Standard Room Triple","prices":{"Mar-Jun / Aug-Oct 2026":105.0,"Jan-Feb / Jul / Nov-Dec 2026":95.0}},{"name":"Standard Room 4 pax","prices":{"Mar-Jun / Aug-Oct 2026":120.0,"Jan-Feb / Jul / Nov-Dec 2026":110.0}}],"seasons":["Mar-Jun / Aug-Oct 2026","Jan-Feb / Jul / Nov-Dec 2026"],"city":"Хива"},{"name":"Orient Star Khiva","full_name":"Orient Star Khiva 4*","address":"PAKHLAVAN MAHMUD STR. 1, Khiva, 220900","currency":"USD","board":"BB","rooms":[{"name":"Standard Single","prices":{"Mar-Jun / Aug-Nov 2026":75.0,"Jan-Mar / Jun-Jul / Nov-Dec 2026":60.0}},{"name":"Standard Double/Twin","prices":{"Mar-Jun / Aug-Nov 2026":100.0,"Jan-Mar / Jun-Jul / Nov-Dec 2026":80.0}},{"name":"Standard Triple","prices":{"Mar-Jun / Aug-Nov 2026":135.0,"Jan-Mar / Jun-Jul / Nov-Dec 2026":115.0}}],"seasons":["Mar-Jun / Aug-Nov 2026","Jan-Mar / Jun-Jul / Nov-Dec 2026"],"city":"Хива"},{"name":"Said Islom Khoja","full_name":"Said Islom Khoja Hotel 3*","address":"200118, Republic of Uzbekistan, Khorezm, Khiva City, Koy Darvaza","currency":"USD","board":"BB","rooms":[{"name":"Standard single","prices":{"Mar-Oct 2026":65.0,"Jan-Feb / Nov-Dec 2026":60.0}},{"name":"Standard double","prices":{"Mar-Oct 2026":90.0,"Jan-Feb / Nov-Dec 2026":80.0}},{"name":"Standard Triple room","prices":{"Mar-Oct 2026":110.0,"Jan-Feb / Nov-Dec 2026":100.0}},{"name":"Suite Room Single","prices":{"Mar-Oct 2026":100.0,"Jan-Feb / Nov-Dec 2026":90.0}},{"name":"Suite Room Double","prices":{"Mar-Oct 2026":125.0,"Jan-Feb / Nov-Dec 2026":115.0}},{"name":"Suite Room Triple","prices":{"Mar-Oct 2026":145.0,"Jan-Feb / Nov-Dec 2026":135.0}}],"seasons":["Mar-Oct 2026","Jan-Feb / Nov-Dec 2026"],"city":"Хива"}];
+var PASS = 'w2';
+var SURL = localStorage.getItem('w_url') || '';
+var SKEY = localStorage.getItem('w_key') || '';
+var curSec = 'tour_packages';
+var allRows = [], filtered = [], editId = null, curPage = 1, PER = 15;
+var CITIES = ['','Samarkand','Bukhara','Khiva','Tashkent','Shakhrisabz','Nukus'];
+var CITIES_RU = ['','Самарканд','Бухара','Хива','Ташкент','Шахрисабз','Нукус'];
 
-function getPriceClass(v) {
-  if (v < 120) return 'price-low';
-  if (v < 250) return 'price-mid';
-  if (v < 500) return 'price-high';
-  return 'price-premium';
-}
-
-function getMinPrice(hotel) {
-  let min = Infinity;
-  for (const r of hotel.rooms)
-    for (const p of Object.values(r.prices))
-      if (p && p < min) min = p;
-  return min === Infinity ? null : min;
-}
-
-function getMaxPrice(hotel) {
-  let max = 0;
-  for (const r of hotel.rooms)
-    for (const p of Object.values(r.prices))
-      if (p && p > max) max = p;
-  return max === 0 ? null : max;
-}
-
-function getRoomClass(name) {
-  const n = name.toLowerCase();
-  if (/presidential|residence suit|premier suite/.test(n)) return 'rc-presidential';
-  if (/executive suite|executive suit|grand suit/.test(n)) return 'rc-executive';
-  if (/suite|apartment|lux/.test(n)) return 'rc-suite';
-  if (/deluxe|superior|premium|vip/.test(n)) return 'rc-deluxe';
-  if (/studio|family/.test(n)) return 'rc-family';
-  return 'rc-standard';
-}
-
-const ROOM_CLASS_ORDER = ['rc-standard','rc-family','rc-deluxe','rc-suite','rc-executive','rc-presidential'];
-const ROOM_CLASS_LABEL = {
-  'rc-standard':    {label:'Standard',             color:'#EBF3F8', accent:'#0F6A90'},
-  'rc-family':      {label:'Family / Studio',       color:'#EAF4ED', accent:'#1B6E32'},
-  'rc-deluxe':      {label:'Deluxe / Superior',     color:'#FFF8DC', accent:'#8A5200'},
-  'rc-suite':       {label:'Suite',                 color:'#FFF0E8', accent:'#A63000'},
-  'rc-executive':   {label:'Executive Suite',       color:'#F4EAFA', accent:'#5A2080'},
-  'rc-presidential':{label:'Presidential / Premier',color:'#FEF4DF', accent:'#7A4A00'},
+var CLABEL = {
+  image_url:'Фото', name:'Название', title:'Название', city:'Город',
+  stars:'Stars', tier:'Уровень', price_from:'Цена от', price_peak:'Пик $',
+  total_price:'Цена', avg_check:'Ср.чек', entry_price:'Вход $',
+  rating:'Рейтинг', active:'Статус', duration_days:'Дней',
+  type:'Тип', category:'Категория', cuisine:'Кухня',
+  vehicle:'Авто', capacity:'Мест', board_type:'Питание', price:'Цена'
 };
 
-function truncateLabel(s, max=38) {
-  const parts = s.split(/\s+/);
-  const first = parts.slice(0, 3).join(' ');
-  return first.length > max ? first.substring(0, max) + '…' : first;
-}
-
-function getSeasonLabel(i, n) {
-  if (n === 1) return 'High season';
-  if (n === 2) return i === 0 ? 'High season' : 'Low season';
-  if (n === 3) return i === 0 ? 'High season' : i === 1 ? 'Middle season' : 'Low season';
-  return 'Season ' + (i + 1);
-}
-
-function buildCard(hotel, idx) {
-  const minP = getMinPrice(hotel);
-  const maxP = getMaxPrice(hotel);
-  const hasData = hotel.rooms.length > 0;
-  const n = hotel.seasons.length;
-
-  let seasonsHTML = '';
-  if (n > 0) {
-    seasonsHTML = `<div class="seasons-header" style="grid-template-columns: 180px repeat(${n}, 1fr); margin-top:12px; margin-bottom:4px;">
-      <div></div>
-      ${hotel.seasons.map((s, i) =>
-        `<div class="season-label sc${i}" title="${s}">${getSeasonLabel(i, n)}<br>
-         <span style="font-size:9px;font-weight:300;opacity:0.85">${truncateLabel(s)}</span></div>`
-      ).join('')}
-    </div>`;
+var SECS = {
+  flights:  { label:'Авиабилеты', type:'ext' },
+  railway:  { label:'Ж/Д билеты', type:'ext' },
+  hotels: { label:'Отели', type:'db', pk:'price_from',
+    cols:['image_url','name','city','stars','board_type','price_from','price_peak','active'],
+    fields:[
+      {k:'name',l:'Название отеля',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'stars',l:'Звёзды (1-5)',t:'num'},
+      {k:'tier',l:'Категория',t:'sel',o:['budget','standard','premium','luxury']},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'review_count',l:'Кол-во отзывов',t:'num'},
+      {k:'phone',l:'Телефон',t:'text'},
+      {k:'website',l:'Сайт',t:'text'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'market_restrictions',l:'Рынок/ограничения',t:'text',ph:'VALID FOR ALL MARKETS'},
+      {k:'contract_from',l:'Контракт с',t:'text',ph:'01.01.2026'},
+      {k:'contract_to',l:'Контракт по',t:'text',ph:'31.12.2026'},
+      {k:'currency',l:'Валюта',t:'sel',o:['USD','EUR','UZS']},
+      {k:'board_type',l:'Тип питания',t:'sel',o:['RO','BB','HB','FB','AI']},
+      {k:'tour_fee_included',l:'Tour Fee включен',t:'bool'},
+      {k:'children_free_age',l:'Дети бесплатно (возраст)',t:'text',ph:'0-5.99'},
+      {k:'cancellation_policy',l:'Политика отмены / No Show',t:'ta'},
+      {k:'price_from',l:'Цена от $ (мин. номер)',t:'num'},
+      {k:'price_peak',l:'Цена пик $ (макс. сезон)',t:'num'},
+      {k:'season_high_dates',l:'Высокий сезон (даты)',t:'text',ph:'31.03-01.06 / 01.09-01.11'},
+      {k:'season_mid_dates',l:'Средний сезон (даты)',t:'text',ph:'23.03-29.03 / 01.06-14.06'},
+      {k:'season_low_dates',l:'Низкий сезон (даты)',t:'text',ph:'01.01-22.03 / 15.06-23.08'},
+      {k:'room_prices',l:'Цены номеров JSON',t:'ta',ph:'[{"room":"Guest single","high":305,"mid":235,"low":195}]'},
+      {k:'checkin_standard',l:'Check-in стандарт',t:'text',ph:'14:00'},
+      {k:'checkin_early',l:'Ранний check-in',t:'text',ph:'08:00-14:00 = 50%, до 08:00 = 100%'},
+      {k:'checkout_standard',l:'Check-out стандарт',t:'text',ph:'12:00'},
+      {k:'checkout_late',l:'Поздний check-out',t:'text',ph:'12:00-18:00 = 50%, после 18:00 = 100%'},
+      {k:'amenities',l:'Удобства',t:'text',ph:'Wi-Fi, бассейн, спа, ресторан'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  transfers: { label:'Трансфер', type:'db', pk:'price',
+    cols:['name','city','type','vehicle','price','capacity','active'],
+    fields:[
+      {k:'name',l:'Маршрут',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'type',l:'Тип',t:'sel',o:['аэропорт -> отель','отель -> аэропорт','межгород','экскурсионный','персональный']},
+      {k:'vehicle',l:'Транспорт',t:'sel',o:['Sedan','Minivan','Minibus','Bus','VIP']},
+      {k:'price',l:'Цена ($)',t:'num'},
+      {k:'capacity',l:'Мест',t:'num'},
+      {k:'duration_min',l:'Время в пути (мин)',t:'num'},
+      {k:'distance_km',l:'Расстояние (км)',t:'num'},
+      {k:'from_location',l:'Откуда',t:'text'},
+      {k:'to_location',l:'Куда',t:'text'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  sights: { label:'Достопримечательности', type:'db', pk:'entry_price',
+    cols:['image_url','name','city','category','entry_price','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'category',l:'Категория',t:'sel',o:['мечеть','медресе','мавзолей','крепость','базар','площадь','парк','дворец']},
+      {k:'entry_price',l:'Цена входа ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'duration_hours',l:'Часов на осмотр',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text',ph:'08:00 - 20:00'},
+      {k:'best_time',l:'Лучшее время',t:'text',ph:'Раннее утро'},
+      {k:'guide_needed',l:'Нужен гид',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'history',l:'История',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  restaurants: { label:'Рестораны', type:'db', pk:'avg_check',
+    cols:['image_url','name','city','cuisine','avg_check','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'cuisine',l:'Кухня',t:'text',ph:'Узбекская, Европейская...'},
+      {k:'type',l:'Тип заведения',t:'sel',o:['ресторан','кафе','чайхана','столовая','бар','бистро','фаст-фуд']},
+      {k:'avg_check',l:'Средний чек ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'phone',l:'Телефон',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text',ph:'09:00 - 23:00'},
+      {k:'seats',l:'Мест',t:'num'},
+      {k:'menu_highlights',l:'Топ блюда',t:'text',ph:'Плов, шашлык, самса'},
+      {k:'halal',l:'Халяль',t:'bool'},
+      {k:'alcohol',l:'Алкоголь',t:'bool'},
+      {k:'booking_required',l:'Нужна бронь',t:'bool'},
+      {k:'delivery',l:'Доставка',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  food: { label:'Еда', type:'db', pk:'price',
+    cols:['image_url','name','city','category','price','active'],
+    fields:[
+      {k:'name',l:'Блюдо / продукт',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'category',l:'Категория',t:'sel',o:['уличная еда','рынок','пекарня','кондитерская','национальное блюдо']},
+      {k:'price',l:'Цена ($)',t:'num'},
+      {k:'address',l:'Где найти',t:'text'},
+      {k:'working_hours',l:'Часы',t:'text'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  recreation: { label:'Отдых', type:'db', pk:'price',
+    cols:['image_url','name','city','category','price','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'category',l:'Категория',t:'sel',o:['спа','баня','природа','пляж','горы','санаторий','йога','медитация']},
+      {k:'price',l:'Цена ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'duration_hours',l:'Часов',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text'},
+      {k:'booking_required',l:'Нужна бронь',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  entertainment: { label:'Развлечения', type:'db', pk:'price',
+    cols:['image_url','name','city','category','price','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'category',l:'Категория',t:'sel',o:['шоу','концерт','квест','аттракцион','кино','театр','клуб','мастер-класс','спорт']},
+      {k:'price',l:'Цена ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'duration_hours',l:'Часов',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text'},
+      {k:'min_age',l:'Мин. возраст',t:'num'},
+      {k:'booking_required',l:'Нужна бронь',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  museums: { label:'Музеи', type:'db', pk:'entry_price',
+    cols:['image_url','name','city','type','entry_price','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'type',l:'Тип',t:'sel',o:['исторический','художественный','краеведческий','национальный','интерактивный']},
+      {k:'entry_price',l:'Цена входа ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'duration_hours',l:'Часов',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text',ph:'09:00 - 18:00'},
+      {k:'closed_day',l:'Выходной',t:'text',ph:'Понедельник'},
+      {k:'audio_guide',l:'Аудиогид',t:'bool'},
+      {k:'guided_tours',l:'Экскурсии',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  tour_packages: { label:'Тур-пакеты', type:'db', pk:'total_price',
+    cols:['image_url','title','city','tier','duration_days','total_price','rating','active'],
+    fields:[
+      {k:'title',l:'Название пакета',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'tier',l:'Уровень',t:'sel',o:['budget','standard','premium']},
+      {k:'duration_days',l:'Дней',t:'num'},
+      {k:'total_price',l:'Итоговая цена ($)',t:'num'},
+      {k:'price_per_person',l:'Цена/человек ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'max_guests',l:'Макс. гостей',t:'num'},
+      {k:'includes_flight',l:'Авиа включен',t:'bool'},
+      {k:'includes_hotel',l:'Отель включен',t:'bool'},
+      {k:'includes_transfer',l:'Трансфер включен',t:'bool'},
+      {k:'includes_guide',l:'Гид включен',t:'bool'},
+      {k:'tag1',l:'Тег 1',t:'text'},
+      {k:'tag2',l:'Тег 2',t:'text'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
   }
+};
 
-  let tableHTML = '';
-  if (hasData) {
-    const sk = hotel.seasons;
-    const groups = {};
-    for (const room of hotel.rooms) {
-      const rc = getRoomClass(room.name);
-      if (!groups[rc]) groups[rc] = [];
-      groups[rc].push(room);
-    }
-
-    const rowsHTML = ROOM_CLASS_ORDER
-      .filter(rc => groups[rc])
-      .map(rc => {
-        const info = ROOM_CLASS_LABEL[rc];
-        const header = `<tr>
-          <td colspan="${sk.length + 1}" style="padding:5px 10px 4px;background:${info.color};border-left:3px solid ${info.accent};font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${info.accent};">${info.label}</td>
-        </tr>`;
-        const rows = groups[rc].map(room => {
-          const pkeys = Object.keys(room.prices);
-          const priceCells = sk.length > 0
-            ? sk.map(key => {
-                let val = room.prices[key];
-                if (val === undefined) {
-                  const mk = pkeys.find(k => k.trim() === key.trim());
-                  if (mk) val = room.prices[mk];
-                }
-                return val !== undefined && val !== null
-                  ? `<td class="price-cell"><span class="price-amount ${getPriceClass(val)}">$${val}</span></td>`
-                  : `<td class="price-cell"><span class="price-na">—</span></td>`;
-              }).join('')
-            : `<td class="price-cell"><span class="price-amount ${getPriceClass(Object.values(room.prices)[0])}">$${Object.values(room.prices)[0]}</span></td>`;
-          return `<tr style="border-left:3px solid ${info.accent}22;">
-            <td class="room-name-cell" style="padding-left:14px;">${room.name}</td>
-            ${priceCells}
-          </tr>`;
-        }).join('');
-        return header + rows;
-      }).join('');
-
-    tableHTML = `<table class="price-table">
-      <colgroup><col style="width:180px">${sk.map(() => '<col>').join('')}</colgroup>
-      <tbody>${rowsHTML}</tbody>
-    </table>`;
+// AUTH
+function doLogin() {
+  var v = document.getElementById('lpwd').value;
+  if (v === PASS) {
+    sessionStorage.setItem('wa','1');
+    document.getElementById('lock').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    appInit();
   } else {
-    tableHTML = `<div class="no-data-msg">Данные по ценам не загружены</div>`;
+    var e = document.getElementById('lerr');
+    e.style.opacity = '1';
+    document.getElementById('lpwd').value = '';
+    setTimeout(function(){ e.style.opacity='0'; }, 2000);
   }
-
-  const priceRangeHTML = hasData && minP
-    ? `<span class="price-range">от <span class="from">$${minP}</span> до $${maxP} / ночь · BB</span>`
-    : `<span class="price-range" style="color:#666">данные уточняются</span>`;
-
-  return `<div class="hotel-card" data-city="${hotel.city}" id="card-${idx}" onclick="toggleCard(${idx})">
-    <div class="card-header">
-      <div style="flex:1">
-        <div class="hotel-name">${hotel.full_name || hotel.name}</div>
-        ${priceRangeHTML}
-      </div>
-      <div class="hotel-meta">
-        ${hotel.board ? `<span class="badge badge-board">${hotel.board}</span>` : ''}
-        <span class="badge badge-usd">USD</span>
-        ${!hasData ? `<span class="badge badge-nodata">N/A</span>` : ''}
-        <span class="toggle-icon">▾</span>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="hotel-address">📍 ${hotel.address}</div>
-      ${seasonsHTML}
-      ${tableHTML}
-    </div>
-  </div>`;
+};
+function doLogout() { sessionStorage.removeItem('wa'); location.reload(); };
+document.getElementById('lpwd').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+if (sessionStorage.getItem('wa') === '1') {
+  document.getElementById('lock').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
 }
 
-function renderCities(filter = 'all', search = '') {
-  const cities = ['Ташкент','Самарканд','Бухара','Хива'];
-  const cityClass = {'Ташкент':'tashkent','Самарканд':'samarkand','Бухара':'bukhara','Хива':'khiva'};
-  const container = document.getElementById('main-container');
-  let html = '';
-  let totalVisible = 0;
+// CONN
+function setConn(ok) {
+  document.getElementById('cdot').className = ok ? 'cdot' : 'cdot off';
+  document.getElementById('clabel').textContent = ok ? 'Supabase connected' : 'Не подключено';
+}
 
-  for (const city of cities) {
-    if (filter !== 'all' && filter !== city) continue;
-    const cityHotels = HOTELS.map((h,i) => ({h,i})).filter(({h}) => h.city === city);
-    if (!cityHotels.length) continue;
-    const filtered = search
-      ? cityHotels.filter(({h}) =>
-          h.name.toLowerCase().includes(search.toLowerCase()) ||
-          (h.full_name||'').toLowerCase().includes(search.toLowerCase()))
-      : cityHotels;
-    if (!filtered.length) continue;
-    totalVisible += filtered.length;
+// SUPABASE
+async function sbFetch(table, o) {
+  o = o || {};
+  var method = o.method || 'GET';
+  var r = await fetch(SURL + '/rest/v1/' + table + (o.qs||''), {
+    method: method,
+    headers: { apikey:SKEY, Authorization:'Bearer '+SKEY, 'Content-Type':'application/json', Prefer: method==='POST'?'return=representation':'' },
+    body: o.body ? JSON.stringify(o.body) : null
+  });
+  if (!r.ok) { var t = await r.text(); if(r.status===404||t.indexOf('does not exist')>-1) return []; throw new Error(t.slice(0,100)); }
+  var t = await r.text(); return t ? JSON.parse(t) : [];
+}
 
-    html += `<div class="city-section" data-city-section="${city}">
-      <div class="city-header">
-        <span class="city-name ${cityClass[city]}">${city}</span>
-        <span class="city-count">${filtered.length} ${filtered.length===1?'отель':'отелей'}</span>
-      </div>
-      <div class="hotels-grid">
-        ${filtered.map(({h,i}) => buildCard(h,i)).join('')}
-      </div>
-    </div>`;
+// SWITCH
+function switchSec(sec) {
+  curSec = sec; curPage = 1;
+  document.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('on'); });
+  var el = document.getElementById('ni-'+sec); if(el) el.classList.add('on');
+  var s = SECS[sec];
+  document.getElementById('sec-title').textContent = s.label;
+  var isExt = s.type === 'ext';
+  document.getElementById('stats-row').style.display = isExt ? 'none' : 'grid';
+  document.getElementById('toolbar-row').style.display = isExt ? 'none' : 'flex';
+  document.getElementById('table-wrap').style.display = isExt ? 'none' : 'block';
+  document.getElementById('ext-sec').style.display = isExt ? 'block' : 'none';
+  document.getElementById('add-btn').style.display = isExt ? 'none' : 'inline-flex';
+  document.getElementById('sec-type').textContent = isExt ? 'Внешний API' : 'Supabase';
+  document.getElementById('sec-type').className = 'badge ' + (isExt?'bsky':'bgray');
+  if (isExt) renderExt(sec); else loadData();
+};
+
+// LOAD
+async function loadData() {
+  var s = SECS[curSec]; if (!s || s.type==='ext') return;
+  if (!SURL || !SKEY) { allRows=[]; renderTable(); return; }
+  try {
+    var data = await sbFetch(curSec, {qs:'?order=id'});
+    allRows = Array.isArray(data) ? data : [];
+    var el = document.getElementById('cnt-'+curSec); if(el) el.textContent = allRows.length;
+    document.getElementById('s-total').textContent = allRows.length;
+    var active = allRows.filter(function(r){return r.active===true;}).length;
+    document.getElementById('s-active').textContent = active;
+    var pk = s.pk; var prices = allRows.map(function(r){return +(r[pk])||0;}).filter(Boolean);
+    document.getElementById('s-price').textContent = '$' + (prices.length ? Math.round(prices.reduce(function(a,b){return a+b;},0)/prices.length) : 0);
+    setConn(true); document.getElementById('cfg-notice').style.display='none';
+    applyFilters();
+  } catch(e) { showToast('Ошибка: '+e.message,'red'); allRows=[]; renderTable(); }
+};
+
+function applyFilters() {
+  var q = document.getElementById('q-search').value.toLowerCase();
+  var city = document.getElementById('q-city').value;
+  var af = document.getElementById('q-active').value;
+  filtered = allRows.filter(function(r) {
+    if (q && JSON.stringify(r).toLowerCase().indexOf(q)===-1) return false;
+    if (city && r.city !== city) return false;
+    if (af==='1' && r.active!==true) return false;
+    if (af==='0' && r.active===true) return false;
+    return true;
+  });
+  curPage=1; renderTable();
+};
+
+function renderTable() {
+  var s = SECS[curSec]; var cols = s.cols||[];
+  var start=(curPage-1)*PER; var page=filtered.slice(start,start+PER);
+  document.getElementById('t-head').innerHTML = cols.map(function(c){return '<th>'+(CLABEL[c]||c)+'</th>';}).join('')+'<th></th>';
+  if (!page.length) {
+    document.getElementById('t-body').innerHTML = '<tr><td colspan="'+(cols.length+1)+'"><div class="empty"><div class="empty-ico">--</div><p>Нет данных</p></div></td></tr>';
+  } else {
+    document.getElementById('t-body').innerHTML = page.map(function(row){
+      var rid = String(row.id);
+      return '<tr onclick="openEdit(\''+rid+'\')">'+
+        cols.map(function(c){return renderCell(c,row[c]);}).join('')+
+        '<td><div class="racts" onclick="event.stopPropagation()">'+
+        '<button class="btn btn-sm btn-edit" onclick="openEdit(\''+rid+'\')">Edit</button>'+
+        '<button class="btn btn-sm btn-danger" onclick="delRow(\''+rid+'\')">Del</button>'+
+        '</div></td></tr>';
+    }).join('');
   }
-
-  container.innerHTML = html || `<div style="padding:40px;text-align:center;color:#666">Ничего не найдено</div>`;
-  document.getElementById('visible-count').textContent = totalVisible;
+  document.getElementById('t-count').textContent = filtered.length+' записей';
+  var pages=Math.ceil(filtered.length/PER);
+  document.getElementById('t-pager').innerHTML = pages<=1?'':Array.from({length:pages},function(_,i){
+    return '<div class="pgb'+(i+1===curPage?' act':'')+'" onclick="goPage('+(i+1)+')">'+(i+1)+'</div>';
+  }).join('');
 }
 
-function toggleCard(idx) {
-  const card = document.getElementById('card-' + idx);
-  if (card) card.classList.toggle('expanded');
+function renderCell(col, val) {
+  if (col==='image_url') return val?'<td><img class="td-img" src="'+val+'" onerror="this.style.opacity=0"></td>':'<td><div class="td-img-ph">img</div></td>';
+  if (col==='active') return '<td><span class="badge '+(val?'bg':'bgray')+'">'+(val?'Активен':'Нет')+'</span></td>';
+  if (col==='tier') { var m={budget:'bamb',standard:'bsky',premium:'bpink',luxury:'bacc'}; return '<td><span class="badge '+(m[val]||'')+'">'+(val||'-')+'</span></td>'; }
+  if (col==='type'||col==='category') return '<td><span class="badge bacc">'+(val||'-')+'</span></td>';
+  if (col==='stars') return '<td>'+(val?'* x'+val:'')+'</td>';
+  var pkeys=['price','total_price','price_from','price_peak','avg_check','entry_price'];
+  if (pkeys.indexOf(col)!==-1) return val!=null?'<td><span class="pval">$'+val+'</span></td>':'<td>-</td>';
+  if (col==='name'||col==='title') return '<td class="tdp">'+(val||'-')+'</td>';
+  return '<td>'+(val!=null?val:'-')+'</td>';
 }
 
-let activeFilter = 'all';
-let activeSearch = '';
+function goPage(p){ curPage=p; renderTable(); };
+function openAdd(){ editId=null; document.getElementById('rec-title').textContent='Добавить - '+SECS[curSec].label; buildForm(null); document.getElementById('rec-ovl').classList.add('open'); };
+function openEdit(id){ editId=id; var rec=allRows.filter(function(r){return String(r.id)===String(id);})[0]; document.getElementById('rec-title').textContent='Редактировать'; buildForm(rec); document.getElementById('rec-ovl').classList.add('open'); };
+function closeRec(){ document.getElementById('rec-ovl').classList.remove('open'); editId=null; };
 
-function filterCity(btn, city) {
-  document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  activeFilter = city;
-  renderCities(activeFilter, activeSearch);
+function buildForm(rec) {
+  var fields=SECS[curSec].fields||[];
+  var h='<div class="fgrid">';
+  fields.forEach(function(f){
+    var val=rec?(rec[f.k]!==undefined?rec[f.k]:''):'';
+    var full=(f.t==='ta'||f.t==='photo')?'ffull':'';
+    h+='<div class="fg '+full+'"><label class="flabel">'+f.l+(f.req?' *':'')+'</label>';
+    if (f.t==='text'||f.t==='num') {
+      h+='<input class="fi" id="fi-'+f.k+'" type="'+(f.t==='num'?'number':'text')+'" value="'+(val||'')+'" placeholder="'+(f.ph||'')+'">';
+    } else if (f.t==='city') {
+      h+='<select class="fsel2" id="fi-'+f.k+'">'+CITIES_RU.map(function(c){return '<option'+(c===val?' selected':'')+'>'+c+'</option>';}).join('')+'</select>';
+    } else if (f.t==='sel') {
+      h+='<select class="fsel2" id="fi-'+f.k+'">'+(f.o||[]).map(function(o){return '<option'+(o===val?' selected':'')+'>'+o+'</option>';}).join('')+'</select>';
+    } else if (f.t==='ta') {
+      h+='<textarea class="fta" id="fi-'+f.k+'" placeholder="'+(f.ph||'')+'">'+(val||'')+'</textarea>';
+    } else if (f.t==='bool') {
+      h+='<select class="fsel2" id="fi-'+f.k+'"><option value="true"'+(val===true||val==="true"?' selected':'')+'>Да</option><option value="false"'+(val!==true&&val!=="true"?' selected':'')+'>Нет</option></select>';
+    } else if (f.t==='photo') {
+      h+='<div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:5px">'+
+         '<input class="fi" id="fi-'+f.k+'" type="text" value="'+(val||'')+'" placeholder="https://..." oninput="previewPhoto()">'+
+         '<button class="btn btn-ghost btn-sm" type="button" onclick="findPhotos()">Фото</button></div>'+
+         '<div class="phprev" id="ph-prev">'+(val?'<img src="'+val+'" onerror="this.style.opacity=0">':'нет фото')+'</div>'+
+         '<div id="ph-res"></div>';
+    }
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('rec-body').innerHTML=h;
 }
 
-function searchHotels(q) {
-  activeSearch = q;
-  renderCities(activeFilter, activeSearch);
+function previewPhoto(){
+  var pf=(SECS[curSec].fields||[]).filter(function(f){return f.t==='photo';})[0];
+  if(!pf)return;
+  var inp=document.getElementById('fi-'+pf.k); if(!inp)return;
+  var p=document.getElementById('ph-prev');
+  if(p) p.innerHTML=inp.value?'<img src="'+inp.value+'" onerror="this.style.opacity=0">':'нет фото';
+};
+
+async function findPhotos(){
+  var ne=document.getElementById('fi-name')||document.getElementById('fi-title');
+  var ce=document.getElementById('fi-city');
+  var q=[ne?ne.value:'',ce?ce.value:'','Uzbekistan'].filter(Boolean).join(' ');
+  var res=document.getElementById('ph-res'); res.innerHTML='<div class="uhint">Ищу фото...</div>';
+  try {
+    var r=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(q)+'&per_page=8&client_id=x8nIR01NbCJlThbG9vyqcmUsFO6-EdQAPetNj04KID8');
+    var d=await r.json();
+    if(!d.results||!d.results.length){res.innerHTML='<div class="uhint">Не найдено</div>';return;}
+    res.innerHTML='<div class="ugrid">'+d.results.map(function(p){var u=p.urls.regular.replace(/'/g,"%27");return '<img class="uthumb" src="'+p.urls.small+'" onclick="pickPhoto(\''+u+'\')">'; }).join('')+'</div>';
+  } catch(e){res.innerHTML='<div class="uhint">Ошибка</div>';}
+};
+
+function pickPhoto(url){
+  var pf=(SECS[curSec].fields||[]).filter(function(f){return f.t==='photo';})[0]; if(!pf)return;
+  var inp=document.getElementById('fi-'+pf.k); if(inp)inp.value=url;
+  var p=document.getElementById('ph-prev'); if(p)p.innerHTML='<img src="'+url+'">';
+};
+
+async function saveRec(){
+  var fields=SECS[curSec].fields||[]; var body={};
+  fields.forEach(function(f){
+    var el=document.getElementById('fi-'+f.k); if(!el)return;
+    var v=el.value;
+    if(f.t==='num') v=v===''?null:+v;
+    if(f.t==='bool') v=v==='true';
+    body[f.k]=v;
+  });
+  try {
+    if(editId){ await sbFetch(curSec,{method:'PATCH',body:body,qs:'?id=eq.'+editId}); showToast('Сохранено','green'); }
+    else { await sbFetch(curSec,{method:'POST',body:body}); showToast('Добавлено','green'); }
+    closeRec(); loadData();
+  } catch(e){ showToast('Ошибка: '+e.message,'red'); }
+};
+
+async function delRow(id){
+  if(!confirm('Удалить запись?'))return;
+  try{ await sbFetch(curSec,{method:'DELETE',qs:'?id=eq.'+id}); showToast('Удалено','green'); loadData(); }
+  catch(e){ showToast('Ошибка: '+e.message,'red'); }
+};
+
+function openCfg(){ document.getElementById('cfg-url').value=SURL; document.getElementById('cfg-key').value=SKEY; document.getElementById('cfg-ovl').classList.add('open'); };
+function closeCfg(){ document.getElementById('cfg-ovl').classList.remove('open'); };
+function saveCfg(){
+  SURL=document.getElementById('cfg-url').value.trim().replace(/\/$/,'');
+  SKEY=document.getElementById('cfg-key').value.trim();
+  localStorage.setItem('w_url',SURL); localStorage.setItem('w_key',SKEY);
+  closeCfg(); setConn(true); document.getElementById('cfg-notice').style.display='none';
+  showToast('Подключено','green'); loadData();
+};
+
+// EXT
+function renderExt(sec) {
+  var c=document.getElementById('ext-sec');
+  if(sec==='flights') c.innerHTML=flightsUI();
+  else if(sec==='railway') c.innerHTML=railwayUI();
 }
 
-function expandAll() {
-  document.querySelectorAll('.hotel-card').forEach(c => c.classList.add('expanded'));
+function flightsUI(){
+  var d=new Date(Date.now()+7*864e5).toISOString().split('T')[0];
+  return '<div class="notice notice-sky">Поиск через Aviasales TravelPayouts API</div>'+
+    '<div class="ext-wrap"><div class="ext-header"><div class="ext-icon" style="background:rgba(56,189,248,.12);font-size:28px">+</div>'+
+    '<div><div style="font-size:16px;font-weight:600">Поиск авиабилетов</div><div style="font-size:12px;color:var(--tx3)">Aviasales API</div></div></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:16px;align-items:end">'+
+    '<div class="fg"><label class="flabel">Откуда (IATA)</label><input class="fi" id="fl-from" value="TAS"></div>'+
+    '<div class="fg"><label class="flabel">Куда (IATA)</label><input class="fi" id="fl-to" value="SKD"></div>'+
+    '<div class="fg"><label class="flabel">Дата</label><input class="fi" id="fl-date" type="date" value="'+d+'"></div>'+
+    '<div class="fg"><label class="flabel">Пасс.</label><select class="fsel2" id="fl-pass"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>'+
+    '<button class="btn btn-sky" onclick="searchFlights()">Найти</button></div>'+
+    '<div id="fl-res" style="text-align:center;padding:24px;color:var(--tx3)">Введи параметры и нажми Найти</div>'+
+    '<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--b);display:flex;gap:10px">'+
+    '<a href="https://www.aviasales.ru" target="_blank" class="btn btn-ghost btn-sm">Aviasales.ru</a></div></div>';
 }
 
-function collapseAll() {
-  document.querySelectorAll('.hotel-card').forEach(c => c.classList.remove('expanded'));
+async function searchFlights(){
+  var from=document.getElementById('fl-from').value.trim().toUpperCase();
+  var to=document.getElementById('fl-to').value.trim().toUpperCase();
+  var date=document.getElementById('fl-date').value;
+  var res=document.getElementById('fl-res');
+  if(!from||!to||!date){showToast('Заполни поля','red');return;}
+  res.innerHTML='<div style="text-align:center;padding:24px;color:var(--tx3)">Ищу рейсы...</div>';
+  var ym=date.split('-');
+  try{
+    var r=await fetch('https://api.travelpayouts.com/v1/prices/cheap?origin='+from+'&destination='+to+'&depart_date='+ym[0]+'-'+ym[1]+'&currency=usd&token=d1ab8c478da29f2a25ce14d5440a4cb9');
+    var d=await r.json();
+    var fs=d.data&&d.data[to]?Object.values(d.data[to]).slice(0,6):[];
+    if(!fs.length){res.innerHTML='<div style="text-align:center;padding:24px;color:var(--tx3)">Рейсов не найдено</div>';return;}
+    res.innerHTML=fs.map(function(f){
+      return '<div class="flight-card">'+
+        '<div style="flex:1"><div style="font-size:11px;color:var(--tx3)">'+(f.airline||'')+'</div>'+
+        '<div style="font-size:16px;font-weight:600">'+from+' > '+to+'</div>'+
+        '<div style="font-size:12px;color:var(--tx3)">'+date+'</div></div>'+
+        '<span class="badge '+(f.transfers===0?'bg':'bamb')+'">'+(f.transfers===0?'Прямой':f.transfers+' пересадка')+'</span>'+
+        '<div style="text-align:right"><div style="font-size:20px;font-weight:600;color:var(--grn);font-family:var(--fm)">$'+(f.price||'-')+'</div>'+
+        '<a href="https://www.aviasales.ru/search/'+from+date.replace(/-/g,'')+to+'1" target="_blank" class="btn btn-sky btn-sm" style="margin-top:6px">Купить</a></div></div>';
+    }).join('');
+  }catch(e){
+    res.innerHTML='<div style="text-align:center;padding:24px">'+
+      '<a href="https://www.aviasales.ru/search/'+from+date.replace(/-/g,'')+to+'1" target="_blank" class="btn btn-sky">Искать на Aviasales</a></div>';
+  }
+};
+
+function railwayUI(){
+  var cities=[['Ташкент','Tashkent'],['Самарканд','Samarkand'],['Бухара','Bukhara'],
+    ['Хива','Khiva'],['Андижан','Andijan'],['Фергана','Fergana'],
+    ['Наманган','Namangan'],['Термез','Termez'],['Москва','Moscow']];
+  var opts=cities.map(function(c){return '<option value="'+c[1]+'">'+c[0]+'</option>';}).join('');
+  var opts2=cities.map(function(c){return '<option value="'+c[1]+'"'+(c[0]==='Самарканд'?' selected':'')+'>'+c[0]+'</option>';}).join('');
+  var tom=new Date(Date.now()+864e5).toISOString().split('T')[0];
+  var routes=[['Ташкент > Самарканд','Tashkent','Samarkand','1.5-2ч','от $5'],
+    ['Ташкент > Бухара','Tashkent','Bukhara','3-4ч','от $9'],
+    ['Ташкент > Хива','Tashkent','Khiva','~7ч','от $12'],
+    ['Самарканд > Бухара','Samarkand','Bukhara','~2ч','от $5'],
+    ['Ташкент > Андижан','Tashkent','Andijan','~3ч','от $7'],
+    ['Москва > Ташкент','Moscow','Tashkent','~70ч','от $60']];
+  return '<div class="notice notice-sky">Ж/Д билеты - Яндекс Путешествия</div>'+
+    '<div class="ext-wrap"><div class="ext-header"><div class="ext-icon" style="background:rgba(245,158,11,.12);font-size:28px">~</div>'+
+    '<div><div style="font-size:16px;font-weight:600">Поиск ж/д билетов</div><div style="font-size:12px;color:var(--tx3)">Яндекс Путешествия</div></div></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;margin-bottom:16px;align-items:end">'+
+    '<div class="fg"><label class="flabel">Откуда</label><select class="fsel2" id="rw-from">'+opts+'</select></div>'+
+    '<div class="fg"><label class="flabel">Куда</label><select class="fsel2" id="rw-to">'+opts2+'</select></div>'+
+    '<div class="fg"><label class="flabel">Дата</label><input class="fi" id="rw-date" type="date" value="'+tom+'"></div>'+
+    '<button class="btn btn-amb" onclick="openRailway()">Найти</button></div>'+
+    '<div style="background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:16px;margin-bottom:14px">'+
+    '<div style="font-size:12px;color:var(--tx3);margin-bottom:10px;font-weight:500">Популярные маршруты</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'+
+    routes.map(function(rt){return '<div class="route-card" onclick="setRoute(\''+rt[1]+'\',\''+rt[2]+'\')">'+
+      '<div style="font-size:12px;font-weight:500;color:var(--tx)">'+rt[0]+'</div>'+
+      '<div style="font-size:11px;color:var(--tx3);margin-top:3px">'+rt[3]+' &bull; <span style="color:var(--grn)">'+rt[4]+'</span></div></div>';}).join('')+
+    '</div></div>'+
+    '<div style="padding-top:14px;border-top:1px solid var(--b);display:flex;gap:10px">'+
+    '<a href="https://travel.yandex.ru/trains" target="_blank" class="btn btn-ghost btn-sm">Яндекс Путешествия</a>'+
+    '<a href="https://rasp.yandex.ru" target="_blank" class="btn btn-ghost btn-sm">Расписания</a></div></div>';
 }
 
-renderCities();
+function openRailway(){
+  var from=document.getElementById('rw-from').value;
+  var to=document.getElementById('rw-to').value;
+  var date=document.getElementById('rw-date').value;
+  window.open('https://travel.yandex.ru/trains/'+from+'--'+to+'/?when='+date,'_blank');
+};
+function setRoute(from,to){
+  var f=document.getElementById('rw-from'); if(f)f.value=from;
+  var t=document.getElementById('rw-to'); if(t)t.value=to;
+};
+
+function showToast(msg, color) {
+  var cols={green:'#22c55e',red:'#ef4444',sky:'#38bdf8'};
+  document.getElementById('tdot').style.background = cols[color]||cols.sky;
+  document.getElementById('tmsg').textContent = msg;
+  var t=document.getElementById('toast'); t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2800);
+}
+
+function appInit() {
+  if(SURL&&SKEY){ document.getElementById('cfg-notice').style.display='none'; setConn(true); }
+  else setConn(false);
+  switchSec('tour_packages');
+}
+
+if(sessionStorage.getItem('wa')==='1') appInit();
+
+
 </script>
-
 </body>
 </html>
