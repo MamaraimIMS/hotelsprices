@@ -6,7 +6,6 @@
 <title>Waylo Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* весь твой стиль остался точно таким же — я его не трогал */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0c0c0f;--surf:#141418;--surf2:#1c1c22;--surf3:#242430;
@@ -15,126 +14,783 @@
   --grn:#22c55e;--amb:#f59e0b;--red:#ef4444;--sky:#38bdf8;--pink:#f472b6;
   --ff:"DM Sans",sans-serif;--fm:"DM Mono",monospace
 }
-/* ... (весь CSS точно такой же, я его не менял, чтобы не путаться) ... */
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--ff);font-size:14px}
+#lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999}
+.lcard{background:var(--surf);border:1px solid var(--b2);border-radius:20px;padding:48px 40px;width:360px;text-align:center}
+.llogo{width:56px;height:56px;background:var(--acc);border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;color:#fff;margin:0 auto 18px}
+.ltitle{font-size:20px;font-weight:600;margin-bottom:5px}
+.lsub{font-size:13px;color:var(--tx3);margin-bottom:26px}
+.linput{width:100%;background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:12px 16px;color:var(--tx);font-size:15px;font-family:var(--ff);outline:none;text-align:center;letter-spacing:4px}
+.linput:focus{border-color:var(--acc)}
+.lbtn{width:100%;margin-top:12px;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--ff)}
+.lbtn:hover{background:var(--acc2)}
+.lerr{font-size:12px;color:var(--red);margin-top:8px;opacity:0;transition:opacity .3s;min-height:16px}
+#app{display:none;height:100vh;overflow:hidden}
+.shell{display:flex;height:100%}
+.sb{width:230px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--b);display:flex;flex-direction:column;overflow-y:auto}
+.sb::-webkit-scrollbar{width:0}
+.sb-logo{padding:18px 16px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px}
+.sb-mark{width:30px;height:30px;background:var(--acc);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
+.sb-name{font-weight:600;font-size:14px}
+.sb-badge{font-size:9px;font-weight:500;background:var(--adim);color:var(--acc2);border:1px solid rgba(124,109,250,.3);border-radius:4px;padding:1px 5px;letter-spacing:.5px;margin-left:auto}
+.sb-sec{padding:14px 14px 5px;font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:1.4px;text-transform:uppercase}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;margin:1px 6px;border-radius:8px;cursor:pointer;color:var(--tx2);font-size:13px;transition:all .15s}
+.ni:hover{background:var(--surf2);color:var(--tx)}
+.ni.on{background:var(--adim);color:var(--acc2);font-weight:500}
+.ni-ico{width:22px;text-align:center;flex-shrink:0}
+.ni-cnt{margin-left:auto;font-size:10px;font-family:var(--fm);background:var(--surf3);color:var(--tx3);border-radius:4px;padding:1px 5px}
+.ni-ext{margin-left:auto;font-size:9px;color:var(--sky)}
+.sb-foot{margin-top:auto;padding:10px;border-top:1px solid var(--b)}
+.logout-btn{width:100%;margin-bottom:7px;padding:7px;background:rgba(239,68,68,.08);color:var(--red);border:1px solid rgba(239,68,68,.18);border-radius:7px;font-family:var(--ff);font-size:12px;cursor:pointer}
+.conn{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--surf2);border-radius:7px;font-size:12px;color:var(--tx2)}
+.cdot{width:6px;height:6px;border-radius:50%;background:var(--grn);box-shadow:0 0 5px var(--grn)}
+.cdot.off{background:var(--tx3);box-shadow:none}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:0 22px;height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);background:var(--surf);flex-shrink:0}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-title{font-weight:600;font-size:15px}
+.content{flex:1;overflow-y:auto;padding:20px 22px}
+.content::-webkit-scrollbar{width:5px}
+.content::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-family:var(--ff);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-ghost{background:transparent;color:var(--tx2);border:1px solid var(--b)}
+.btn-ghost:hover{background:var(--surf2);color:var(--tx)}
+.btn-primary{background:var(--acc);color:#fff}
+.btn-primary:hover{background:var(--acc2)}
+.btn-sky{background:rgba(56,189,248,.12);color:var(--sky);border:1px solid rgba(56,189,248,.25)}
+.btn-amb{background:rgba(245,158,11,.12);color:var(--amb);border:1px solid rgba(245,158,11,.25)}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-danger{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.btn-edit{background:rgba(34,197,94,.1);color:var(--grn);border:1px solid rgba(34,197,94,.2)}
+.notice{border-radius:10px;padding:11px 15px;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-size:13px}
+.notice-amb{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.22);color:#d97706}
+.notice-sky{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.22);color:var(--sky)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.scard{background:var(--surf);border:1px solid var(--b);border-radius:12px;padding:14px 16px}
+.slabel{font-size:9px;color:var(--tx3);font-weight:600;letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px}
+.sval{font-size:22px;font-weight:600;font-family:var(--fm)}
+.ssub{font-size:11px;color:var(--tx3);margin-top:3px}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:13px;flex-wrap:wrap}
+.sbox{display:flex;align-items:center;gap:7px;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:7px 11px;flex:1;min-width:150px;max-width:240px}
+.sbox input{background:none;border:none;outline:none;color:var(--tx);font-family:var(--ff);font-size:13px;width:100%}
+.sbox input::placeholder{color:var(--tx3)}
+select.fsel{background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:7px 10px;color:var(--tx2);font-family:var(--ff);font-size:13px;outline:none;cursor:pointer}
+.twrap{background:var(--surf);border:1px solid var(--b);border-radius:12px;overflow:hidden}
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:580px}
+thead tr{background:var(--surf2);border-bottom:1px solid var(--b)}
+th{padding:9px 13px;text-align:left;font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:.7px;text-transform:uppercase;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--surf2)}
+td{padding:9px 13px;font-size:13px;color:var(--tx2);vertical-align:middle}
+td.tdp{color:var(--tx);font-weight:500}
+.td-img{width:42px;height:32px;border-radius:5px;object-fit:cover}
+.td-img-ph{width:42px;height:32px;border-radius:5px;background:var(--surf3);display:flex;align-items:center;justify-content:center;font-size:13px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.bg{background:rgba(34,197,94,.12);color:var(--grn);border:1px solid rgba(34,197,94,.2)}
+.bgray{background:rgba(90,90,114,.15);color:var(--tx3);border:1px solid var(--b)}
+.bsky{background:rgba(56,189,248,.12);color:var(--sky)}
+.bamb{background:rgba(245,158,11,.12);color:var(--amb)}
+.bpink{background:rgba(244,114,182,.12);color:var(--pink)}
+.bacc{background:var(--adim);color:var(--acc2)}
+.pval{font-family:var(--fm);color:var(--grn);font-size:13px;font-weight:500}
+.racts{display:flex;gap:5px;opacity:0;transition:opacity .15s}
+tr:hover .racts{opacity:1}
+.tfoot{padding:9px 14px;border-top:1px solid var(--b);background:var(--surf2);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--tx3)}
+.pager{display:flex;gap:3px}
+.pgb{width:25px;height:25px;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--b);background:var(--surf);color:var(--tx2);font-size:12px;transition:all .15s}
+.pgb:hover,.pgb.act{background:var(--acc);color:#fff;border-color:var(--acc)}
+.empty{text-align:center;padding:44px 24px;color:var(--tx3)}
+.empty-ico{font-size:34px;margin-bottom:10px}
+.ext-wrap{background:var(--surf);border:1px solid var(--b);border-radius:14px;padding:24px}
+.ext-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.ext-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.route-card{background:var(--surf3);border-radius:8px;padding:10px 12px;cursor:pointer}
+.route-card:hover{background:var(--surf2)}
+.flight-card{background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.movl{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.movl.open{opacity:1;pointer-events:all}
+.modal{background:var(--surf);border:1px solid var(--b2);border-radius:16px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;transform:translateY(10px);transition:transform .2s}
+.movl.open .modal{transform:translateY(0)}
+.modal::-webkit-scrollbar{width:4px}
+.modal::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.mhead{padding:18px 22px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surf);z-index:1}
+.mtitle{font-size:15px;font-weight:600}
+.mx{width:27px;height:27px;border-radius:7px;background:var(--surf2);border:none;color:var(--tx2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mx:hover{background:var(--surf3);color:var(--tx)}
+.mbody{padding:18px 22px}
+.mfoot{padding:12px 22px 18px;border-top:1px solid var(--b);display:flex;justify-content:flex-end;gap:8px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ffull{grid-column:1/-1}
+.fg{display:flex;flex-direction:column;gap:4px}
+.flabel{font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:.6px;text-transform:uppercase}
+.fi,.fsel2,.fta{background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:8px 11px;color:var(--tx);font-family:var(--ff);font-size:13px;outline:none;transition:border-color .15s;width:100%}
+.fi:focus,.fsel2:focus,.fta:focus{border-color:var(--acc)}
+.fi::placeholder,.fta::placeholder{color:var(--tx3)}
+.fta{resize:vertical;min-height:72px}
+.fsel2 option{background:var(--surf)}
+.phprev{width:100%;height:105px;border-radius:8px;border:1px solid var(--b);background:var(--surf3);display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:12px;overflow:hidden;margin-bottom:6px}
+.phprev img{width:100%;height:100%;object-fit:cover}
+.ugrid{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.uthumb{width:60px;height:44px;border-radius:5px;object-fit:cover;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
+.uthumb:hover{border-color:var(--acc)}
+.uhint{font-size:11px;color:var(--tx3);padding:3px 0}
+.cfginfo{background:var(--surf2);border-radius:8px;padding:11px;font-size:12px;color:var(--tx3);line-height:1.7;margin-bottom:14px}
 .toast{position:fixed;bottom:22px;right:22px;background:var(--surf);border:1px solid var(--b2);border-radius:10px;padding:10px 16px;font-size:13px;color:var(--tx);display:flex;align-items:center;gap:9px;transform:translateY(60px);opacity:0;transition:all .3s;z-index:3000;pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
 .tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 </style>
 </head>
 <body>
-<!-- весь HTML точно такой же, только в скрипте я починил 3 места -->
-<div id="lock"> ... (всё как было) ... </div>
-<div id="app"> ... (всё как было) ... </div>
+
+<div id="lock">
+  <div class="lcard">
+    <div class="llogo">W</div>
+    <div class="ltitle">Waylo Admin</div>
+    <div class="lsub">Введи пароль для входа</div>
+    <input class="linput" id="lpwd" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+    <button class="lbtn" onclick="doLogin()">Войти</button>
+    <div class="lerr" id="lerr">Неверный пароль</div>
+  </div>
+</div>
+
+<div id="app">
+<div class="shell">
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-mark">W</div>
+    <div class="sb-name">Waylo</div>
+    <div class="sb-badge">ADMIN</div>
+  </div>
+  <div class="sb-sec">Каталог</div>
+  <div class="ni" id="ni-flights"     onclick="switchSec('flights')"><span class="ni-ico">&#x2708;</span>Авиабилеты<span class="ni-ext">API</span></div>
+  <div class="ni" id="ni-railway"     onclick="switchSec('railway')"><span class="ni-ico">&#x1F682;</span>Ж/Д билеты<span class="ni-ext">API</span></div>
+  <div class="ni" id="ni-hotels"      onclick="switchSec('hotels')"><span class="ni-ico">&#x1F3E8;</span>Отели<span class="ni-cnt" id="cnt-hotels">0</span></div>
+  <div class="ni" id="ni-transfers"   onclick="switchSec('transfers')"><span class="ni-ico">&#x1F697;</span>Трансфер<span class="ni-cnt" id="cnt-transfers">0</span></div>
+  <div class="ni" id="ni-sights"      onclick="switchSec('sights')"><span class="ni-ico">&#x1F3DB;</span>Достопримечательности<span class="ni-cnt" id="cnt-sights">0</span></div>
+  <div class="ni" id="ni-restaurants" onclick="switchSec('restaurants')"><span class="ni-ico">&#x1F35C;</span>Рестораны<span class="ni-cnt" id="cnt-restaurants">0</span></div>
+  <div class="ni" id="ni-food"        onclick="switchSec('food')"><span class="ni-ico">&#x1F37D;</span>Еда<span class="ni-cnt" id="cnt-food">0</span></div>
+  <div class="ni" id="ni-recreation"  onclick="switchSec('recreation')"><span class="ni-ico">&#x1F33F;</span>Отдых<span class="ni-cnt" id="cnt-recreation">0</span></div>
+  <div class="ni" id="ni-entertainment" onclick="switchSec('entertainment')"><span class="ni-ico">&#x1F3AA;</span>Развлечения<span class="ni-cnt" id="cnt-entertainment">0</span></div>
+  <div class="ni" id="ni-museums"     onclick="switchSec('museums')"><span class="ni-ico">&#x1F3FA;</span>Музеи<span class="ni-cnt" id="cnt-museums">0</span></div>
+  <div class="sb-sec">Туры</div>
+  <div class="ni on" id="ni-tour_packages" onclick="switchSec('tour_packages')"><span class="ni-ico">&#x1F4E6;</span>Тур-пакеты<span class="ni-cnt" id="cnt-tour_packages">0</span></div>
+  <div class="sb-foot">
+    <button class="logout-btn" onclick="doLogout()">Выйти</button>
+    <div class="conn"><div class="cdot off" id="cdot"></div><span id="clabel">Не подключено</span></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-title" id="sec-title">Тур-пакеты</div>
+      <span class="badge bgray" id="sec-type">Supabase</span>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="loadData()">Обновить</button>
+      <button class="btn btn-primary btn-sm" id="add-btn" onclick="openAdd()">+ Добавить</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="notice notice-amb" id="cfg-notice">
+      Укажи Supabase URL и API Key.
+      <button class="btn btn-sm" onclick="openCfg()" style="margin-left:auto;background:rgba(245,158,11,.15);color:#d97706;border:1px solid rgba(245,158,11,.3)">Настройки</button>
+    </div>
+    <div class="stats" id="stats-row">
+      <div class="scard"><div class="slabel">Записей</div><div class="sval" id="s-total">0</div><div class="ssub">в разделе</div></div>
+      <div class="scard"><div class="slabel">Активных</div><div class="sval" style="color:var(--grn)" id="s-active">0</div><div class="ssub">active=true</div></div>
+      <div class="scard"><div class="slabel">Ср. цена</div><div class="sval" style="color:var(--acc2)" id="s-price">$0</div><div class="ssub">по разделу</div></div>
+      <div class="scard"><div class="slabel">Разделов</div><div class="sval" style="color:var(--sky)">11</div><div class="ssub">в каталоге</div></div>
+    </div>
+    <div class="toolbar" id="toolbar-row">
+      <div class="sbox"><input type="text" id="q-search" placeholder="Поиск..." oninput="applyFilters()"></div>
+      <select class="fsel" id="q-city" onchange="applyFilters()">
+        <option value="">Все города</option>
+        <option>Самарканд</option><option>Бухара</option><option>Хива</option>
+        <option>Ташкент</option><option>Шахрисабз</option><option>Нукус</option>
+      </select>
+      <select class="fsel" id="q-active" onchange="applyFilters()">
+        <option value="">Все статусы</option>
+        <option value="1">Активные</option>
+        <option value="0">Неактивные</option>
+      </select>
+    </div>
+    <div class="twrap" id="table-wrap">
+      <div class="tscroll"><table><thead><tr id="t-head"></tr></thead><tbody id="t-body"></tbody></table></div>
+      <div class="tfoot"><span id="t-count">0 записей</span><div class="pager" id="t-pager"></div></div>
+    </div>
+    <div id="ext-sec" style="display:none"></div>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="movl" id="rec-ovl" onclick="if(event.target===this)closeRec()">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle" id="rec-title">Добавить</div><button class="mx" onclick="closeRec()">x</button></div>
+    <div class="mbody" id="rec-body"></div>
+    <div class="mfoot"><button class="btn btn-ghost" onclick="closeRec()">Отмена</button><button class="btn btn-primary" onclick="saveRec()">Сохранить</button></div>
+  </div>
+</div>
+
+<div class="movl" id="cfg-ovl" onclick="if(event.target===this)closeCfg()">
+  <div class="modal" style="width:440px">
+    <div class="mhead"><div class="mtitle">Supabase подключение</div><button class="mx" onclick="closeCfg()">x</button></div>
+    <div class="mbody">
+      <div class="cfginfo">Supabase > Project Settings > API > anon public key</div>
+      <div class="fg" style="margin-bottom:11px"><label class="flabel">Supabase URL</label><input class="fi" id="cfg-url" placeholder="https://xxxx.supabase.co"></div>
+      <div class="fg"><label class="flabel">Anon API Key</label><input class="fi" id="cfg-key" placeholder="eyJhbGci..."></div>
+    </div>
+    <div class="mfoot"><button class="btn btn-ghost" onclick="closeCfg()">Отмена</button><button class="btn btn-primary" onclick="saveCfg()">Подключить</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><div class="tdot" id="tdot"></div><span id="tmsg"></span></div>
 
 <script>
-// ====================== ИСПРАВЛЕННЫЙ СКРИПТ ======================
-var PASS = 'w2';                    // ← поменяй на свой пароль, если хочешь
+var PASS = 'w2';
 var SURL = localStorage.getItem('w_url') || '';
 var SKEY = localStorage.getItem('w_key') || '';
 var curSec = 'tour_packages';
 var allRows = [], filtered = [], editId = null, curPage = 1, PER = 15;
-
+var CITIES = ['','Samarkand','Bukhara','Khiva','Tashkent','Shakhrisabz','Nukus'];
 var CITIES_RU = ['','Самарканд','Бухара','Хива','Ташкент','Шахрисабз','Нукус'];
 
-var CLABEL = { /* всё как было */ };
-var SECS = { /* весь твой большой объект SECS остался точно таким же */ };
+var CLABEL = {
+  image_url:'Фото', name:'Название', title:'Название', city:'Город',
+  stars:'Stars', tier:'Уровень', price_from:'Цена от', price_peak:'Пик $',
+  total_price:'Цена', avg_check:'Ср.чек', entry_price:'Вход $',
+  rating:'Рейтинг', active:'Статус', duration_days:'Дней',
+  type:'Тип', category:'Категория', cuisine:'Кухня',
+  vehicle:'Авто', capacity:'Мест', board_type:'Питание', price:'Цена'
+};
 
-// === AUTH (без изменений) ===
-function doLogin() { /* как было */ }
-function doLogout() { /* как было */ }
+var SECS = {
+  flights:  { label:'Авиабилеты', type:'ext' },
+  railway:  { label:'Ж/Д билеты', type:'ext' },
+  hotels: { label:'Отели', type:'db', pk:'price_from',
+    cols:['image_url','name','city','stars','board_type','price_from','price_peak','active'],
+    fields:[
+      {k:'name',l:'Название отеля',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'stars',l:'Звёзды (1-5)',t:'num'},
+      {k:'tier',l:'Категория',t:'sel',o:['budget','standard','premium','luxury']},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'review_count',l:'Кол-во отзывов',t:'num'},
+      {k:'phone',l:'Телефон',t:'text'},
+      {k:'website',l:'Сайт',t:'text'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'market_restrictions',l:'Рынок/ограничения',t:'text',ph:'VALID FOR ALL MARKETS'},
+      {k:'contract_from',l:'Контракт с',t:'text',ph:'01.01.2026'},
+      {k:'contract_to',l:'Контракт по',t:'text',ph:'31.12.2026'},
+      {k:'currency',l:'Валюта',t:'sel',o:['USD','EUR','UZS']},
+      {k:'board_type',l:'Тип питания',t:'sel',o:['RO','BB','HB','FB','AI']},
+      {k:'tour_fee_included',l:'Tour Fee включен',t:'bool'},
+      {k:'children_free_age',l:'Дети бесплатно (возраст)',t:'text',ph:'0-5.99'},
+      {k:'cancellation_policy',l:'Политика отмены / No Show',t:'ta'},
+      {k:'price_from',l:'Цена от $ (мин. номер)',t:'num'},
+      {k:'price_peak',l:'Цена пик $ (макс. сезон)',t:'num'},
+      {k:'season_high_dates',l:'Высокий сезон (даты)',t:'text',ph:'31.03-01.06 / 01.09-01.11'},
+      {k:'season_mid_dates',l:'Средний сезон (даты)',t:'text',ph:'23.03-29.03 / 01.06-14.06'},
+      {k:'season_low_dates',l:'Низкий сезон (даты)',t:'text',ph:'01.01-22.03 / 15.06-23.08'},
+      {k:'room_prices',l:'Цены номеров JSON',t:'ta',ph:'[{"room":"Guest single","high":305,"mid":235,"low":195}]'},
+      {k:'checkin_standard',l:'Check-in стандарт',t:'text',ph:'14:00'},
+      {k:'checkin_early',l:'Ранний check-in',t:'text',ph:'08:00-14:00 = 50%, до 08:00 = 100%'},
+      {k:'checkout_standard',l:'Check-out стандарт',t:'text',ph:'12:00'},
+      {k:'checkout_late',l:'Поздний check-out',t:'text',ph:'12:00-18:00 = 50%, после 18:00 = 100%'},
+      {k:'amenities',l:'Удобства',t:'text',ph:'Wi-Fi, бассейн, спа, ресторан'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  transfers: { label:'Трансфер', type:'db', pk:'price',
+    cols:['name','city','type','vehicle','price','capacity','active'],
+    fields:[
+      {k:'name',l:'Маршрут',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'type',l:'Тип',t:'sel',o:['аэропорт -> отель','отель -> аэропорт','межгород','экскурсионный','персональный']},
+      {k:'vehicle',l:'Транспорт',t:'sel',o:['Sedan','Minivan','Minibus','Bus','VIP']},
+      {k:'price',l:'Цена ($)',t:'num'},
+      {k:'capacity',l:'Мест',t:'num'},
+      {k:'duration_min',l:'Время в пути (мин)',t:'num'},
+      {k:'distance_km',l:'Расстояние (км)',t:'num'},
+      {k:'from_location',l:'Откуда',t:'text'},
+      {k:'to_location',l:'Куда',t:'text'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  sights: { label:'Достопримечательности', type:'db', pk:'entry_price',
+    cols:['image_url','name','city','category','entry_price','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'category',l:'Категория',t:'sel',o:['мечеть','медресе','мавзолей','крепость','базар','площадь','парк','дворец']},
+      {k:'entry_price',l:'Цена входа ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'duration_hours',l:'Часов на осмотр',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text',ph:'08:00 - 20:00'},
+      {k:'best_time',l:'Лучшее время',t:'text',ph:'Раннее утро'},
+      {k:'guide_needed',l:'Нужен гид',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'history',l:'История',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  restaurants: { label:'Рестораны', type:'db', pk:'avg_check',
+    cols:['image_url','name','city','cuisine','avg_check','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'cuisine',l:'Кухня',t:'text',ph:'Узбекская, Европейская...'},
+      {k:'type',l:'Тип заведения',t:'sel',o:['ресторан','кафе','чайхана','столовая','бар','бистро','фаст-фуд']},
+      {k:'avg_check',l:'Средний чек ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'phone',l:'Телефон',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text',ph:'09:00 - 23:00'},
+      {k:'seats',l:'Мест',t:'num'},
+      {k:'menu_highlights',l:'Топ блюда',t:'text',ph:'Плов, шашлык, самса'},
+      {k:'halal',l:'Халяль',t:'bool'},
+      {k:'alcohol',l:'Алкоголь',t:'bool'},
+      {k:'booking_required',l:'Нужна бронь',t:'bool'},
+      {k:'delivery',l:'Доставка',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  food: { label:'Еда', type:'db', pk:'price',
+    cols:['image_url','name','city','category','price','active'],
+    fields:[
+      {k:'name',l:'Блюдо / продукт',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'category',l:'Категория',t:'sel',o:['уличная еда','рынок','пекарня','кондитерская','национальное блюдо']},
+      {k:'price',l:'Цена ($)',t:'num'},
+      {k:'address',l:'Где найти',t:'text'},
+      {k:'working_hours',l:'Часы',t:'text'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  recreation: { label:'Отдых', type:'db', pk:'price',
+    cols:['image_url','name','city','category','price','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'category',l:'Категория',t:'sel',o:['спа','баня','природа','пляж','горы','санаторий','йога','медитация']},
+      {k:'price',l:'Цена ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'duration_hours',l:'Часов',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text'},
+      {k:'booking_required',l:'Нужна бронь',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  entertainment: { label:'Развлечения', type:'db', pk:'price',
+    cols:['image_url','name','city','category','price','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'category',l:'Категория',t:'sel',o:['шоу','концерт','квест','аттракцион','кино','театр','клуб','мастер-класс','спорт']},
+      {k:'price',l:'Цена ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'duration_hours',l:'Часов',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text'},
+      {k:'min_age',l:'Мин. возраст',t:'num'},
+      {k:'booking_required',l:'Нужна бронь',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  museums: { label:'Музеи', type:'db', pk:'entry_price',
+    cols:['image_url','name','city','type','entry_price','rating','active'],
+    fields:[
+      {k:'name',l:'Название',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'type',l:'Тип',t:'sel',o:['исторический','художественный','краеведческий','национальный','интерактивный']},
+      {k:'entry_price',l:'Цена входа ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'duration_hours',l:'Часов',t:'num'},
+      {k:'address',l:'Адрес',t:'text'},
+      {k:'working_hours',l:'Часы работы',t:'text',ph:'09:00 - 18:00'},
+      {k:'closed_day',l:'Выходной',t:'text',ph:'Понедельник'},
+      {k:'audio_guide',l:'Аудиогид',t:'bool'},
+      {k:'guided_tours',l:'Экскурсии',t:'bool'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  },
+  tour_packages: { label:'Тур-пакеты', type:'db', pk:'total_price',
+    cols:['image_url','title','city','tier','duration_days','total_price','rating','active'],
+    fields:[
+      {k:'title',l:'Название пакета',t:'text',req:1},
+      {k:'city',l:'Город',t:'city'},
+      {k:'tier',l:'Уровень',t:'sel',o:['budget','standard','premium']},
+      {k:'duration_days',l:'Дней',t:'num'},
+      {k:'total_price',l:'Итоговая цена ($)',t:'num'},
+      {k:'price_per_person',l:'Цена/человек ($)',t:'num'},
+      {k:'rating',l:'Рейтинг',t:'num'},
+      {k:'max_guests',l:'Макс. гостей',t:'num'},
+      {k:'includes_flight',l:'Авиа включен',t:'bool'},
+      {k:'includes_hotel',l:'Отель включен',t:'bool'},
+      {k:'includes_transfer',l:'Трансфер включен',t:'bool'},
+      {k:'includes_guide',l:'Гид включен',t:'bool'},
+      {k:'tag1',l:'Тег 1',t:'text'},
+      {k:'tag2',l:'Тег 2',t:'text'},
+      {k:'image_url',l:'Фото',t:'photo'},
+      {k:'description',l:'Описание',t:'ta'},
+      {k:'active',l:'Активен',t:'bool'}
+    ]
+  }
+};
 
-// === SUPABASE + ИСПРАВЛЕНИЯ ===
-async function sbFetch(table, o) { /* как было */ }
+// AUTH
+function doLogin() {
+  var v = document.getElementById('lpwd').value;
+  if (v === PASS) {
+    sessionStorage.setItem('wa','1');
+    document.getElementById('lock').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    appInit();
+  } else {
+    var e = document.getElementById('lerr');
+    e.style.opacity = '1';
+    document.getElementById('lpwd').value = '';
+    setTimeout(function(){ e.style.opacity='0'; }, 2000);
+  }
+};
+function doLogout() { sessionStorage.removeItem('wa'); location.reload(); };
+document.getElementById('lpwd').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+if (sessionStorage.getItem('wa') === '1') {
+  document.getElementById('lock').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
 
-function switchSec(sec) { /* как было */ }
+// CONN
+function setConn(ok) {
+  document.getElementById('cdot').className = ok ? 'cdot' : 'cdot off';
+  document.getElementById('clabel').textContent = ok ? 'Supabase connected' : 'Не подключено';
+}
 
+// SUPABASE
+async function sbFetch(table, o) {
+  o = o || {};
+  var method = o.method || 'GET';
+  var r = await fetch(SURL + '/rest/v1/' + table + (o.qs||''), {
+    method: method,
+    headers: { apikey:SKEY, Authorization:'Bearer '+SKEY, 'Content-Type':'application/json', Prefer: method==='POST'?'return=representation':'' },
+    body: o.body ? JSON.stringify(o.body) : null
+  });
+  if (!r.ok) { var t = await r.text(); if(r.status===404||t.indexOf('does not exist')>-1) return []; throw new Error(t.slice(0,100)); }
+  var t = await r.text(); return t ? JSON.parse(t) : [];
+}
+
+// SWITCH
+function switchSec(sec) {
+  curSec = sec; curPage = 1;
+  document.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('on'); });
+  var el = document.getElementById('ni-'+sec); if(el) el.classList.add('on');
+  var s = SECS[sec];
+  document.getElementById('sec-title').textContent = s.label;
+  var isExt = s.type === 'ext';
+  document.getElementById('stats-row').style.display = isExt ? 'none' : 'grid';
+  document.getElementById('toolbar-row').style.display = isExt ? 'none' : 'flex';
+  document.getElementById('table-wrap').style.display = isExt ? 'none' : 'block';
+  document.getElementById('ext-sec').style.display = isExt ? 'block' : 'none';
+  document.getElementById('add-btn').style.display = isExt ? 'none' : 'inline-flex';
+  document.getElementById('sec-type').textContent = isExt ? 'Внешний API' : 'Supabase';
+  document.getElementById('sec-type').className = 'badge ' + (isExt?'bsky':'bgray');
+  if (isExt) renderExt(sec); else loadData();
+};
+
+// LOAD
 async function loadData() {
   var s = SECS[curSec]; if (!s || s.type==='ext') return;
-  if (!SURL || !SKEY) { 
-    allRows=[]; renderTable(); 
-    document.getElementById('cfg-notice').style.display='block';
-    setConn(false);
-    return; 
-  }
+  if (!SURL || !SKEY) { allRows=[]; renderTable(); return; }
   try {
     var data = await sbFetch(curSec, {qs:'?order=id'});
     allRows = Array.isArray(data) ? data : [];
-    /* остальное как было */
-    setConn(true); 
-    document.getElementById('cfg-notice').style.display='none';
+    var el = document.getElementById('cnt-'+curSec); if(el) el.textContent = allRows.length;
+    document.getElementById('s-total').textContent = allRows.length;
+    var active = allRows.filter(function(r){return r.active===true;}).length;
+    document.getElementById('s-active').textContent = active;
+    var pk = s.pk; var prices = allRows.map(function(r){return +(r[pk])||0;}).filter(Boolean);
+    document.getElementById('s-price').textContent = '$' + (prices.length ? Math.round(prices.reduce(function(a,b){return a+b;},0)/prices.length) : 0);
+    setConn(true); document.getElementById('cfg-notice').style.display='none';
     applyFilters();
-  } catch(e) { 
-    showToast('Ошибка: '+e.message,'red'); 
-    allRows=[]; 
-    renderTable();
-    document.getElementById('cfg-notice').style.display='block';  // ← ИСПРАВЛЕНИЕ 1
-    setConn(false);
+  } catch(e) { showToast('Ошибка: '+e.message,'red'); allRows=[]; renderTable(); }
+};
+
+function applyFilters() {
+  var q = document.getElementById('q-search').value.toLowerCase();
+  var city = document.getElementById('q-city').value;
+  var af = document.getElementById('q-active').value;
+  filtered = allRows.filter(function(r) {
+    if (q && JSON.stringify(r).toLowerCase().indexOf(q)===-1) return false;
+    if (city && r.city !== city) return false;
+    if (af==='1' && r.active!==true) return false;
+    if (af==='0' && r.active===true) return false;
+    return true;
+  });
+  curPage=1; renderTable();
+};
+
+function renderTable() {
+  var s = SECS[curSec]; var cols = s.cols||[];
+  var start=(curPage-1)*PER; var page=filtered.slice(start,start+PER);
+  document.getElementById('t-head').innerHTML = cols.map(function(c){return '<th>'+(CLABEL[c]||c)+'</th>';}).join('')+'<th></th>';
+  if (!page.length) {
+    document.getElementById('t-body').innerHTML = '<tr><td colspan="'+(cols.length+1)+'"><div class="empty"><div class="empty-ico">--</div><p>Нет данных</p></div></td></tr>';
+  } else {
+    document.getElementById('t-body').innerHTML = page.map(function(row){
+      var rid = String(row.id);
+      return '<tr onclick="openEdit(\''+rid+'\')">'+
+        cols.map(function(c){return renderCell(c,row[c]);}).join('')+
+        '<td><div class="racts" onclick="event.stopPropagation()">'+
+        '<button class="btn btn-sm btn-edit" onclick="openEdit(\''+rid+'\')">Edit</button>'+
+        '<button class="btn btn-sm btn-danger" onclick="delRow(\''+rid+'\')">Del</button>'+
+        '</div></td></tr>';
+    }).join('');
   }
+  document.getElementById('t-count').textContent = filtered.length+' записей';
+  var pages=Math.ceil(filtered.length/PER);
+  document.getElementById('t-pager').innerHTML = pages<=1?'':Array.from({length:pages},function(_,i){
+    return '<div class="pgb'+(i+1===curPage?' act':'')+'" onclick="goPage('+(i+1)+')">'+(i+1)+'</div>';
+  }).join('');
 }
 
-// === ИСПРАВЛЕНИЕ ПОИСКА ФОТО ===
-async function findPhotos(){
-  var fields = SECS[curSec].fields || [];
-  var nameField = document.getElementById('fi-name') || document.getElementById('fi-title');
-  var cityField = document.getElementById('fi-city');
-  var q = [
-    nameField ? nameField.value : '',
-    cityField ? cityField.value : '',
-    'Uzbekistan'
-  ].filter(Boolean).join(' ');
+function renderCell(col, val) {
+  if (col==='image_url') return val?'<td><img class="td-img" src="'+val+'" onerror="this.style.opacity=0"></td>':'<td><div class="td-img-ph">img</div></td>';
+  if (col==='active') return '<td><span class="badge '+(val?'bg':'bgray')+'">'+(val?'Активен':'Нет')+'</span></td>';
+  if (col==='tier') { var m={budget:'bamb',standard:'bsky',premium:'bpink',luxury:'bacc'}; return '<td><span class="badge '+(m[val]||'')+'">'+(val||'-')+'</span></td>'; }
+  if (col==='type'||col==='category') return '<td><span class="badge bacc">'+(val||'-')+'</span></td>';
+  if (col==='stars') return '<td>'+(val?'* x'+val:'')+'</td>';
+  var pkeys=['price','total_price','price_from','price_peak','avg_check','entry_price'];
+  if (pkeys.indexOf(col)!==-1) return val!=null?'<td><span class="pval">$'+val+'</span></td>':'<td>-</td>';
+  if (col==='name'||col==='title') return '<td class="tdp">'+(val||'-')+'</td>';
+  return '<td>'+(val!=null?val:'-')+'</td>';
+}
 
-  var res = document.getElementById('ph-res');
-  res.innerHTML = '<div class="uhint">Ищу фото...</div>';
-  
-  try {
-    var r = await fetch('https://api.unsplash.com/search/photos?query=' + encodeURIComponent(q) + '&per_page=8&client_id=x8nIR01NbCJlThbG9vyqcmUsFO6-EdQAPetNj04KID8');
-    var d = await r.json();
-    if(!d.results || !d.results.length){
-      res.innerHTML = '<div class="uhint">Не найдено фото</div>';
-      return;
+function goPage(p){ curPage=p; renderTable(); };
+function openAdd(){ editId=null; document.getElementById('rec-title').textContent='Добавить - '+SECS[curSec].label; buildForm(null); document.getElementById('rec-ovl').classList.add('open'); };
+function openEdit(id){ editId=id; var rec=allRows.filter(function(r){return String(r.id)===String(id);})[0]; document.getElementById('rec-title').textContent='Редактировать'; buildForm(rec); document.getElementById('rec-ovl').classList.add('open'); };
+function closeRec(){ document.getElementById('rec-ovl').classList.remove('open'); editId=null; };
+
+function buildForm(rec) {
+  var fields=SECS[curSec].fields||[];
+  var h='<div class="fgrid">';
+  fields.forEach(function(f){
+    var val=rec?(rec[f.k]!==undefined?rec[f.k]:''):'';
+    var full=(f.t==='ta'||f.t==='photo')?'ffull':'';
+    h+='<div class="fg '+full+'"><label class="flabel">'+f.l+(f.req?' *':'')+'</label>';
+    if (f.t==='text'||f.t==='num') {
+      h+='<input class="fi" id="fi-'+f.k+'" type="'+(f.t==='num'?'number':'text')+'" value="'+(val||'')+'" placeholder="'+(f.ph||'')+'">';
+    } else if (f.t==='city') {
+      h+='<select class="fsel2" id="fi-'+f.k+'">'+CITIES_RU.map(function(c){return '<option'+(c===val?' selected':'')+'>'+c+'</option>';}).join('')+'</select>';
+    } else if (f.t==='sel') {
+      h+='<select class="fsel2" id="fi-'+f.k+'">'+(f.o||[]).map(function(o){return '<option'+(o===val?' selected':'')+'>'+o+'</option>';}).join('')+'</select>';
+    } else if (f.t==='ta') {
+      h+='<textarea class="fta" id="fi-'+f.k+'" placeholder="'+(f.ph||'')+'">'+(val||'')+'</textarea>';
+    } else if (f.t==='bool') {
+      h+='<select class="fsel2" id="fi-'+f.k+'"><option value="true"'+(val===true||val==="true"?' selected':'')+'>Да</option><option value="false"'+(val!==true&&val!=="true"?' selected':'')+'>Нет</option></select>';
+    } else if (f.t==='photo') {
+      h+='<div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:5px">'+
+         '<input class="fi" id="fi-'+f.k+'" type="text" value="'+(val||'')+'" placeholder="https://..." oninput="previewPhoto()">'+
+         '<button class="btn btn-ghost btn-sm" type="button" onclick="findPhotos()">Фото</button></div>'+
+         '<div class="phprev" id="ph-prev">'+(val?'<img src="'+val+'" onerror="this.style.opacity=0">':'нет фото')+'</div>'+
+         '<div id="ph-res"></div>';
     }
-    /* остальное как было */
-  } catch(e){
-    res.innerHTML = '<div class="uhint">Ошибка поиска фото</div>';
-  }
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('rec-body').innerHTML=h;
 }
 
-// === ОСТАЛЬНЫЕ ФУНКЦИИ (saveRec, delRow и т.д.) — я добавил только одну строку в delRow и saveRec ===
-async function saveRec(){
-  /* как было */
+function previewPhoto(){
+  var pf=(SECS[curSec].fields||[]).filter(function(f){return f.t==='photo';})[0];
+  if(!pf)return;
+  var inp=document.getElementById('fi-'+pf.k); if(!inp)return;
+  var p=document.getElementById('ph-prev');
+  if(p) p.innerHTML=inp.value?'<img src="'+inp.value+'" onerror="this.style.opacity=0">':'нет фото';
+};
+
+async function findPhotos(){
+  var ne=document.getElementById('fi-name')||document.getElementById('fi-title');
+  var ce=document.getElementById('fi-city');
+  var q=[ne?ne.value:'',ce?ce.value:'','Uzbekistan'].filter(Boolean).join(' ');
+  var res=document.getElementById('ph-res'); res.innerHTML='<div class="uhint">Ищу фото...</div>';
   try {
-    if(editId){ await sbFetch... }
-    else { await sbFetch... }
-    closeRec(); 
-    loadData();           // ← уже было, но теперь точно работает
-    showToast('Сохранено!','green');
+    var r=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(q)+'&per_page=8&client_id=x8nIR01NbCJlThbG9vyqcmUsFO6-EdQAPetNj04KID8');
+    var d=await r.json();
+    if(!d.results||!d.results.length){res.innerHTML='<div class="uhint">Не найдено</div>';return;}
+    res.innerHTML='<div class="ugrid">'+d.results.map(function(p){var u=p.urls.regular.replace(/'/g,"%27");return '<img class="uthumb" src="'+p.urls.small+'" onclick="pickPhoto(\''+u+'\')">'; }).join('')+'</div>';
+  } catch(e){res.innerHTML='<div class="uhint">Ошибка</div>';}
+};
+
+function pickPhoto(url){
+  var pf=(SECS[curSec].fields||[]).filter(function(f){return f.t==='photo';})[0]; if(!pf)return;
+  var inp=document.getElementById('fi-'+pf.k); if(inp)inp.value=url;
+  var p=document.getElementById('ph-prev'); if(p)p.innerHTML='<img src="'+url+'">';
+};
+
+async function saveRec(){
+  var fields=SECS[curSec].fields||[]; var body={};
+  fields.forEach(function(f){
+    var el=document.getElementById('fi-'+f.k); if(!el)return;
+    var v=el.value;
+    if(f.t==='num') v=v===''?null:+v;
+    if(f.t==='bool') v=v==='true';
+    body[f.k]=v;
+  });
+  try {
+    if(editId){ await sbFetch(curSec,{method:'PATCH',body:body,qs:'?id=eq.'+editId}); showToast('Сохранено','green'); }
+    else { await sbFetch(curSec,{method:'POST',body:body}); showToast('Добавлено','green'); }
+    closeRec(); loadData();
   } catch(e){ showToast('Ошибка: '+e.message,'red'); }
-}
+};
 
 async function delRow(id){
-  if(!confirm('Удалить запись?')) return;
-  try{ 
-    await sbFetch(curSec,{method:'DELETE',qs:'?id=eq.'+id}); 
-    showToast('Удалено!','green'); 
-    loadData();           // ← ИСПРАВЛЕНИЕ 2 (обновление сразу)
-  }
+  if(!confirm('Удалить запись?'))return;
+  try{ await sbFetch(curSec,{method:'DELETE',qs:'?id=eq.'+id}); showToast('Удалено','green'); loadData(); }
   catch(e){ showToast('Ошибка: '+e.message,'red'); }
+};
+
+function openCfg(){ document.getElementById('cfg-url').value=SURL; document.getElementById('cfg-key').value=SKEY; document.getElementById('cfg-ovl').classList.add('open'); };
+function closeCfg(){ document.getElementById('cfg-ovl').classList.remove('open'); };
+function saveCfg(){
+  SURL=document.getElementById('cfg-url').value.trim().replace(/\/$/,'');
+  SKEY=document.getElementById('cfg-key').value.trim();
+  localStorage.setItem('w_url',SURL); localStorage.setItem('w_key',SKEY);
+  closeCfg(); setConn(true); document.getElementById('cfg-notice').style.display='none';
+  showToast('Подключено','green'); loadData();
+};
+
+// EXT
+function renderExt(sec) {
+  var c=document.getElementById('ext-sec');
+  if(sec==='flights') c.innerHTML=flightsUI();
+  else if(sec==='railway') c.innerHTML=railwayUI();
 }
 
-// === ВСЁ ОСТАЛЬНОЕ (flightsUI, railwayUI, showToast, appInit) — без изменений ===
+function flightsUI(){
+  var d=new Date(Date.now()+7*864e5).toISOString().split('T')[0];
+  return '<div class="notice notice-sky">Поиск через Aviasales TravelPayouts API</div>'+
+    '<div class="ext-wrap"><div class="ext-header"><div class="ext-icon" style="background:rgba(56,189,248,.12);font-size:28px">+</div>'+
+    '<div><div style="font-size:16px;font-weight:600">Поиск авиабилетов</div><div style="font-size:12px;color:var(--tx3)">Aviasales API</div></div></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:16px;align-items:end">'+
+    '<div class="fg"><label class="flabel">Откуда (IATA)</label><input class="fi" id="fl-from" value="TAS"></div>'+
+    '<div class="fg"><label class="flabel">Куда (IATA)</label><input class="fi" id="fl-to" value="SKD"></div>'+
+    '<div class="fg"><label class="flabel">Дата</label><input class="fi" id="fl-date" type="date" value="'+d+'"></div>'+
+    '<div class="fg"><label class="flabel">Пасс.</label><select class="fsel2" id="fl-pass"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>'+
+    '<button class="btn btn-sky" onclick="searchFlights()">Найти</button></div>'+
+    '<div id="fl-res" style="text-align:center;padding:24px;color:var(--tx3)">Введи параметры и нажми Найти</div>'+
+    '<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--b);display:flex;gap:10px">'+
+    '<a href="https://www.aviasales.ru" target="_blank" class="btn btn-ghost btn-sm">Aviasales.ru</a></div></div>';
+}
+
+async function searchFlights(){
+  var from=document.getElementById('fl-from').value.trim().toUpperCase();
+  var to=document.getElementById('fl-to').value.trim().toUpperCase();
+  var date=document.getElementById('fl-date').value;
+  var res=document.getElementById('fl-res');
+  if(!from||!to||!date){showToast('Заполни поля','red');return;}
+  res.innerHTML='<div style="text-align:center;padding:24px;color:var(--tx3)">Ищу рейсы...</div>';
+  var ym=date.split('-');
+  try{
+    var r=await fetch('https://api.travelpayouts.com/v1/prices/cheap?origin='+from+'&destination='+to+'&depart_date='+ym[0]+'-'+ym[1]+'&currency=usd&token=d1ab8c478da29f2a25ce14d5440a4cb9');
+    var d=await r.json();
+    var fs=d.data&&d.data[to]?Object.values(d.data[to]).slice(0,6):[];
+    if(!fs.length){res.innerHTML='<div style="text-align:center;padding:24px;color:var(--tx3)">Рейсов не найдено</div>';return;}
+    res.innerHTML=fs.map(function(f){
+      return '<div class="flight-card">'+
+        '<div style="flex:1"><div style="font-size:11px;color:var(--tx3)">'+(f.airline||'')+'</div>'+
+        '<div style="font-size:16px;font-weight:600">'+from+' > '+to+'</div>'+
+        '<div style="font-size:12px;color:var(--tx3)">'+date+'</div></div>'+
+        '<span class="badge '+(f.transfers===0?'bg':'bamb')+'">'+(f.transfers===0?'Прямой':f.transfers+' пересадка')+'</span>'+
+        '<div style="text-align:right"><div style="font-size:20px;font-weight:600;color:var(--grn);font-family:var(--fm)">$'+(f.price||'-')+'</div>'+
+        '<a href="https://www.aviasales.ru/search/'+from+date.replace(/-/g,'')+to+'1" target="_blank" class="btn btn-sky btn-sm" style="margin-top:6px">Купить</a></div></div>';
+    }).join('');
+  }catch(e){
+    res.innerHTML='<div style="text-align:center;padding:24px">'+
+      '<a href="https://www.aviasales.ru/search/'+from+date.replace(/-/g,'')+to+'1" target="_blank" class="btn btn-sky">Искать на Aviasales</a></div>';
+  }
+};
+
+function railwayUI(){
+  var cities=[['Ташкент','Tashkent'],['Самарканд','Samarkand'],['Бухара','Bukhara'],
+    ['Хива','Khiva'],['Андижан','Andijan'],['Фергана','Fergana'],
+    ['Наманган','Namangan'],['Термез','Termez'],['Москва','Moscow']];
+  var opts=cities.map(function(c){return '<option value="'+c[1]+'">'+c[0]+'</option>';}).join('');
+  var opts2=cities.map(function(c){return '<option value="'+c[1]+'"'+(c[0]==='Самарканд'?' selected':'')+'>'+c[0]+'</option>';}).join('');
+  var tom=new Date(Date.now()+864e5).toISOString().split('T')[0];
+  var routes=[['Ташкент > Самарканд','Tashkent','Samarkand','1.5-2ч','от $5'],
+    ['Ташкент > Бухара','Tashkent','Bukhara','3-4ч','от $9'],
+    ['Ташкент > Хива','Tashkent','Khiva','~7ч','от $12'],
+    ['Самарканд > Бухара','Samarkand','Bukhara','~2ч','от $5'],
+    ['Ташкент > Андижан','Tashkent','Andijan','~3ч','от $7'],
+    ['Москва > Ташкент','Moscow','Tashkent','~70ч','от $60']];
+  return '<div class="notice notice-sky">Ж/Д билеты - Яндекс Путешествия</div>'+
+    '<div class="ext-wrap"><div class="ext-header"><div class="ext-icon" style="background:rgba(245,158,11,.12);font-size:28px">~</div>'+
+    '<div><div style="font-size:16px;font-weight:600">Поиск ж/д билетов</div><div style="font-size:12px;color:var(--tx3)">Яндекс Путешествия</div></div></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;margin-bottom:16px;align-items:end">'+
+    '<div class="fg"><label class="flabel">Откуда</label><select class="fsel2" id="rw-from">'+opts+'</select></div>'+
+    '<div class="fg"><label class="flabel">Куда</label><select class="fsel2" id="rw-to">'+opts2+'</select></div>'+
+    '<div class="fg"><label class="flabel">Дата</label><input class="fi" id="rw-date" type="date" value="'+tom+'"></div>'+
+    '<button class="btn btn-amb" onclick="openRailway()">Найти</button></div>'+
+    '<div style="background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:16px;margin-bottom:14px">'+
+    '<div style="font-size:12px;color:var(--tx3);margin-bottom:10px;font-weight:500">Популярные маршруты</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'+
+    routes.map(function(rt){return '<div class="route-card" onclick="setRoute(\''+rt[1]+'\',\''+rt[2]+'\')">'+
+      '<div style="font-size:12px;font-weight:500;color:var(--tx)">'+rt[0]+'</div>'+
+      '<div style="font-size:11px;color:var(--tx3);margin-top:3px">'+rt[3]+' &bull; <span style="color:var(--grn)">'+rt[4]+'</span></div></div>';}).join('')+
+    '</div></div>'+
+    '<div style="padding-top:14px;border-top:1px solid var(--b);display:flex;gap:10px">'+
+    '<a href="https://travel.yandex.ru/trains" target="_blank" class="btn btn-ghost btn-sm">Яндекс Путешествия</a>'+
+    '<a href="https://rasp.yandex.ru" target="_blank" class="btn btn-ghost btn-sm">Расписания</a></div></div>';
+}
+
+function openRailway(){
+  var from=document.getElementById('rw-from').value;
+  var to=document.getElementById('rw-to').value;
+  var date=document.getElementById('rw-date').value;
+  window.open('https://travel.yandex.ru/trains/'+from+'--'+to+'/?when='+date,'_blank');
+};
+function setRoute(from,to){
+  var f=document.getElementById('rw-from'); if(f)f.value=from;
+  var t=document.getElementById('rw-to'); if(t)t.value=to;
+};
+
+function showToast(msg, color) {
+  var cols={green:'#22c55e',red:'#ef4444',sky:'#38bdf8'};
+  document.getElementById('tdot').style.background = cols[color]||cols.sky;
+  document.getElementById('tmsg').textContent = msg;
+  var t=document.getElementById('toast'); t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2800);
+}
 
 function appInit() {
-  if(SURL && SKEY){ 
-    document.getElementById('cfg-notice').style.display='none'; 
-    setConn(true); 
-  } else {
-    setConn(false);
-    document.getElementById('cfg-notice').style.display='block';
-  }
+  if(SURL&&SKEY){ document.getElementById('cfg-notice').style.display='none'; setConn(true); }
+  else setConn(false);
   switchSec('tour_packages');
 }
 
 if(sessionStorage.getItem('wa')==='1') appInit();
+
+
 </script>
 </body>
 </html>
