@@ -111,7 +111,7 @@ tr:hover .racts{opacity:1}
 .flight-card{background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:8px}
 .movl{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .movl.open{opacity:1;pointer-events:all}
-.modal{background:var(--surf);border:1px solid var(--b2);border-radius:16px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;transform:translateY(10px);transition:transform .2s}
+.modal{background:var(--surf);border:1px solid var(--b2);border-radius:16px;width:920px;max-width:97vw;max-height:90vh;overflow-y:auto;transform:translateY(10px);transition:transform .2s}
 .movl.open .modal{transform:translateY(0)}
 .modal::-webkit-scrollbar{width:4px}
 .modal::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
@@ -167,7 +167,6 @@ tr:hover .racts{opacity:1}
   </div>
   <div class="sb-sec">Каталог</div>
   <div class="ni" id="ni-flights"     onclick="switchSec('flights')"><span class="ni-ico">&#x2708;</span>Авиабилеты<span class="ni-ext">API</span></div>
-  <div class="ni" id="ni-railway"     onclick="switchSec('railway')"><span class="ni-ico">&#x1F682;</span>Ж/Д билеты<span class="ni-ext">API</span></div>
   <div class="ni" id="ni-hotels"      onclick="switchSec('hotels')"><span class="ni-ico">&#x1F3E8;</span>Отели<span class="ni-cnt" id="cnt-hotels">0</span></div>
   <div class="ni" id="ni-transfers"   onclick="switchSec('transfers')"><span class="ni-ico">&#x1F697;</span>Трансфер<span class="ni-cnt" id="cnt-transfers">0</span></div>
   <div class="ni" id="ni-sights"      onclick="switchSec('sights')"><span class="ni-ico">&#x1F3DB;</span>Достопримечательности<span class="ni-cnt" id="cnt-sights">0</span></div>
@@ -204,7 +203,7 @@ tr:hover .racts{opacity:1}
       <div class="scard"><div class="slabel">Записей</div><div class="sval" id="s-total">0</div><div class="ssub">в разделе</div></div>
       <div class="scard"><div class="slabel">Активных</div><div class="sval" style="color:var(--grn)" id="s-active">0</div><div class="ssub">active=true</div></div>
       <div class="scard"><div class="slabel">Ср. цена</div><div class="sval" style="color:var(--acc2)" id="s-price">$0</div><div class="ssub">по разделу</div></div>
-      <div class="scard"><div class="slabel">Разделов</div><div class="sval" style="color:var(--sky)">11</div><div class="ssub">в каталоге</div></div>
+      <div class="scard"><div class="slabel">Разделов</div><div class="sval" style="color:var(--sky)">10</div><div class="ssub">в каталоге</div></div>
     </div>
     <div class="toolbar" id="toolbar-row">
       <div class="sbox"><input type="text" id="q-search" placeholder="Поиск..." oninput="applyFilters()"></div>
@@ -291,7 +290,6 @@ var CLABEL = {
 
 var SECS = {
   flights:  { label:'Авиабилеты', type:'ext' },
-  railway:  { label:'Ж/Д билеты', type:'ext' },
   hotels: { label:'Отели', type:'db', pk:'price_from',
     cols:['image_url','name','city','stars','board_type','price_from','price_peak','active'],
     fields:[
@@ -301,31 +299,13 @@ var SECS = {
       {k:'stars',l:'Звёзды (1-5)',t:'num'},
       {k:'rooms',l:'Номера',t:'rooms'},
       {k:'rating',l:'Рейтинг',t:'num'},
-      {k:'review_count',l:'Кол-во отзывов',t:'num'},
-      {k:'phone',l:'Телефон',t:'text'},
-      {k:'website',l:'Сайт',t:'text'},
-      {k:'image_url',l:'Фото',t:'photo'},
-      {k:'description',l:'Описание',t:'ta'},
-      {k:'market_restrictions',l:'Рынок/ограничения',t:'text',ph:'VALID FOR ALL MARKETS'},
-      {k:'contract_from',l:'Контракт с',t:'text',ph:'01.01.2026'},
-      {k:'contract_to',l:'Контракт по',t:'text',ph:'31.12.2026'},
+      {k:'room_photos',l:'Фото номеров',t:'room_photos'},
       {k:'currency',l:'Валюта',t:'sel',o:['USD','EUR','UZS']},
       {k:'board_type',l:'Тип питания',t:'sel',o:['RO','BB','HB','FB','AI']},
-      {k:'tour_fee_included',l:'Tour Fee включен',t:'bool'},
-      {k:'children_free_age',l:'Дети бесплатно (возраст)',t:'text',ph:'0-5.99'},
-      {k:'cancellation_policy',l:'Политика отмены / No Show',t:'ta'},
-      {k:'price_from',l:'Цена от $ (мин. номер)',t:'num'},
-      {k:'price_peak',l:'Цена пик $ (макс. сезон)',t:'num'},
-      {k:'season_high_dates',l:'Высокий сезон (даты)',t:'text',ph:'31.03-01.06 / 01.09-01.11'},
-      {k:'season_mid_dates',l:'Средний сезон (даты)',t:'text',ph:'23.03-29.03 / 01.06-14.06'},
-      {k:'season_low_dates',l:'Низкий сезон (даты)',t:'text',ph:'01.01-22.03 / 15.06-23.08'},
-      {k:'room_prices',l:'Цены номеров JSON',t:'ta',ph:'[{"room":"Guest single","high":305,"mid":235,"low":195}]'},
       {k:'checkin_standard',l:'Check-in стандарт',t:'text',ph:'14:00'},
-      {k:'checkin_early',l:'Ранний check-in',t:'text',ph:'08:00-14:00 = 50%, до 08:00 = 100%'},
       {k:'checkout_standard',l:'Check-out стандарт',t:'text',ph:'12:00'},
-      {k:'checkout_late',l:'Поздний check-out',t:'text',ph:'12:00-18:00 = 50%, после 18:00 = 100%'},
       {k:'amenities',l:'Удобства',t:'text',ph:'Wi-Fi, бассейн, спа, ресторан'},
-      {k:'active',l:'Активен',t:'bool'}
+      {k:'hotel_rules',l:'Правила отеля',t:'ta',ph:'Введите правила отеля...'},
     ]
   },
   transfers: { label:'Трансфер', type:'db', pk:'price',
@@ -508,54 +488,59 @@ function setConn(ok) {
   document.getElementById('clabel').textContent = ok ? 'Supabase connected' : 'Не подключено';
 }
 
-// SUPABASE — используем XMLHttpRequest вместо fetch (нет проблем с AbortSignal/postMessage)
-function sbXHR(table, o) {
-  return new Promise(function(resolve, reject) {
-    o = o || {};
-    var method = o.method || 'GET';
-    var xhr = new XMLHttpRequest();
-    xhr.open(method, SURL + '/rest/v1/' + table + (o.qs||''), true);
-    xhr.setRequestHeader('apikey', SKEY);
-    xhr.setRequestHeader('Authorization', 'Bearer ' + SKEY);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    if (method === 'POST') xhr.setRequestHeader('Prefer', 'return=representation');
-    xhr.timeout = 15000;
-    xhr.ontimeout = function(){ reject(new Error('Таймаут — Supabase не отвечает')); };
-    xhr.onerror = function(){ reject(new Error('Нет связи с Supabase. Убедись что проект активен на supabase.com/dashboard')); };
-    xhr.onload = function() {
-      if (xhr.status === 404 || (xhr.responseText && xhr.responseText.indexOf('does not exist') > -1)) {
-        resolve([]); return;
+// SUPABASE
+async function sbRequest(url, opts) {
+  var proxies = [
+    url,
+    'https://corsproxy.io/?' + encodeURIComponent(url),
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+    'https://proxy.cors.sh/' + url
+  ];
+  var lastErr = '';
+  for (var i = 0; i < proxies.length; i++) {
+    try {
+      var o = Object.assign({}, opts);
+      if (i > 0) {
+        // прокси — копируем заголовки
+        o = JSON.parse(JSON.stringify(opts));
       }
-      if (xhr.status === 401) { reject(new Error('Неверный API Key (401)')); return; }
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try { resolve(xhr.responseText ? JSON.parse(xhr.responseText) : []); }
-        catch(e) { resolve([]); }
-        return;
-      }
-      var msg = xhr.responseText || ('HTTP ' + xhr.status);
-      try { var j = JSON.parse(xhr.responseText); msg = j.message || j.hint || j.details || msg; } catch(e){}
-      reject(new Error('HTTP ' + xhr.status + ': ' + msg.slice(0, 200)));
-    };
-    xhr.send(o.body ? JSON.stringify(o.body) : null);
-  });
+      var r = await Promise.race([
+        fetch(proxies[i], o),
+        new Promise(function(_, reject){ setTimeout(function(){ reject(new Error('timeout')); }, 8000); })
+      ]);
+      if (r) return r;
+    } catch(e) { lastErr = e.message; }
+  }
+  throw new Error('Нет связи с Supabase (' + lastErr + ')');
 }
 
-function sbFetch(table, o) { return sbXHR(table, o); }
-
-function pingSupabase() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', SURL + '/rest/v1/', true);
-  xhr.setRequestHeader('apikey', SKEY);
-  xhr.setRequestHeader('Authorization', 'Bearer ' + SKEY);
-  xhr.timeout = 8000;
-  xhr.ontimeout = function(){ setConn(false); };
-  xhr.onerror = function(){ setConn(false); };
-  xhr.onload = function() {
-    var ok = xhr.status === 200 || xhr.status === 400;
-    setConn(ok);
-    if (ok) document.getElementById('cfg-notice').style.display = 'none';
+async function sbFetch(table, o) {
+  o = o || {};
+  var method = o.method || 'GET';
+  var url = SURL + '/rest/v1/' + table + (o.qs||'');
+  var headers = {
+    'apikey': SKEY, 'Authorization': 'Bearer '+SKEY,
+    'Content-Type': 'application/json', 'Accept': 'application/json'
   };
-  xhr.send();
+  if (method==='POST') headers['Prefer']='return=representation';
+  var res = await sbRequest(url, {method:method, headers:headers, body:o.body?JSON.stringify(o.body):undefined});
+  if (!res.ok) {
+    var t=await res.text(); var msg=t;
+    try{var j=JSON.parse(t);msg=j.message||j.hint||j.details||t;}catch(e){}
+    if(res.status===404||t.indexOf('does not exist')>-1) return [];
+    if(res.status===401) throw new Error('Неверный API Key (401)');
+    throw new Error('HTTP '+res.status+': '+msg.slice(0,200));
+  }
+  var t=await res.text(); return t?JSON.parse(t):[];
+}
+
+async function pingSupabase() {
+  try {
+    var res=await sbRequest(SURL+'/rest/v1/',{headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Accept':'application/json'}});
+    var ok=res.status===200||res.status===400||res.status===404;
+    setConn(ok);
+    if(ok) document.getElementById('cfg-notice').style.display='none';
+  } catch(e){ setConn(false); }
 }
 
 function testConn(){
@@ -569,28 +554,14 @@ function testConn(){
     box.style.color=ok?'var(--grn)':'var(--red)';
     box.innerHTML=msg;
   }
-  if(!url||!key){ show('❌ Заполни URL и Key',false); return; }
-  if(!url.startsWith('https://')){ show('❌ URL должен начинаться с https://',false); return; }
+  if(!url||!key){show('❌ Заполни URL и Key',false);return;}
   show('⏳ Проверяю подключение...',false);
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url+'/rest/v1/', true);
-  xhr.setRequestHeader('apikey', key);
-  xhr.setRequestHeader('Authorization', 'Bearer '+key);
-  xhr.timeout = 8000;
-  xhr.ontimeout = function(){ show('❌ Таймаут — Supabase не отвечает. Проект на паузе?',false); };
-  xhr.onerror = function(){
-    show('❌ Нет доступа к Supabase.<br><br><b>Причины:</b><br>'+
-      '1. Проект на паузе — <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--sky)">supabase.com/dashboard</a> → Restore<br>'+
-      '2. Неверный URL (должен быть: https://xxxxx.supabase.co)<br>'+
-      '3. Нет интернета',false);
-  };
-  xhr.onload = function(){
-    if(xhr.status===200||xhr.status===400){ show('✅ Подключено успешно! Статус: '+xhr.status,true); return; }
-    if(xhr.status===401){ show('❌ Неверный API Key (401)',false); return; }
-    if(xhr.status===404){ show('❌ Неверный URL проекта (404)',false); return; }
-    show('❌ HTTP '+xhr.status,false);
-  };
-  xhr.send();
+  sbRequest(url+'/rest/v1/',{headers:{'apikey':key,'Authorization':'Bearer '+key,'Accept':'application/json'}})
+  .then(function(r){
+    if(r.status===200||r.status===400||r.status===404){show('✅ Подключено! Статус: '+r.status,true);}
+    else if(r.status===401){show('❌ Неверный API Key (401)',false);}
+    else{show('❌ HTTP '+r.status,false);}
+  }).catch(function(e){show('❌ '+e.message,false);});
 }
 
 // SWITCH
@@ -701,6 +672,25 @@ function buildForm(rec) {
       h+='</div>';
       return;
     }
+    if(f.t==='room_photos'){
+      var photosVal=[];
+      try{
+        if(val){
+          var parsed=typeof val==='string'?JSON.parse(val):val;
+          // поддержка старого формата {1:'url'} и нового [{id,url}]
+          if(Array.isArray(parsed)) photosVal=parsed;
+          else photosVal=Object.keys(parsed).map(function(k){return {id:+k,url:parsed[k]};});
+        }
+      }catch(e){}
+      if(!photosVal.length) photosVal=[{id:1,url:''}];
+      h+='<div class="fg ffull"><label class="flabel">Фото номеров (по ID)</label>';
+      h+='<div id="photos-list" style="display:flex;flex-direction:column;gap:8px">';
+      photosVal.forEach(function(p,i){ h+=buildPhotoRow(i,p); });
+      h+='</div>';
+      h+='<button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addPhotoRow()">+ Добавить фото</button>';
+      h+='</div>';
+      return;
+    }
     var full=(f.t==='ta'||f.t==='photo')?'ffull':'';
     h+='<div class="fg '+full+'"><label class="flabel">'+f.l+(f.req?' *':'')+'</label>';
     if(f.t==='text'||f.t==='num'){
@@ -734,9 +724,11 @@ var ROOM_TYPES=[
 ];
 
 function buildRoomRow(i,r){
-  var opts=ROOM_TYPES.map(function(t){return '<option'+(t===(r.type||'')?' selected':'')+'>'+t+'</option>';}).join('');
-  return '<div class="room-row" id="room-row-'+i+'">'+
-    '<div><span class="flabel">Тип номера</span><select class="fsel2" id="room-type-'+i+'">'+opts+'</select></div>'+
+  var idOpts='';
+  for(var n=1;n<=20;n++) idOpts+='<option value="'+n+'"'+(+r.room_id===n?' selected':'')+'>'+n+'</option>';
+  return '<div class="room-row" id="room-row-'+i+'" style="grid-template-columns:60px 2fr 1fr 1fr 1fr auto">'+
+    '<div><span class="flabel">ID фото</span><select class="fsel2" id="room-id-'+i+'">'+idOpts+'</select></div>'+
+    '<div><span class="flabel">Тип номера</span><input class="fi" id="room-type-'+i+'" type="text" value="'+(r.type||'')+'" placeholder="Введите тип номера..."></div>'+
     '<div><span class="flabel">Цена ($)</span><input class="fi" id="room-price-'+i+'" type="number" value="'+(r.price||'')+'" placeholder="0"></div>'+
     '<div><span class="flabel">Сезон с</span><input class="fi" id="room-from-'+i+'" type="date" value="'+(r.date_from||'')+'"></div>'+
     '<div><span class="flabel">Сезон по</span><input class="fi" id="room-to-'+i+'" type="date" value="'+(r.date_to||'')+'"></div>'+
@@ -772,13 +764,96 @@ function collectRooms(){
   var rows=[];
   list.querySelectorAll('[id^="room-row-"]').forEach(function(el){
     var i=el.id.replace('room-row-','');
+    var id=document.getElementById('room-id-'+i);
     var t=document.getElementById('room-type-'+i);
     var p=document.getElementById('room-price-'+i);
     var f=document.getElementById('room-from-'+i);
     var o=document.getElementById('room-to-'+i);
-    if(t) rows.push({type:t.value,price:p?+p.value||0:0,date_from:f?f.value:'',date_to:o?o.value:''});
+    if(t) rows.push({
+      room_id: id?+id.value:1,
+      type: t.value,
+      price: p?+p.value||0:0,
+      date_from: f?f.value:'',
+      date_to: o?o.value:''
+    });
   });
   return rows;
+}
+
+function buildPhotoRow(i, p){
+  var id=p.id||1; var url=p.url||'';
+  var idOpts='';
+  for(var n=1;n<=20;n++) idOpts+='<option value="'+n+'"'+(n===id?' selected':'')+'>'+n+'</option>';
+  return '<div id="photo-row-'+i+'" style="display:grid;grid-template-columns:80px 1fr auto auto auto;gap:6px;align-items:center;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:8px">'+
+    '<div><span class="flabel" style="display:block;margin-bottom:3px">ID фото</span><select class="fsel2" id="phid-'+i+'">'+idOpts+'</select></div>'+
+    '<input class="fi" id="phurl-'+i+'" type="text" value="'+url+'" placeholder="https://... URL фото" oninput="previewPhotoRow('+i+')">'+
+    '<button class="btn btn-ghost btn-sm" type="button" onclick="findPhotoRowPhotos('+i+')">Найти</button>'+
+    '<div style="width:48px;height:36px;border-radius:5px;overflow:hidden;background:var(--surf3);flex-shrink:0" id="phprev-'+i+'">'+
+    (url?'<img src="'+url+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.opacity=0">':'')+
+    '</div>'+
+    '<button type="button" class="btn btn-danger btn-sm" style="padding:6px 10px" onclick="removePhotoRow('+i+')">✕</button>'+
+    '</div>'+
+    '<div id="phres-'+i+'" style="padding-left:4px"></div>';
+}
+
+function addPhotoRow(){
+  var list=document.getElementById('photos-list'); if(!list)return;
+  var max=0;
+  list.querySelectorAll('[id^="photo-row-"]').forEach(function(el){
+    var n=parseInt(el.id.replace('photo-row-',''))||0; if(n>=max)max=n+1;
+  });
+  var div=document.createElement('div');
+  div.innerHTML=buildPhotoRow(max,{id:max+1,url:''});
+  while(div.firstChild) list.appendChild(div.firstChild);
+}
+
+function removePhotoRow(i){
+  var list=document.getElementById('photos-list');
+  if(list&&list.querySelectorAll('[id^="photo-row-"]').length<=1){showToast('Минимум одно фото','red');return;}
+  var row=document.getElementById('photo-row-'+i); if(row)row.remove();
+  var res=document.getElementById('phres-'+i); if(res)res.remove();
+}
+
+function previewPhotoRow(i){
+  var inp=document.getElementById('phurl-'+i); if(!inp)return;
+  var p=document.getElementById('phprev-'+i); if(!p)return;
+  p.innerHTML=inp.value?'<img src="'+inp.value+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.opacity=0">':'';
+}
+
+async function findPhotoRowPhotos(i){
+  var ne=document.getElementById('fi-name');
+  var ce=document.getElementById('fi-city');
+  var q=[ne?ne.value:'',ce?ce.value:'','hotel room','Uzbekistan'].filter(Boolean).join(' ');
+  var res=document.getElementById('phres-'+i); if(!res)return;
+  res.innerHTML='<div class="uhint">Ищу фото...</div>';
+  try{
+    var r=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(q)+'&per_page=6&client_id=x8nIR01NbCJlThbG9vyqcmUsFO6-EdQAPetNj04KID8');
+    var d=await r.json();
+    if(!d.results||!d.results.length){res.innerHTML='<div class="uhint">Не найдено</div>';return;}
+    res.innerHTML='<div class="ugrid">'+d.results.map(function(p){
+      var u=p.urls.regular.replace(/'/g,'%27');
+      return '<img class="uthumb" src="'+p.urls.small+'" onclick="pickPhotoRow('+i+',\''+u+'\')">';
+    }).join('')+'</div>';
+  }catch(e){res.innerHTML='<div class="uhint">Ошибка</div>';}
+}
+
+function pickPhotoRow(i,url){
+  var inp=document.getElementById('phurl-'+i); if(inp)inp.value=url;
+  var p=document.getElementById('phprev-'+i);
+  if(p)p.innerHTML='<img src="'+url+'" style="width:100%;height:100%;object-fit:cover">';
+  var res=document.getElementById('phres-'+i); if(res)res.innerHTML='';
+}
+
+function collectRoomPhotos(){
+  var list=document.getElementById('photos-list'); if(!list)return[];
+  var photos=[];
+  list.querySelectorAll('[id^="photo-row-"]').forEach(function(el){
+    var i=el.id.replace('photo-row-','');
+    var idEl=document.getElementById('phid-'+i);
+    var urlEl=document.getElementById('phurl-'+i);
+    if(idEl&&urlEl&&urlEl.value) photos.push({id:+idEl.value,url:urlEl.value});
+  });
+  return photos;
 }
 
 function previewPhoto(){
@@ -818,6 +893,7 @@ async function saveRec(){
   var fields=SECS[curSec].fields||[]; var body={};
   fields.forEach(function(f){
     if(f.t==='rooms'){ body[f.k]=JSON.stringify(collectRooms()); return; }
+    if(f.t==='room_photos'){ body[f.k]=JSON.stringify(collectRoomPhotos()); return; }
     var el=document.getElementById('fi-'+f.k); if(!el)return;
     var v=el.value;
     if(f.t==='num') v=v===''?null:+v;
@@ -874,7 +950,6 @@ function saveCfg(){
 function renderExt(sec) {
   var c=document.getElementById('ext-sec');
   if(sec==='flights') c.innerHTML=flightsUI();
-  else if(sec==='railway') c.innerHTML=railwayUI();
 }
 
 var FL_CITIES=[
@@ -1113,147 +1188,6 @@ async function searchFlights(){
     }).join('');
 };
 
-function railwayUI(){
-  var cities=[['Ташкент','Tashkent'],['Самарканд','Samarkand'],['Бухара','Bukhara'],
-    ['Хива','Khiva'],['Андижан','Andijan'],['Фергана','Fergana'],
-    ['Наманган','Namangan'],['Термез','Termez'],['Москва','Moscow']];
-  var opts=cities.map(function(c){return '<option value="'+c[1]+'">'+c[0]+'</option>';}).join('');
-  var opts2=cities.map(function(c){return '<option value="'+c[1]+'"'+(c[0]==='Самарканд'?' selected':'')+'>'+c[0]+'</option>';}).join('');
-  var tom=new Date(Date.now()+864e5).toISOString().split('T')[0];
-  var ret=new Date(Date.now()+8*864e5).toISOString().split('T')[0];
-  var routes=[['Ташкент → Самарканд','Tashkent','Samarkand','1.5-2ч','от $5'],
-    ['Ташкент → Бухара','Tashkent','Bukhara','3-4ч','от $9'],
-    ['Ташкент → Хива','Tashkent','Khiva','~7ч','от $12'],
-    ['Самарканд → Бухара','Samarkand','Bukhara','~2ч','от $5'],
-    ['Ташкент → Андижан','Tashkent','Andijan','~3ч','от $7'],
-    ['Москва → Ташкент','Moscow','Tashkent','~70ч','от $60']];
-  return '<div class="notice notice-sky" style="align-items:center">🚂 Ж/Д билеты — TravelPayouts API</div>'+
-    '<div class="ext-wrap">'+
-    '<div class="ext-header"><div class="ext-icon" style="background:rgba(245,158,11,.12);font-size:24px">🚂</div>'+
-    '<div><div style="font-size:16px;font-weight:600">Поиск ж/д билетов</div><div style="font-size:12px;color:var(--tx3)">TravelPayouts · токен подключён</div></div>'+
-    '<div style="margin-left:auto;display:flex;gap:4px;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:3px">'+
-    '<button id="rw-oneway" class="btn btn-sm" onclick="rwToggleType(\'oneway\')" style="background:var(--acc);color:#fff;border:none">Туда</button>'+
-    '<button id="rw-round" class="btn btn-sm" onclick="rwToggleType(\'round\')" style="background:transparent;color:var(--tx2);border:none">Туда-обратно</button>'+
-    '</div></div>'+
-    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:12px;align-items:end">'+
-    '<div class="fg"><label class="flabel">Откуда</label><select class="fsel2" id="rw-from">'+opts+'</select></div>'+
-    '<div class="fg"><label class="flabel">Куда</label><select class="fsel2" id="rw-to">'+opts2+'</select></div>'+
-    '<div class="fg"><label class="flabel">Дата туда</label><input class="fi" id="rw-date" type="date" value="'+tom+'"></div>'+
-    '<div class="fg"><label class="flabel">Дата обратно</label><input class="fi" id="rw-retdate" type="date" value="'+ret+'" disabled style="opacity:.35"></div>'+
-    '<button class="btn btn-amb" onclick="searchTrains()" style="white-space:nowrap">🔍 Найти</button></div>'+
-    '<div style="background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px">'+
-    '<div style="font-size:11px;color:var(--tx3);margin-bottom:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Популярные маршруты</div>'+
-    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'+
-    routes.map(function(rt){return '<div class="route-card" onclick="setRoute(\''+rt[1]+'\',\''+rt[2]+'\')">'+
-      '<div style="font-size:12px;font-weight:500;color:var(--tx)">'+rt[0]+'</div>'+
-      '<div style="font-size:11px;color:var(--tx3);margin-top:3px">'+rt[3]+' &bull; <span style="color:var(--grn)">'+rt[4]+'</span></div></div>';}).join('')+
-    '</div></div>'+
-    '<div id="rw-res" style="min-height:60px;text-align:center;padding:20px;color:var(--tx3);font-size:13px">Выбери маршрут и нажми Найти</div>'+
-    '</div>';
-}
-
-function rwToggleType(type){
-  var isRound=(type==='round');
-  var rd=document.getElementById('rw-retdate');
-  var btnO=document.getElementById('rw-oneway');
-  var btnR=document.getElementById('rw-round');
-  if(rd){ rd.disabled=!isRound; rd.style.opacity=isRound?'1':'0.35'; }
-  if(btnO){ btnO.style.background=isRound?'transparent':'var(--acc)'; btnO.style.color=isRound?'var(--tx2)':'#fff'; }
-  if(btnR){ btnR.style.background=isRound?'var(--acc)':'transparent'; btnR.style.color=isRound?'#fff':'var(--tx2)'; }
-}
-
-async function searchTrains(){
-  var fromEl=document.getElementById('rw-from');
-  var toEl=document.getElementById('rw-to');
-  var date=document.getElementById('rw-date').value;
-  var retEl=document.getElementById('rw-retdate');
-  var retDate=retEl&&!retEl.disabled?retEl.value:'';
-  var isRound=!!(retDate);
-  var fromVal=fromEl.value;
-  var toVal=toEl.value;
-  var fromText=fromEl.options[fromEl.selectedIndex].text;
-  var toText=toEl.options[toEl.selectedIndex].text;
-  var arrow=isRound?'⇄':'→';
-  var res=document.getElementById('rw-res');
-  if(!fromVal||!toVal||!date){showToast('Заполни все поля','red');return;}
-  res.innerHTML='<div style="text-align:center;padding:28px;color:var(--tx3)"><div style="font-size:26px;margin-bottom:8px">🚂</div><div>Ищу поезда...</div></div>';
-
-  var iataMap={Tashkent:'TAS',Samarkand:'SKD',Bukhara:'BHK',Khiva:'NCU',Andijan:'AZN',Fergana:'FEG',Namangan:'NMA',Termez:'TMJ',Moscow:'MOW'};
-  var fromIata=iataMap[fromVal]||'TAS';
-  var toIata=iataMap[toVal]||'SKD';
-  var parts=date.split('-');
-  var ym=parts[0]+'-'+parts[1];
-
-  var results=[];
-  try {
-    var r=await tpFetch('https://api.travelpayouts.com/v1/prices/cheap?origin='+fromIata+'&destination='+toIata+'&depart_date='+ym+'&currency=usd&token='+TP_TOKEN);
-    if(r&&r.success&&r.data&&r.data[toIata]){
-      results=Object.values(r.data[toIata]).slice(0,6).map(function(f){return{price:f.price,transfers:f.transfers,date:f.departure_at?f.departure_at.slice(0,10):date};});
-    }
-  } catch(e){}
-
-  var trainRef={
-    'TashkentSamarkand':{duration:'1ч 40м',trains:['Afrosiyob'],price_from:5},
-    'TashkentBukhara':{duration:'3ч 30м',trains:['Afrosiyob','Sharq'],price_from:9},
-    'TashkentKhiva':{duration:'6ч 30м',trains:['Sharq'],price_from:12},
-    'SamarkandBukhara':{duration:'1ч 50м',trains:['Afrosiyob','Sharq'],price_from:5},
-    'TashkentAndijan':{duration:'3ч',trains:['Sharq'],price_from:7},
-    'MoscowTashkent':{duration:'67-72ч',trains:['Москва-Ташкент'],price_from:60},
-  };
-  var refKey=fromVal+toVal;
-  var ref=trainRef[refKey]||trainRef[toVal+fromVal];
-
-  var buyUrl='https://bilet.uzbekistan-railways.uz';
-  var dateInfo=date+(isRound?' → '+retDate:'');
-
-  if(!results.length){
-    if(ref){
-      res.innerHTML='<div style="padding:4px">'+
-        '<div style="font-size:11px;color:var(--tx3);margin-bottom:10px">Справочные данные · актуальные цены уточняй на кассе</div>'+
-        ref.trains.map(function(tr){
-          var priceRound=isRound?ref.price_from*2:ref.price_from;
-          return '<div class="flight-card" style="cursor:default">'+
-            '<div style="font-size:22px;margin-right:6px">🚂</div>'+
-            '<div style="flex:1">'+
-            '<div style="font-size:15px;font-weight:600;color:var(--tx)">'+fromText+' '+arrow+' '+toText+'</div>'+
-            '<div style="font-size:11px;color:var(--tx3);margin-top:2px">'+tr+' · '+ref.duration+(isRound?' · туда-обратно':'')+'</div>'+
-            '<div style="font-size:11px;color:var(--tx3);margin-top:1px">📅 '+dateInfo+'</div>'+
-            '</div>'+
-            '<div style="text-align:right;min-width:90px">'+
-            '<div style="font-size:18px;font-weight:700;color:var(--grn);font-family:var(--fm)">от $'+priceRound+'</div>'+
-            '<div style="font-size:10px;color:var(--tx3);margin-bottom:4px">'+(isRound?'туда-обратно':'в одну сторону')+'</div>'+
-            '<a href="'+buyUrl+'" target="_blank" class="btn btn-amb btn-sm">Купить</a>'+
-            '</div></div>';
-        }).join('');
-      return;
-    }
-    res.innerHTML='<div style="text-align:center;padding:28px;color:var(--tx3)">'+
-      '<div style="font-size:28px;margin-bottom:10px">🔍</div>'+
-      '<div style="font-weight:500;color:var(--tx);margin-bottom:5px">Нет данных по маршруту '+fromText+' '+arrow+' '+toText+'</div>'+
-      '<div style="font-size:12px">Попробуй другой маршрут или дату</div>'+
-      '</div>';
-    return;
-  }
-
-  res.innerHTML='<div style="font-size:11px;color:var(--tx3);margin-bottom:10px">Найдено '+results.length+' вариантов · '+fromText+' '+arrow+' '+toText+'</div>'+
-    results.map(function(f){
-      return '<div class="flight-card" style="cursor:default">'+
-        '<div style="font-size:22px;margin-right:6px">🚂</div>'+
-        '<div style="flex:1">'+
-        '<div style="font-size:15px;font-weight:600;color:var(--tx)">'+fromText+' '+arrow+' '+toText+'</div>'+
-        '<div style="font-size:11px;color:var(--tx3);margin-top:2px">📅 '+(f.date||date)+(isRound?' → '+retDate:'')+'</div>'+
-        '</div>'+
-        '<div style="text-align:right;min-width:90px">'+
-        '<div style="font-size:20px;font-weight:700;color:var(--grn);font-family:var(--fm)">$'+f.price+'</div>'+
-        '<div style="font-size:10px;color:var(--tx3);margin-bottom:4px">'+(isRound?'туда-обратно':'в одну сторону')+'</div>'+
-        '<a href="'+buyUrl+'" target="_blank" class="btn btn-amb btn-sm">Купить</a>'+
-        '</div></div>';
-    }).join('');
-};
-function setRoute(from,to){
-  var f=document.getElementById('rw-from'); if(f)f.value=from;
-  var t=document.getElementById('rw-to'); if(t)t.value=to;
-};
 
 function showToast(msg, color) {
   var cols={green:'#22c55e',red:'#ef4444',sky:'#38bdf8'};
