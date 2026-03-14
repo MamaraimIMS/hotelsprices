@@ -651,7 +651,63 @@ function renderCell(col, val) {
 }
 
 function goPage(p){ curPage=p; renderTable(); };
-function openAdd(){ editId=null; document.getElementById('rec-title').textContent='Добавить - '+SECS[curSec].label; buildForm(null); document.getElementById('rec-ovl').classList.add('open'); };
+function draftKey(){ return 'draft_'+curSec; }
+
+function saveDraft(){
+  if(editId) return; // черновик только для новых записей
+  var fields=SECS[curSec].fields||[]; var data={};
+  fields.forEach(function(f){
+    if(f.t==='rooms') data[f.k]=collectRooms();
+    else if(f.t==='room_photos') data[f.k]=collectRoomPhotos();
+    else{ var el=document.getElementById('fi-'+f.k); if(el) data[f.k]=el.value; }
+  });
+  localStorage.setItem(draftKey(), JSON.stringify(data));
+}
+
+function loadDraft(){
+  try{ return JSON.parse(localStorage.getItem(draftKey())||'null'); }catch(e){ return null; }
+}
+
+function clearDraft(){ localStorage.removeItem(draftKey()); }
+
+function openAdd(){
+  editId=null;
+  var draft=loadDraft();
+  document.getElementById('rec-title').innerHTML='Добавить — '+SECS[curSec].label+
+    (draft?'<span id="draft-badge" style="margin-left:10px;font-size:11px;background:rgba(245,158,11,.15);color:var(--amb);border:1px solid rgba(245,158,11,.3);border-radius:5px;padding:2px 8px;font-weight:500;cursor:pointer" onclick="clearDraftAndReset()">✏ Черновик сохранён — нажми чтобы очистить</span>':'');
+  buildForm(draft);
+  document.getElementById('rec-ovl').classList.add('open');
+  // вешаем автосохранение на все поля
+  setTimeout(function(){
+    document.querySelectorAll('#rec-body input, #rec-body select, #rec-body textarea').forEach(function(el){
+      el.addEventListener('input', saveDraft);
+      el.addEventListener('change', saveDraft);
+    });
+    // наблюдатель за динамическими полями (номера/фото добавляются кнопкой)
+    var obs=new MutationObserver(function(){
+      document.querySelectorAll('#rec-body input, #rec-body select, #rec-body textarea').forEach(function(el){
+        if(!el._draftBound){ el._draftBound=true; el.addEventListener('input',saveDraft); el.addEventListener('change',saveDraft); }
+      });
+    });
+    var body=document.getElementById('rec-body');
+    if(body) obs.observe(body,{childList:true,subtree:true});
+  },100);
+}
+
+function clearDraftAndReset(){
+  clearDraft();
+  buildForm(null);
+  var badge=document.getElementById('draft-badge');
+  if(badge) badge.remove();
+  showToast('Черновик очищен','sky');
+  setTimeout(function(){
+    document.querySelectorAll('#rec-body input, #rec-body select, #rec-body textarea').forEach(function(el){
+      el.addEventListener('input', saveDraft);
+      el.addEventListener('change', saveDraft);
+    });
+  },100);
+}
+
 function openEdit(id){ editId=id; var rec=allRows.filter(function(r){return String(r.id)===String(id);})[0]; document.getElementById('rec-title').textContent='Редактировать'; buildForm(rec); document.getElementById('rec-ovl').classList.add('open'); };
 function closeRec(){ document.getElementById('rec-ovl').classList.remove('open'); editId=null; };
 
@@ -910,7 +966,7 @@ async function saveRec(){
       resp=await sbFetch(curSec,{method:'POST',body:body});
       showToast('Добавлено','green');
     }
-    closeRec(); loadData();
+    closeRec(); clearDraft(); loadData();
   } catch(e){
     var msg=e.message||'Неизвестная ошибка';
     if(msg.toLowerCase().indexOf('failed to fetch')>-1){
