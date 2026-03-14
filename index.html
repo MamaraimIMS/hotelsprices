@@ -140,6 +140,8 @@ tr:hover .racts{opacity:1}
 .toast{position:fixed;bottom:22px;right:22px;background:var(--surf);border:1px solid var(--b2);border-radius:10px;padding:10px 16px;font-size:13px;color:var(--tx);display:flex;align-items:center;gap:9px;transform:translateY(60px);opacity:0;transition:all .3s;z-index:3000;pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
 .tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.room-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:7px;align-items:end;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:10px;margin-bottom:6px}
+.room-row .flabel{font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -236,14 +238,19 @@ tr:hover .racts{opacity:1}
 </div>
 
 <div class="movl" id="cfg-ovl" onclick="if(event.target===this)closeCfg()">
-  <div class="modal" style="width:440px">
-    <div class="mhead"><div class="mtitle">Supabase подключение</div><button class="mx" onclick="closeCfg()">x</button></div>
+  <div class="modal" style="width:460px">
+    <div class="mhead"><div class="mtitle">Настройки</div><button class="mx" onclick="closeCfg()">x</button></div>
     <div class="mbody">
-      <div class="cfginfo">Supabase > Project Settings > API > anon public key</div>
+      <div style="font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:8px">Supabase</div>
       <div class="fg" style="margin-bottom:11px"><label class="flabel">Supabase URL</label><input class="fi" id="cfg-url" placeholder="https://xxxx.supabase.co"></div>
-      <div class="fg"><label class="flabel">Anon API Key</label><input class="fi" id="cfg-key" placeholder="eyJhbGci..."></div>
+      <div class="fg" style="margin-bottom:11px"><label class="flabel">Anon API Key</label><input class="fi" id="cfg-key" placeholder="eyJhbGci..."></div>
+      <button class="btn btn-ghost btn-sm" style="margin-bottom:14px;width:100%" onclick="testConn()">🔌 Проверить подключение</button>
+      <div id="cfg-test-res" style="font-size:12px;margin-bottom:14px;display:none;padding:10px;border-radius:8px"></div>
+      <div style="font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:8px">TravelPayouts</div>
+      <div class="cfginfo">Личный кабинет TravelPayouts → Инструменты → Маркер партнёра</div>
+      <div class="fg"><label class="flabel">Партнёрский Marker (для кнопки «Купить»)</label><input class="fi" id="cfg-marker" placeholder="например: 123456" value=""></div>
     </div>
-    <div class="mfoot"><button class="btn btn-ghost" onclick="closeCfg()">Отмена</button><button class="btn btn-primary" onclick="saveCfg()">Подключить</button></div>
+    <div class="mfoot"><button class="btn btn-ghost" onclick="closeCfg()">Отмена</button><button class="btn btn-primary" onclick="saveCfg()">Сохранить</button></div>
   </div>
 </div>
 
@@ -251,9 +258,23 @@ tr:hover .racts{opacity:1}
 
 <script>
 var PASS = 'w2';
-var SURL = localStorage.getItem('w_url') || '';
-var SKEY = localStorage.getItem('w_key') || '';
+// Принудительно сбрасываем старые значения и вшиваем правильные
+localStorage.removeItem('w_url');
+localStorage.removeItem('w_key');
+var SURL = 'https://chhxhcduzjlnoieafved.supabase.co';
+var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNoaHhoY2R1empsbm9pZWFmdmVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMDUwNTIsImV4cCI6MjA4ODg4MTA1Mn0.GIQ0RH4WQTjBfgmJ_g9HcfbyUCd1dYgYGZ8u7WlrEdE';
 var TP_TOKEN = 'ed05c13e61e0b321e7dff5fc015f4bbf';
+var TP_MARKER = localStorage.getItem('tp_marker') || '';
+
+function aviasalesUrl(from, dateOut, to, dateBack, passengers){
+  // Aviasales формат даты: DDMMYY (6 символов)
+  function fmt(d){ var p=d.split('-'); return p[2]+p[1]+p[0].slice(2); }
+  var marker = TP_MARKER ? '?marker='+TP_MARKER : '';
+  if(dateBack){
+    return 'https://www.aviasales.ru/search/'+from+fmt(dateOut)+to+fmt(dateBack)+from+passengers+marker;
+  }
+  return 'https://www.aviasales.ru/search/'+from+fmt(dateOut)+to+passengers+marker;
+}
 var curSec = 'tour_packages';
 var allRows = [], filtered = [], editId = null, curPage = 1, PER = 15;
 var CITIES = ['','Samarkand','Bukhara','Khiva','Tashkent','Shakhrisabz','Nukus'];
@@ -278,7 +299,7 @@ var SECS = {
       {k:'city',l:'Город',t:'city'},
       {k:'address',l:'Адрес',t:'text'},
       {k:'stars',l:'Звёзды (1-5)',t:'num'},
-      {k:'tier',l:'Категория',t:'sel',o:['budget','standard','premium','luxury']},
+      {k:'rooms',l:'Номера',t:'rooms'},
       {k:'rating',l:'Рейтинг',t:'num'},
       {k:'review_count',l:'Кол-во отзывов',t:'num'},
       {k:'phone',l:'Телефон',t:'text'},
@@ -487,17 +508,89 @@ function setConn(ok) {
   document.getElementById('clabel').textContent = ok ? 'Supabase connected' : 'Не подключено';
 }
 
-// SUPABASE
-async function sbFetch(table, o) {
-  o = o || {};
-  var method = o.method || 'GET';
-  var r = await fetch(SURL + '/rest/v1/' + table + (o.qs||''), {
-    method: method,
-    headers: { apikey:SKEY, Authorization:'Bearer '+SKEY, 'Content-Type':'application/json', Prefer: method==='POST'?'return=representation':'' },
-    body: o.body ? JSON.stringify(o.body) : null
+// SUPABASE — используем XMLHttpRequest вместо fetch (нет проблем с AbortSignal/postMessage)
+function sbXHR(table, o) {
+  return new Promise(function(resolve, reject) {
+    o = o || {};
+    var method = o.method || 'GET';
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, SURL + '/rest/v1/' + table + (o.qs||''), true);
+    xhr.setRequestHeader('apikey', SKEY);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + SKEY);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    if (method === 'POST') xhr.setRequestHeader('Prefer', 'return=representation');
+    xhr.timeout = 15000;
+    xhr.ontimeout = function(){ reject(new Error('Таймаут — Supabase не отвечает')); };
+    xhr.onerror = function(){ reject(new Error('Нет связи с Supabase. Убедись что проект активен на supabase.com/dashboard')); };
+    xhr.onload = function() {
+      if (xhr.status === 404 || (xhr.responseText && xhr.responseText.indexOf('does not exist') > -1)) {
+        resolve([]); return;
+      }
+      if (xhr.status === 401) { reject(new Error('Неверный API Key (401)')); return; }
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try { resolve(xhr.responseText ? JSON.parse(xhr.responseText) : []); }
+        catch(e) { resolve([]); }
+        return;
+      }
+      var msg = xhr.responseText || ('HTTP ' + xhr.status);
+      try { var j = JSON.parse(xhr.responseText); msg = j.message || j.hint || j.details || msg; } catch(e){}
+      reject(new Error('HTTP ' + xhr.status + ': ' + msg.slice(0, 200)));
+    };
+    xhr.send(o.body ? JSON.stringify(o.body) : null);
   });
-  if (!r.ok) { var t = await r.text(); if(r.status===404||t.indexOf('does not exist')>-1) return []; throw new Error(t.slice(0,100)); }
-  var t = await r.text(); return t ? JSON.parse(t) : [];
+}
+
+function sbFetch(table, o) { return sbXHR(table, o); }
+
+function pingSupabase() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', SURL + '/rest/v1/', true);
+  xhr.setRequestHeader('apikey', SKEY);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + SKEY);
+  xhr.timeout = 8000;
+  xhr.ontimeout = function(){ setConn(false); };
+  xhr.onerror = function(){ setConn(false); };
+  xhr.onload = function() {
+    var ok = xhr.status === 200 || xhr.status === 400;
+    setConn(ok);
+    if (ok) document.getElementById('cfg-notice').style.display = 'none';
+  };
+  xhr.send();
+}
+
+function testConn(){
+  var url=(document.getElementById('cfg-url').value||'').trim().replace(/\/+$/,'');
+  var key=(document.getElementById('cfg-key').value||'').trim();
+  var box=document.getElementById('cfg-test-res');
+  box.style.display='block';
+  function show(msg,ok){
+    box.style.background=ok?'rgba(34,197,94,.08)':'rgba(239,68,68,.08)';
+    box.style.border='1px solid '+(ok?'rgba(34,197,94,.2)':'rgba(239,68,68,.2)');
+    box.style.color=ok?'var(--grn)':'var(--red)';
+    box.innerHTML=msg;
+  }
+  if(!url||!key){ show('❌ Заполни URL и Key',false); return; }
+  if(!url.startsWith('https://')){ show('❌ URL должен начинаться с https://',false); return; }
+  show('⏳ Проверяю подключение...',false);
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url+'/rest/v1/', true);
+  xhr.setRequestHeader('apikey', key);
+  xhr.setRequestHeader('Authorization', 'Bearer '+key);
+  xhr.timeout = 8000;
+  xhr.ontimeout = function(){ show('❌ Таймаут — Supabase не отвечает. Проект на паузе?',false); };
+  xhr.onerror = function(){
+    show('❌ Нет доступа к Supabase.<br><br><b>Причины:</b><br>'+
+      '1. Проект на паузе — <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--sky)">supabase.com/dashboard</a> → Restore<br>'+
+      '2. Неверный URL (должен быть: https://xxxxx.supabase.co)<br>'+
+      '3. Нет интернета',false);
+  };
+  xhr.onload = function(){
+    if(xhr.status===200||xhr.status===400){ show('✅ Подключено успешно! Статус: '+xhr.status,true); return; }
+    if(xhr.status===401){ show('❌ Неверный API Key (401)',false); return; }
+    if(xhr.status===404){ show('❌ Неверный URL проекта (404)',false); return; }
+    show('❌ HTTP '+xhr.status,false);
+  };
+  xhr.send();
 }
 
 // SWITCH
@@ -596,19 +689,31 @@ function buildForm(rec) {
   var h='<div class="fgrid">';
   fields.forEach(function(f){
     var val=rec?(rec[f.k]!==undefined?rec[f.k]:''):'';
+    if(f.t==='rooms'){
+      var roomsVal=[];
+      try{ if(val) roomsVal=typeof val==='string'?JSON.parse(val):val; }catch(e){}
+      if(!Array.isArray(roomsVal)||!roomsVal.length) roomsVal=[{type:'',price:'',date_from:'',date_to:''}];
+      h+='<div class="fg ffull"><label class="flabel">Номера</label>';
+      h+='<div id="rooms-list">';
+      roomsVal.forEach(function(r,i){ h+=buildRoomRow(i,r); });
+      h+='</div>';
+      h+='<button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addRoomRow()">+ Добавить номер</button>';
+      h+='</div>';
+      return;
+    }
     var full=(f.t==='ta'||f.t==='photo')?'ffull':'';
     h+='<div class="fg '+full+'"><label class="flabel">'+f.l+(f.req?' *':'')+'</label>';
-    if (f.t==='text'||f.t==='num') {
+    if(f.t==='text'||f.t==='num'){
       h+='<input class="fi" id="fi-'+f.k+'" type="'+(f.t==='num'?'number':'text')+'" value="'+(val||'')+'" placeholder="'+(f.ph||'')+'">';
-    } else if (f.t==='city') {
+    }else if(f.t==='city'){
       h+='<select class="fsel2" id="fi-'+f.k+'">'+CITIES_RU.map(function(c){return '<option'+(c===val?' selected':'')+'>'+c+'</option>';}).join('')+'</select>';
-    } else if (f.t==='sel') {
+    }else if(f.t==='sel'){
       h+='<select class="fsel2" id="fi-'+f.k+'">'+(f.o||[]).map(function(o){return '<option'+(o===val?' selected':'')+'>'+o+'</option>';}).join('')+'</select>';
-    } else if (f.t==='ta') {
+    }else if(f.t==='ta'){
       h+='<textarea class="fta" id="fi-'+f.k+'" placeholder="'+(f.ph||'')+'">'+(val||'')+'</textarea>';
-    } else if (f.t==='bool') {
+    }else if(f.t==='bool'){
       h+='<select class="fsel2" id="fi-'+f.k+'"><option value="true"'+(val===true||val==="true"?' selected':'')+'>Да</option><option value="false"'+(val!==true&&val!=="true"?' selected':'')+'>Нет</option></select>';
-    } else if (f.t==='photo') {
+    }else if(f.t==='photo'){
       h+='<div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:5px">'+
          '<input class="fi" id="fi-'+f.k+'" type="text" value="'+(val||'')+'" placeholder="https://..." oninput="previewPhoto()">'+
          '<button class="btn btn-ghost btn-sm" type="button" onclick="findPhotos()">Фото</button></div>'+
@@ -619,6 +724,61 @@ function buildForm(rec) {
   });
   h+='</div>';
   document.getElementById('rec-body').innerHTML=h;
+}
+
+var ROOM_TYPES=[
+  'Guest room single','Guest room double','Guest room triple',
+  'Executive room single','Executive room double','Executive room triple',
+  'Corner suite single','Corner suite double','Corner suite triple',
+  'Presidential Suite single','Presidential Suite double','Presidential Suite triple'
+];
+
+function buildRoomRow(i,r){
+  var opts=ROOM_TYPES.map(function(t){return '<option'+(t===(r.type||'')?' selected':'')+'>'+t+'</option>';}).join('');
+  return '<div class="room-row" id="room-row-'+i+'">'+
+    '<div><span class="flabel">Тип номера</span><select class="fsel2" id="room-type-'+i+'">'+opts+'</select></div>'+
+    '<div><span class="flabel">Цена ($)</span><input class="fi" id="room-price-'+i+'" type="number" value="'+(r.price||'')+'" placeholder="0"></div>'+
+    '<div><span class="flabel">Сезон с</span><input class="fi" id="room-from-'+i+'" type="date" value="'+(r.date_from||'')+'"></div>'+
+    '<div><span class="flabel">Сезон по</span><input class="fi" id="room-to-'+i+'" type="date" value="'+(r.date_to||'')+'"></div>'+
+    '<div style="padding-bottom:1px"><button type="button" class="btn btn-danger btn-sm" style="padding:6px 10px" onclick="removeRoomRow('+i+')">✕</button></div>'+
+    '</div>';
+}
+
+var _roomIdx=0;
+function addRoomRow(){
+  var list=document.getElementById('rooms-list'); if(!list)return;
+  // найти максимальный индекс
+  var max=0;
+  list.querySelectorAll('[id^="room-row-"]').forEach(function(el){
+    var n=parseInt(el.id.replace('room-row-',''))||0; if(n>=max)max=n+1;
+  });
+  var div=document.createElement('div');
+  div.innerHTML=buildRoomRow(max,{});
+  list.appendChild(div.firstChild);
+}
+
+function removeRoomRow(i){
+  var row=document.getElementById('room-row-'+i);
+  if(row){
+    var list=document.getElementById('rooms-list');
+    // не удалять если это единственная строка
+    if(list&&list.querySelectorAll('[id^="room-row-"]').length<=1){showToast('Минимум один номер','red');return;}
+    row.remove();
+  }
+}
+
+function collectRooms(){
+  var list=document.getElementById('rooms-list'); if(!list)return[];
+  var rows=[];
+  list.querySelectorAll('[id^="room-row-"]').forEach(function(el){
+    var i=el.id.replace('room-row-','');
+    var t=document.getElementById('room-type-'+i);
+    var p=document.getElementById('room-price-'+i);
+    var f=document.getElementById('room-from-'+i);
+    var o=document.getElementById('room-to-'+i);
+    if(t) rows.push({type:t.value,price:p?+p.value||0:0,date_from:f?f.value:'',date_to:o?o.value:''});
+  });
+  return rows;
 }
 
 function previewPhoto(){
@@ -649,19 +809,42 @@ function pickPhoto(url){
 };
 
 async function saveRec(){
+  // Проверка подключения
+  if(!SURL||!SKEY){
+    showToast('Укажи Supabase URL и Key в Настройках','red');
+    openCfg();
+    return;
+  }
   var fields=SECS[curSec].fields||[]; var body={};
   fields.forEach(function(f){
+    if(f.t==='rooms'){ body[f.k]=JSON.stringify(collectRooms()); return; }
     var el=document.getElementById('fi-'+f.k); if(!el)return;
     var v=el.value;
     if(f.t==='num') v=v===''?null:+v;
-    if(f.t==='bool') v=v==='true';
-    body[f.k]=v;
+    else if(f.t==='bool') v=v==='true';
+    else v=v===''?null:v;
+    if(v!==null) body[f.k]=v;
   });
   try {
-    if(editId){ await sbFetch(curSec,{method:'PATCH',body:body,qs:'?id=eq.'+editId}); showToast('Сохранено','green'); }
-    else { await sbFetch(curSec,{method:'POST',body:body}); showToast('Добавлено','green'); }
+    var resp;
+    if(editId){
+      resp=await sbFetch(curSec,{method:'PATCH',body:body,qs:'?id=eq.'+editId});
+      showToast('Сохранено','green');
+    } else {
+      resp=await sbFetch(curSec,{method:'POST',body:body});
+      showToast('Добавлено','green');
+    }
     closeRec(); loadData();
-  } catch(e){ showToast('Ошибка: '+e.message,'red'); }
+  } catch(e){
+    var msg=e.message||'Неизвестная ошибка';
+    if(msg.toLowerCase().indexOf('failed to fetch')>-1){
+      showToast('Нет связи с Supabase — проверь URL и Key в Настройках','red');
+      setTimeout(openCfg, 800);
+    } else {
+      showToast('Ошибка: '+msg,'red');
+    }
+    console.error('saveRec error:',e);
+  }
 };
 
 async function delRow(id){
@@ -670,14 +853,21 @@ async function delRow(id){
   catch(e){ showToast('Ошибка: '+e.message,'red'); }
 };
 
-function openCfg(){ document.getElementById('cfg-url').value=SURL; document.getElementById('cfg-key').value=SKEY; document.getElementById('cfg-ovl').classList.add('open'); };
+function openCfg(){ document.getElementById('cfg-url').value=SURL; document.getElementById('cfg-key').value=SKEY; document.getElementById('cfg-marker').value=TP_MARKER; document.getElementById('cfg-ovl').classList.add('open'); };
 function closeCfg(){ document.getElementById('cfg-ovl').classList.remove('open'); };
 function saveCfg(){
-  SURL=document.getElementById('cfg-url').value.trim().replace(/\/$/,'');
-  SKEY=document.getElementById('cfg-key').value.trim();
-  localStorage.setItem('w_url',SURL); localStorage.setItem('w_key',SKEY);
-  closeCfg(); setConn(true); document.getElementById('cfg-notice').style.display='none';
-  showToast('Подключено','green'); loadData();
+  var url=document.getElementById('cfg-url').value.trim().replace(/\/+$/,'');
+  var key=document.getElementById('cfg-key').value.trim();
+  var marker=document.getElementById('cfg-marker').value.trim();
+  if(!url||!key){ showToast('Заполни URL и Key','red'); return; }
+  if(!url.startsWith('https://')){ showToast('URL должен начинаться с https://','red'); return; }
+  SURL=url; SKEY=key; TP_MARKER=marker;
+  localStorage.setItem('tp_marker',TP_MARKER);
+  closeCfg();
+  document.getElementById('cfg-notice').style.display='none';
+  showToast('Настройки сохранены','green');
+  pingSupabase();
+  loadData();
 };
 
 // EXT
@@ -845,9 +1035,7 @@ async function searchFlights(){
 
   var dp=date.split('-');
   var ym=dp[0]+'-'+dp[1];
-  var dateFlat=dp[0]+dp[1]+dp[2];
-  // Aviasales URL: туда / туда-обратно
-  var bookUrl='https://www.aviasales.ru/search/'+from+dateFlat+to+(isRound?retDate.replace(/-/g,'')+from:'')+'1'+pass;
+  var bookUrl=aviasalesUrl(from, date, to, isRound?retDate:null, pass);
   var results=[];
 
   // Endpoint 1: cheap (с датой)
@@ -906,7 +1094,7 @@ async function searchFlights(){
     '</div>'+
     results.map(function(f){
       var dur=f.duration?Math.floor(f.duration/60)+'ч '+f.duration%60+'м':'';
-      var fBookUrl='https://www.aviasales.ru/search/'+from+(f.date||date).replace(/-/g,'')+to+pass;
+      var fBookUrl=aviasalesUrl(from, f.date||date, to, isRound?retDate:null, pass);
       return '<div class="flight-card" style="cursor:default">'+
         '<div style="font-size:22px;margin-right:8px">✈</div>'+
         '<div style="flex:1">'+
@@ -1076,9 +1264,8 @@ function showToast(msg, color) {
 }
 
 function appInit() {
-  if(SURL&&SKEY){ document.getElementById('cfg-notice').style.display='none'; setConn(true); }
-  else setConn(false);
   switchSec('tour_packages');
+  pingSupabase();
 }
 
 if(sessionStorage.getItem('wa')==='1') appInit();
