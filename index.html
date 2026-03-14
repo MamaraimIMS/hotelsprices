@@ -253,6 +253,7 @@ tr:hover .racts{opacity:1}
 var PASS = 'w2';
 var SURL = localStorage.getItem('w_url') || '';
 var SKEY = localStorage.getItem('w_key') || '';
+var TP_TOKEN = 'ed05c13e61e0b321e7dff5fc015f4bbf';
 var curSec = 'tour_packages';
 var allRows = [], filtered = [], editId = null, curPage = 1, PER = 15;
 var CITIES = ['','Samarkand','Bukhara','Khiva','Tashkent','Shakhrisabz','Nukus'];
@@ -686,48 +687,242 @@ function renderExt(sec) {
   else if(sec==='railway') c.innerHTML=railwayUI();
 }
 
+var FL_CITIES=[
+  ['Ташкент','TAS'],['Самарканд','SKD'],['Бухара','BHK'],['Хива','NCU'],
+  ['Андижан','AZN'],['Фергана','FEG'],['Наманган','NMA'],['Термез','TMJ'],
+  ['Москва','MOW'],['Санкт-Петербург','LED'],['Стамбул','IST'],['Дубай','DXB'],
+  ['Бангкок','BKK'],['Франкфурт','FRA'],['Пекин','PEK'],['Сеул','ICN'],
+  ['Нью-Йорк','JFK'],['Лондон','LHR'],['Париж','CDG'],['Амстердам','AMS'],
+  ['Куала-Лумпур','KUL'],['Сингапур','SIN'],['Доха','DOH'],['Абу-Даби','AUH'],
+  ['Алматы','ALA'],['Бишкек','FRU'],['Тегеран','IKA'],['Дели','DEL']
+];
+
 function flightsUI(){
   var d=new Date(Date.now()+7*864e5).toISOString().split('T')[0];
-  return '<div class="notice notice-sky">Поиск через Aviasales TravelPayouts API</div>'+
-    '<div class="ext-wrap"><div class="ext-header"><div class="ext-icon" style="background:rgba(56,189,248,.12);font-size:28px">+</div>'+
-    '<div><div style="font-size:16px;font-weight:600">Поиск авиабилетов</div><div style="font-size:12px;color:var(--tx3)">Aviasales API</div></div></div>'+
-    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:16px;align-items:end">'+
-    '<div class="fg"><label class="flabel">Откуда (IATA)</label><input class="fi" id="fl-from" value="TAS"></div>'+
-    '<div class="fg"><label class="flabel">Куда (IATA)</label><input class="fi" id="fl-to" value="SKD"></div>'+
-    '<div class="fg"><label class="flabel">Дата</label><input class="fi" id="fl-date" type="date" value="'+d+'"></div>'+
-    '<div class="fg"><label class="flabel">Пасс.</label><select class="fsel2" id="fl-pass"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>'+
-    '<button class="btn btn-sky" onclick="searchFlights()">Найти</button></div>'+
-    '<div id="fl-res" style="text-align:center;padding:24px;color:var(--tx3)">Введи параметры и нажми Найти</div>'+
-    '<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--b);display:flex;gap:10px">'+
-    '<a href="https://www.aviasales.ru" target="_blank" class="btn btn-ghost btn-sm">Aviasales.ru</a></div></div>';
+  var ret=new Date(Date.now()+14*864e5).toISOString().split('T')[0];
+  var optsFrom=FL_CITIES.map(function(c){return '<option value="'+c[1]+'"'+(c[1]==='TAS'?' selected':'')+'>'+c[0]+' ('+c[1]+')</option>';}).join('');
+  var optsTo=FL_CITIES.map(function(c){return '<option value="'+c[1]+'"'+(c[1]==='IST'?' selected':'')+'>'+c[0]+' ('+c[1]+')</option>';}).join('');
+  var routes=[
+    ['TAS','IST','Ташкент → Стамбул'],['TAS','DXB','Ташкент → Дубай'],
+    ['TAS','MOW','Ташкент → Москва'],['TAS','LED','Ташкент → СПб'],
+    ['TAS','BKK','Ташкент → Бангкок'],['SKD','IST','Самарканд → Стамбул'],
+    ['TAS','FRA','Ташкент → Франкфурт'],['TAS','DOH','Ташкент → Доха']
+  ];
+  var rhtml=routes.map(function(r){
+    return '<div class="route-card" onclick="setFlight(\''+r[0]+'\',\''+r[1]+'\')" style="cursor:pointer">'+
+      '<div style="font-size:11px;font-weight:600;color:var(--acc2)">'+r[0]+' ⇄ '+r[1]+'</div>'+
+      '<div style="font-size:11px;color:var(--tx3);margin-top:2px">'+r[2]+'</div></div>';
+  }).join('');
+
+  return '<div class="notice notice-sky" style="align-items:center">✈ Авиабилеты — Aviasales (TravelPayouts)</div>'+
+    '<div class="ext-wrap">'+
+    '<div class="ext-header"><div class="ext-icon" style="background:rgba(56,189,248,.12);font-size:24px">✈</div>'+
+    '<div><div style="font-size:16px;font-weight:600">Поиск авиабилетов</div>'+
+    '<div style="font-size:12px;color:var(--tx3)">TravelPayouts · токен подключён</div></div>'+
+    '<div style="margin-left:auto;display:flex;gap:4px;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:3px">'+
+    '<button id="fl-oneway" class="btn btn-sm" onclick="flToggleType(\'oneway\')" style="background:var(--acc);color:#fff;border:none">Туда</button>'+
+    '<button id="fl-round" class="btn btn-sm" onclick="flToggleType(\'round\')" style="background:transparent;color:var(--tx2);border:none">Туда-обратно</button>'+
+    '</div></div>'+
+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:12px;align-items:end" id="fl-fields">'+
+    '<div class="fg"><label class="flabel">Откуда</label><select class="fsel2" id="fl-from">'+optsFrom+'</select></div>'+
+    '<div class="fg"><label class="flabel">Куда</label><select class="fsel2" id="fl-to">'+optsTo+'</select></div>'+
+    '<div class="fg"><label class="flabel">Дата туда</label><input class="fi" id="fl-date" type="date" value="'+d+'"></div>'+
+    '<div class="fg" id="fl-ret-wrap"><label class="flabel">Дата обратно</label><input class="fi" id="fl-retdate" type="date" value="'+ret+'" disabled style="opacity:.35"></div>'+
+    '<div class="fg"><label class="flabel">Пассажиры</label><select class="fsel2" id="fl-pass"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>'+
+    '<button class="btn btn-sky" onclick="searchFlights()" style="white-space:nowrap;padding:8px 18px">🔍 Найти</button></div>'+
+
+    '<div style="background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px">'+
+    '<div style="font-size:11px;color:var(--tx3);margin-bottom:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Популярные маршруты</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">'+rhtml+'</div></div>'+
+
+    '<div id="fl-res">'+
+    '<div style="text-align:center;padding:32px;color:var(--tx3)">'+
+    '<div style="font-size:32px;margin-bottom:10px">✈</div>'+
+    '<div style="font-size:14px">Выбери маршрут и нажми <b style="color:var(--tx)">Найти</b></div>'+
+    '</div></div>'+
+    '</div>';
+}
+
+function flToggleType(type){
+  var isRound=(type==='round');
+  var rd=document.getElementById('fl-retdate');
+  var btnO=document.getElementById('fl-oneway');
+  var btnR=document.getElementById('fl-round');
+  if(rd){ rd.disabled=!isRound; rd.style.opacity=isRound?'1':'0.35'; }
+  if(btnO){ btnO.style.background=isRound?'transparent':' var(--acc)'; btnO.style.color=isRound?'var(--tx2)':'#fff'; }
+  if(btnR){ btnR.style.background=isRound?'var(--acc)':'transparent'; btnR.style.color=isRound?'#fff':'var(--tx2)'; }
+}
+
+function setFlight(from,to){
+  var f=document.getElementById('fl-from'); if(f)f.value=from;
+  var t=document.getElementById('fl-to'); if(t)t.value=to;
+}
+
+async function tpFetch(url){
+  var proxies=[
+    function(u){return fetch(u,{headers:{'X-Access-Token':TP_TOKEN,'x-api-key':TP_TOKEN}});},
+    function(u){return fetch('https://corsproxy.io/?'+encodeURIComponent(u));},
+    function(u){return fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(u));},
+    function(u){return fetch('https://thingproxy.freeboard.io/fetch/'+u);}
+  ];
+  for(var i=0;i<proxies.length;i++){
+    try{
+      var r=await proxies[i](url);
+      if(r.ok){var d=await r.json();return d;}
+    }catch(e){}
+  }
+  return null;
+}
+
+function flightFallbackUI(fromText,toText,from,to,date,pass,bookUrl,retDate){
+  var fromShort=fromText.replace(/ \(.*\)/,'');
+  var toShort=toText.replace(/ \(.*\)/,'');
+  var isRound=!!(retDate);
+  var ref={
+    'TAS-IST':{time:'4ч 30м',airlines:'Turkish Airlines, Uzairways',est:'от $180'},
+    'TAS-DXB':{time:'4ч',airlines:'flydubai, Uzairways',est:'от $150'},
+    'TAS-MOW':{time:'4ч 20м',airlines:'Aeroflot, Uzairways',est:'от $200'},
+    'TAS-LED':{time:'5ч',airlines:'Aeroflot, Uzairways',est:'от $220'},
+    'TAS-BKK':{time:'7ч',airlines:'Thai Airways, Uzairways',est:'от $350'},
+    'TAS-FRA':{time:'7ч 30м',airlines:'Lufthansa, Turkish',est:'от $400'},
+    'TAS-DOH':{time:'4ч',airlines:'Qatar Airways',est:'от $160'},
+    'TAS-AMS':{time:'8ч',airlines:'KLM, Turkish',est:'от $420'},
+    'TAS-CDG':{time:'8ч 30м',airlines:'Air France, Turkish',est:'от $430'},
+    'TAS-LHR':{time:'9ч',airlines:'British Airways, Turkish',est:'от $450'},
+    'SKD-IST':{time:'4ч',airlines:'Turkish Airlines',est:'от $200'},
+    'TAS-DEL':{time:'4ч',airlines:'Air India, Uzairways',est:'от $180'},
+    'TAS-PEK':{time:'6ч',airlines:'Air China',est:'от $300'},
+    'TAS-ICN':{time:'7ч',airlines:'Korean Air, Uzairways',est:'от $350'},
+    'TAS-KUL':{time:'7ч 30м',airlines:'AirAsia, Uzairways',est:'от $320'},
+    'TAS-SIN':{time:'8ч',airlines:'Singapore Airlines',est:'от $400'},
+    'TAS-AUH':{time:'4ч',airlines:'Etihad, Uzairways',est:'от $150'},
+    'TAS-ALA':{time:'2ч',airlines:'Air Astana, Uzairways',est:'от $80'},
+    'TAS-FRU':{time:'1ч 30м',airlines:'Avia Traffic',est:'от $60'},
+    'TAS-IKA':{time:'3ч',airlines:'Mahan Air',est:'от $120'}
+  };
+  var key=from+'-'+to;
+  var keyRev=to+'-'+from;
+  var info=ref[key]||ref[keyRev]||{time:'уточняется',airlines:'различные авиакомпании',est:'уточняется'};
+  var arrow=isRound?'⇄':'→';
+  var dateInfo=date+(isRound?' → '+retDate:'');
+  return '<div style="margin-bottom:10px;font-size:11px;color:var(--tx3)">Справочные данные · точные цены — на Aviasales</div>'+
+    '<div class="flight-card" style="cursor:default;align-items:flex-start;flex-direction:column;gap:12px">'+
+    '<div style="display:flex;align-items:center;gap:12px;width:100%">'+
+    '<div style="font-size:26px">✈</div>'+
+    '<div style="flex:1">'+
+    '<div style="font-size:17px;font-weight:700;color:var(--tx)">'+fromShort+' '+arrow+' '+toShort+'</div>'+
+    '<div style="font-size:12px;color:var(--tx3);margin-top:3px">'+from+' '+arrow+' '+to+(isRound?' '+arrow+' '+from:'')+' · '+dateInfo+' · '+pass+' пасс.</div>'+
+    '</div>'+
+    '<div style="text-align:right">'+
+    '<div style="font-size:18px;font-weight:700;color:var(--grn);font-family:var(--fm)">'+info.est+'</div>'+
+    '<div style="font-size:10px;color:var(--tx3)">'+(isRound?'туда-обратно':'в одну сторону')+'</div>'+
+    '</div></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;width:100%;border-top:1px solid var(--b);padding-top:12px">'+
+    '<div><div style="font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Время в пути</div><div style="font-size:13px;font-weight:500;color:var(--tx)">'+info.time+'</div></div>'+
+    '<div><div style="font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Авиакомпании</div><div style="font-size:12px;color:var(--tx2)">'+info.airlines+'</div></div>'+
+    '<div style="display:flex;align-items:center;justify-content:flex-end">'+
+    '<a href="'+bookUrl+'" target="_blank" class="btn btn-sky" style="font-size:13px;padding:9px 20px">✈ Найти билеты</a>'+
+    '</div></div></div>';
 }
 
 async function searchFlights(){
-  var from=document.getElementById('fl-from').value.trim().toUpperCase();
-  var to=document.getElementById('fl-to').value.trim().toUpperCase();
+  var fromEl=document.getElementById('fl-from');
+  var toEl=document.getElementById('fl-to');
+  var from=fromEl.value.trim().toUpperCase();
+  var to=toEl.value.trim().toUpperCase();
+  var fromText=fromEl.options[fromEl.selectedIndex]?fromEl.options[fromEl.selectedIndex].text:from;
+  var toText=toEl.options[toEl.selectedIndex]?toEl.options[toEl.selectedIndex].text:to;
   var date=document.getElementById('fl-date').value;
+  var retEl=document.getElementById('fl-retdate');
+  var retDate=retEl&&!retEl.disabled?retEl.value:'';
+  var pass=document.getElementById('fl-pass').value||'1';
   var res=document.getElementById('fl-res');
-  if(!from||!to||!date){showToast('Заполни поля','red');return;}
-  res.innerHTML='<div style="text-align:center;padding:24px;color:var(--tx3)">Ищу рейсы...</div>';
-  var ym=date.split('-');
-  try{
-    var r=await fetch('https://api.travelpayouts.com/v1/prices/cheap?origin='+from+'&destination='+to+'&depart_date='+ym[0]+'-'+ym[1]+'&currency=usd&token=d1ab8c478da29f2a25ce14d5440a4cb9');
-    var d=await r.json();
-    var fs=d.data&&d.data[to]?Object.values(d.data[to]).slice(0,6):[];
-    if(!fs.length){res.innerHTML='<div style="text-align:center;padding:24px;color:var(--tx3)">Рейсов не найдено</div>';return;}
-    res.innerHTML=fs.map(function(f){
-      return '<div class="flight-card">'+
-        '<div style="flex:1"><div style="font-size:11px;color:var(--tx3)">'+(f.airline||'')+'</div>'+
-        '<div style="font-size:16px;font-weight:600">'+from+' > '+to+'</div>'+
-        '<div style="font-size:12px;color:var(--tx3)">'+date+'</div></div>'+
-        '<span class="badge '+(f.transfers===0?'bg':'bamb')+'">'+(f.transfers===0?'Прямой':f.transfers+' пересадка')+'</span>'+
-        '<div style="text-align:right"><div style="font-size:20px;font-weight:600;color:var(--grn);font-family:var(--fm)">$'+(f.price||'-')+'</div>'+
-        '<a href="https://www.aviasales.ru/search/'+from+date.replace(/-/g,'')+to+'1" target="_blank" class="btn btn-sky btn-sm" style="margin-top:6px">Купить</a></div></div>';
-    }).join('');
-  }catch(e){
-    res.innerHTML='<div style="text-align:center;padding:24px">'+
-      '<a href="https://www.aviasales.ru/search/'+from+date.replace(/-/g,'')+to+'1" target="_blank" class="btn btn-sky">Искать на Aviasales</a></div>';
+  if(!from||!to||!date){showToast('Заполни все поля','red');return;}
+
+  var isRound=!!(retDate);
+  res.innerHTML='<div style="text-align:center;padding:32px;color:var(--tx3)"><div style="font-size:28px;margin-bottom:10px">✈</div><div>Ищу рейсы '+from+' '+(isRound?'⇄':'→')+' '+to+'...</div></div>';
+
+  var dp=date.split('-');
+  var ym=dp[0]+'-'+dp[1];
+  var dateFlat=dp[0]+dp[1]+dp[2];
+  // Aviasales URL: туда / туда-обратно
+  var bookUrl='https://www.aviasales.ru/search/'+from+dateFlat+to+(isRound?retDate.replace(/-/g,'')+from:'')+'1'+pass;
+  var results=[];
+
+  // Endpoint 1: cheap (с датой)
+  try {
+    var d1=await tpFetch('https://api.travelpayouts.com/v1/prices/cheap?origin='+from+'&destination='+to+'&depart_date='+ym+'&currency=usd&token='+TP_TOKEN);
+    if(d1&&d1.success&&d1.data&&d1.data[to])
+      results=Object.values(d1.data[to]).slice(0,8).map(function(f){return{price:f.price,airline:f.airline||'',transfers:f.transfers!=null?f.transfers:0,date:f.departure_at?f.departure_at.slice(0,10):date,duration:f.duration_to||0};});
+  }catch(e){}
+
+  // Endpoint 2: cheap без даты (любой месяц)
+  if(!results.length){
+    try {
+      var d1b=await tpFetch('https://api.travelpayouts.com/v1/prices/cheap?origin='+from+'&destination='+to+'&currency=usd&token='+TP_TOKEN);
+      if(d1b&&d1b.success&&d1b.data&&d1b.data[to])
+        results=Object.values(d1b.data[to]).slice(0,8).map(function(f){return{price:f.price,airline:f.airline||'',transfers:f.transfers!=null?f.transfers:0,date:f.departure_at?f.departure_at.slice(0,10):date,duration:f.duration_to||0};});
+    }catch(e){}
   }
+
+  // Endpoint 3: latest prices
+  if(!results.length){
+    try {
+      var d2=await tpFetch('https://api.travelpayouts.com/v2/prices/latest?origin='+from+'&destination='+to+'&period_type=month&one_way=true&currency=usd&limit=8&token='+TP_TOKEN);
+      if(d2&&d2.success&&d2.data&&d2.data.length)
+        results=d2.data.map(function(f){return{price:f.value,airline:f.airline||'',transfers:f.number_of_changes||0,date:f.depart_date||date,duration:0};});
+    }catch(e){}
+  }
+
+  // Endpoint 4: calendar
+  if(!results.length){
+    try {
+      var d3=await tpFetch('https://api.travelpayouts.com/v1/prices/calendar?origin='+from+'&destination='+to+'&depart_date='+ym+'&currency=usd&token='+TP_TOKEN);
+      if(d3&&d3.success&&d3.data&&Object.keys(d3.data).length)
+        results=Object.values(d3.data).slice(0,8).map(function(f){return{price:f.price,airline:f.airline||'',transfers:f.transfers!=null?f.transfers:0,date:f.departure_at?f.departure_at.slice(0,10):date,duration:0};});
+    }catch(e){}
+  }
+
+  // Endpoint 5: month matrix
+  if(!results.length){
+    try {
+      var d4=await tpFetch('https://api.travelpayouts.com/v1/prices/monthly-matrix?origin='+from+'&destination='+to+'&currency=usd&token='+TP_TOKEN);
+      if(d4&&d4.success&&d4.data&&d4.data.length)
+        results=d4.data.slice(0,8).map(function(f){return{price:f.value,airline:'',transfers:0,date:f.date||date,duration:0};});
+    }catch(e){}
+  }
+
+  if(!results.length){
+    res.innerHTML=flightFallbackUI(fromText,toText,from,to,date,pass,bookUrl,retDate);
+    return;
+  }
+
+  var arrow=isRound?'⇄':'→';
+  res.innerHTML=
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px">'+
+    '<div style="font-size:12px;color:var(--tx3)">Найдено <b style="color:var(--tx)">'+results.length+'</b> вариантов · '+fromText.split(' ')[0]+' '+arrow+' '+toText.split(' ')[0]+'</div>'+
+    '<a href="'+bookUrl+'" target="_blank" class="btn btn-ghost btn-sm">↗ Aviasales</a>'+
+    '</div>'+
+    results.map(function(f){
+      var dur=f.duration?Math.floor(f.duration/60)+'ч '+f.duration%60+'м':'';
+      var fBookUrl='https://www.aviasales.ru/search/'+from+(f.date||date).replace(/-/g,'')+to+pass;
+      return '<div class="flight-card" style="cursor:default">'+
+        '<div style="font-size:22px;margin-right:8px">✈</div>'+
+        '<div style="flex:1">'+
+        '<div style="font-size:15px;font-weight:600;color:var(--tx)">'+fromText.split(' ')[0]+' → '+toText.split(' ')[0]+'</div>'+
+        '<div style="font-size:11px;color:var(--tx3);margin-top:3px">'+
+        (f.airline?f.airline+' · ':'')+
+        (f.date?f.date:'')+(dur?' · '+dur:'')+
+        '</div></div>'+
+        '<span class="badge '+(f.transfers===0?'bg':'bamb')+'" style="margin-right:12px">'+
+        (f.transfers===0?'Прямой':f.transfers+' пересадка')+'</span>'+
+        '<div style="text-align:right;min-width:90px">'+
+        '<div style="font-size:22px;font-weight:700;color:var(--grn);font-family:var(--fm)">$'+f.price+'</div>'+
+        '<div style="font-size:10px;color:var(--tx3);margin-bottom:5px">за 1 пасс.</div>'+
+        '<a href="'+fBookUrl+'" target="_blank" class="btn btn-sky btn-sm">Купить</a>'+
+        '</div></div>';
+    }).join('');
 };
 
 function railwayUI(){
@@ -737,37 +932,135 @@ function railwayUI(){
   var opts=cities.map(function(c){return '<option value="'+c[1]+'">'+c[0]+'</option>';}).join('');
   var opts2=cities.map(function(c){return '<option value="'+c[1]+'"'+(c[0]==='Самарканд'?' selected':'')+'>'+c[0]+'</option>';}).join('');
   var tom=new Date(Date.now()+864e5).toISOString().split('T')[0];
-  var routes=[['Ташкент > Самарканд','Tashkent','Samarkand','1.5-2ч','от $5'],
-    ['Ташкент > Бухара','Tashkent','Bukhara','3-4ч','от $9'],
-    ['Ташкент > Хива','Tashkent','Khiva','~7ч','от $12'],
-    ['Самарканд > Бухара','Samarkand','Bukhara','~2ч','от $5'],
-    ['Ташкент > Андижан','Tashkent','Andijan','~3ч','от $7'],
-    ['Москва > Ташкент','Moscow','Tashkent','~70ч','от $60']];
-  return '<div class="notice notice-sky">Ж/Д билеты - Яндекс Путешествия</div>'+
-    '<div class="ext-wrap"><div class="ext-header"><div class="ext-icon" style="background:rgba(245,158,11,.12);font-size:28px">~</div>'+
-    '<div><div style="font-size:16px;font-weight:600">Поиск ж/д билетов</div><div style="font-size:12px;color:var(--tx3)">Яндекс Путешествия</div></div></div>'+
-    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;margin-bottom:16px;align-items:end">'+
+  var ret=new Date(Date.now()+8*864e5).toISOString().split('T')[0];
+  var routes=[['Ташкент → Самарканд','Tashkent','Samarkand','1.5-2ч','от $5'],
+    ['Ташкент → Бухара','Tashkent','Bukhara','3-4ч','от $9'],
+    ['Ташкент → Хива','Tashkent','Khiva','~7ч','от $12'],
+    ['Самарканд → Бухара','Samarkand','Bukhara','~2ч','от $5'],
+    ['Ташкент → Андижан','Tashkent','Andijan','~3ч','от $7'],
+    ['Москва → Ташкент','Moscow','Tashkent','~70ч','от $60']];
+  return '<div class="notice notice-sky" style="align-items:center">🚂 Ж/Д билеты — TravelPayouts API</div>'+
+    '<div class="ext-wrap">'+
+    '<div class="ext-header"><div class="ext-icon" style="background:rgba(245,158,11,.12);font-size:24px">🚂</div>'+
+    '<div><div style="font-size:16px;font-weight:600">Поиск ж/д билетов</div><div style="font-size:12px;color:var(--tx3)">TravelPayouts · токен подключён</div></div>'+
+    '<div style="margin-left:auto;display:flex;gap:4px;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:3px">'+
+    '<button id="rw-oneway" class="btn btn-sm" onclick="rwToggleType(\'oneway\')" style="background:var(--acc);color:#fff;border:none">Туда</button>'+
+    '<button id="rw-round" class="btn btn-sm" onclick="rwToggleType(\'round\')" style="background:transparent;color:var(--tx2);border:none">Туда-обратно</button>'+
+    '</div></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:12px;align-items:end">'+
     '<div class="fg"><label class="flabel">Откуда</label><select class="fsel2" id="rw-from">'+opts+'</select></div>'+
     '<div class="fg"><label class="flabel">Куда</label><select class="fsel2" id="rw-to">'+opts2+'</select></div>'+
-    '<div class="fg"><label class="flabel">Дата</label><input class="fi" id="rw-date" type="date" value="'+tom+'"></div>'+
-    '<button class="btn btn-amb" onclick="openRailway()">Найти</button></div>'+
-    '<div style="background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:16px;margin-bottom:14px">'+
-    '<div style="font-size:12px;color:var(--tx3);margin-bottom:10px;font-weight:500">Популярные маршруты</div>'+
+    '<div class="fg"><label class="flabel">Дата туда</label><input class="fi" id="rw-date" type="date" value="'+tom+'"></div>'+
+    '<div class="fg"><label class="flabel">Дата обратно</label><input class="fi" id="rw-retdate" type="date" value="'+ret+'" disabled style="opacity:.35"></div>'+
+    '<button class="btn btn-amb" onclick="searchTrains()" style="white-space:nowrap">🔍 Найти</button></div>'+
+    '<div style="background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px">'+
+    '<div style="font-size:11px;color:var(--tx3);margin-bottom:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Популярные маршруты</div>'+
     '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'+
     routes.map(function(rt){return '<div class="route-card" onclick="setRoute(\''+rt[1]+'\',\''+rt[2]+'\')">'+
       '<div style="font-size:12px;font-weight:500;color:var(--tx)">'+rt[0]+'</div>'+
       '<div style="font-size:11px;color:var(--tx3);margin-top:3px">'+rt[3]+' &bull; <span style="color:var(--grn)">'+rt[4]+'</span></div></div>';}).join('')+
     '</div></div>'+
-    '<div style="padding-top:14px;border-top:1px solid var(--b);display:flex;gap:10px">'+
-    '<a href="https://travel.yandex.ru/trains" target="_blank" class="btn btn-ghost btn-sm">Яндекс Путешествия</a>'+
-    '<a href="https://rasp.yandex.ru" target="_blank" class="btn btn-ghost btn-sm">Расписания</a></div></div>';
+    '<div id="rw-res" style="min-height:60px;text-align:center;padding:20px;color:var(--tx3);font-size:13px">Выбери маршрут и нажми Найти</div>'+
+    '</div>';
 }
 
-function openRailway(){
-  var from=document.getElementById('rw-from').value;
-  var to=document.getElementById('rw-to').value;
+function rwToggleType(type){
+  var isRound=(type==='round');
+  var rd=document.getElementById('rw-retdate');
+  var btnO=document.getElementById('rw-oneway');
+  var btnR=document.getElementById('rw-round');
+  if(rd){ rd.disabled=!isRound; rd.style.opacity=isRound?'1':'0.35'; }
+  if(btnO){ btnO.style.background=isRound?'transparent':'var(--acc)'; btnO.style.color=isRound?'var(--tx2)':'#fff'; }
+  if(btnR){ btnR.style.background=isRound?'var(--acc)':'transparent'; btnR.style.color=isRound?'#fff':'var(--tx2)'; }
+}
+
+async function searchTrains(){
+  var fromEl=document.getElementById('rw-from');
+  var toEl=document.getElementById('rw-to');
   var date=document.getElementById('rw-date').value;
-  window.open('https://travel.yandex.ru/trains/'+from+'--'+to+'/?when='+date,'_blank');
+  var retEl=document.getElementById('rw-retdate');
+  var retDate=retEl&&!retEl.disabled?retEl.value:'';
+  var isRound=!!(retDate);
+  var fromVal=fromEl.value;
+  var toVal=toEl.value;
+  var fromText=fromEl.options[fromEl.selectedIndex].text;
+  var toText=toEl.options[toEl.selectedIndex].text;
+  var arrow=isRound?'⇄':'→';
+  var res=document.getElementById('rw-res');
+  if(!fromVal||!toVal||!date){showToast('Заполни все поля','red');return;}
+  res.innerHTML='<div style="text-align:center;padding:28px;color:var(--tx3)"><div style="font-size:26px;margin-bottom:8px">🚂</div><div>Ищу поезда...</div></div>';
+
+  var iataMap={Tashkent:'TAS',Samarkand:'SKD',Bukhara:'BHK',Khiva:'NCU',Andijan:'AZN',Fergana:'FEG',Namangan:'NMA',Termez:'TMJ',Moscow:'MOW'};
+  var fromIata=iataMap[fromVal]||'TAS';
+  var toIata=iataMap[toVal]||'SKD';
+  var parts=date.split('-');
+  var ym=parts[0]+'-'+parts[1];
+
+  var results=[];
+  try {
+    var r=await tpFetch('https://api.travelpayouts.com/v1/prices/cheap?origin='+fromIata+'&destination='+toIata+'&depart_date='+ym+'&currency=usd&token='+TP_TOKEN);
+    if(r&&r.success&&r.data&&r.data[toIata]){
+      results=Object.values(r.data[toIata]).slice(0,6).map(function(f){return{price:f.price,transfers:f.transfers,date:f.departure_at?f.departure_at.slice(0,10):date};});
+    }
+  } catch(e){}
+
+  var trainRef={
+    'TashkentSamarkand':{duration:'1ч 40м',trains:['Afrosiyob'],price_from:5},
+    'TashkentBukhara':{duration:'3ч 30м',trains:['Afrosiyob','Sharq'],price_from:9},
+    'TashkentKhiva':{duration:'6ч 30м',trains:['Sharq'],price_from:12},
+    'SamarkandBukhara':{duration:'1ч 50м',trains:['Afrosiyob','Sharq'],price_from:5},
+    'TashkentAndijan':{duration:'3ч',trains:['Sharq'],price_from:7},
+    'MoscowTashkent':{duration:'67-72ч',trains:['Москва-Ташкент'],price_from:60},
+  };
+  var refKey=fromVal+toVal;
+  var ref=trainRef[refKey]||trainRef[toVal+fromVal];
+
+  var buyUrl='https://bilet.uzbekistan-railways.uz';
+  var dateInfo=date+(isRound?' → '+retDate:'');
+
+  if(!results.length){
+    if(ref){
+      res.innerHTML='<div style="padding:4px">'+
+        '<div style="font-size:11px;color:var(--tx3);margin-bottom:10px">Справочные данные · актуальные цены уточняй на кассе</div>'+
+        ref.trains.map(function(tr){
+          var priceRound=isRound?ref.price_from*2:ref.price_from;
+          return '<div class="flight-card" style="cursor:default">'+
+            '<div style="font-size:22px;margin-right:6px">🚂</div>'+
+            '<div style="flex:1">'+
+            '<div style="font-size:15px;font-weight:600;color:var(--tx)">'+fromText+' '+arrow+' '+toText+'</div>'+
+            '<div style="font-size:11px;color:var(--tx3);margin-top:2px">'+tr+' · '+ref.duration+(isRound?' · туда-обратно':'')+'</div>'+
+            '<div style="font-size:11px;color:var(--tx3);margin-top:1px">📅 '+dateInfo+'</div>'+
+            '</div>'+
+            '<div style="text-align:right;min-width:90px">'+
+            '<div style="font-size:18px;font-weight:700;color:var(--grn);font-family:var(--fm)">от $'+priceRound+'</div>'+
+            '<div style="font-size:10px;color:var(--tx3);margin-bottom:4px">'+(isRound?'туда-обратно':'в одну сторону')+'</div>'+
+            '<a href="'+buyUrl+'" target="_blank" class="btn btn-amb btn-sm">Купить</a>'+
+            '</div></div>';
+        }).join('');
+      return;
+    }
+    res.innerHTML='<div style="text-align:center;padding:28px;color:var(--tx3)">'+
+      '<div style="font-size:28px;margin-bottom:10px">🔍</div>'+
+      '<div style="font-weight:500;color:var(--tx);margin-bottom:5px">Нет данных по маршруту '+fromText+' '+arrow+' '+toText+'</div>'+
+      '<div style="font-size:12px">Попробуй другой маршрут или дату</div>'+
+      '</div>';
+    return;
+  }
+
+  res.innerHTML='<div style="font-size:11px;color:var(--tx3);margin-bottom:10px">Найдено '+results.length+' вариантов · '+fromText+' '+arrow+' '+toText+'</div>'+
+    results.map(function(f){
+      return '<div class="flight-card" style="cursor:default">'+
+        '<div style="font-size:22px;margin-right:6px">🚂</div>'+
+        '<div style="flex:1">'+
+        '<div style="font-size:15px;font-weight:600;color:var(--tx)">'+fromText+' '+arrow+' '+toText+'</div>'+
+        '<div style="font-size:11px;color:var(--tx3);margin-top:2px">📅 '+(f.date||date)+(isRound?' → '+retDate:'')+'</div>'+
+        '</div>'+
+        '<div style="text-align:right;min-width:90px">'+
+        '<div style="font-size:20px;font-weight:700;color:var(--grn);font-family:var(--fm)">$'+f.price+'</div>'+
+        '<div style="font-size:10px;color:var(--tx3);margin-bottom:4px">'+(isRound?'туда-обратно':'в одну сторону')+'</div>'+
+        '<a href="'+buyUrl+'" target="_blank" class="btn btn-amb btn-sm">Купить</a>'+
+        '</div></div>';
+    }).join('');
 };
 function setRoute(from,to){
   var f=document.getElementById('rw-from'); if(f)f.value=from;
