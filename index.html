@@ -559,10 +559,11 @@ const SECTIONS = {
     title: 'Трансферы',
     badge: 'Каталог',
     priceField: 'price',
-    columns: ['name', 'from_city', 'to_city', 'vehicle', 'price', 'active'],
-    columnLabels: { name: 'Маршрут', from_city: 'Откуда', to_city: 'Куда', vehicle: 'Транспорт', price: 'Цена', active: 'Статус' },
+    columns: ['gallery', 'name', 'from_city', 'to_city', 'vehicle', 'price', 'active'],
+    columnLabels: { gallery: '', name: 'Маршрут', from_city: 'Откуда', to_city: 'Куда', vehicle: 'Транспорт', price: 'Цена', active: 'Статус' },
     fields: [
       { key: 'name', label: 'Название', type: 'text', required: true },
+      { key: 'gallery', label: 'Галерея (до 50 фото, макс 100KB)', type: 'gallery' },
       { key: 'from_city', label: 'Откуда', type: 'city' },
       { key: 'to_city', label: 'Куда', type: 'city' },
       { key: 'vehicle', label: 'Транспорт', type: 'select', options: ['седан', 'минивэн', 'автобус', 'поезд'] },
@@ -575,11 +576,11 @@ const SECTIONS = {
     title: 'Достопримечательности',
     badge: 'Каталог',
     priceField: 'entry_price',
-    columns: ['image_url', 'name', 'city', 'type', 'entry_price', 'active'],
-    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', entry_price: 'Вход', active: 'Статус' },
+    columns: ['gallery', 'name', 'city', 'type', 'entry_price', 'active'],
+    columnLabels: { gallery: '', name: 'Название', city: 'Город', type: 'Тип', entry_price: 'Вход', active: 'Статус' },
     fields: [
       { key: 'name', label: 'Название', type: 'text', required: true },
-      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'gallery', label: 'Галерея (до 50 фото, макс 100KB)', type: 'gallery' },
       { key: 'city', label: 'Город', type: 'city' },
       { key: 'type', label: 'Тип', type: 'select', options: ['UNESCO', 'мавзолей', 'мечеть', 'медресе', 'крепость', 'площадь'] },
       { key: 'entry_price', label: 'Цена входа ($)', type: 'number' },
@@ -591,11 +592,11 @@ const SECTIONS = {
     title: 'Рестораны',
     badge: 'Каталог',
     priceField: 'avg_check',
-    columns: ['image_url', 'name', 'city', 'cuisine', 'avg_check', 'active'],
-    columnLabels: { image_url: '', name: 'Название', city: 'Город', cuisine: 'Кухня', avg_check: 'Ср. чек', active: 'Статус' },
+    columns: ['gallery', 'name', 'city', 'cuisine', 'avg_check', 'active'],
+    columnLabels: { gallery: '', name: 'Название', city: 'Город', cuisine: 'Кухня', avg_check: 'Ср. чек', active: 'Статус' },
     fields: [
       { key: 'name', label: 'Название', type: 'text', required: true },
-      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'gallery', label: 'Галерея (до 50 фото, макс 100KB)', type: 'gallery' },
       { key: 'city', label: 'Город', type: 'city' },
       { key: 'cuisine', label: 'Кухня', type: 'select', options: ['узбекская', 'европейская', 'азиатская', 'смешанная'] },
       { key: 'avg_check', label: 'Средний чек ($)', type: 'number' },
@@ -607,11 +608,11 @@ const SECTIONS = {
     title: 'Еда',
     badge: 'Каталог',
     priceField: 'price',
-    columns: ['image_url', 'name', 'city', 'type', 'price', 'active'],
-    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', price: 'Цена', active: 'Статус' },
+    columns: ['gallery', 'name', 'city', 'type', 'price', 'active'],
+    columnLabels: { gallery: '', name: 'Название', city: 'Город', type: 'Тип', price: 'Цена', active: 'Статус' },
     fields: [
       { key: 'name', label: 'Название', type: 'text', required: true },
-      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'gallery', label: 'Галерея (до 50 фото, макс 100KB)', type: 'gallery' },
       { key: 'city', label: 'Город', type: 'city' },
       { key: 'type', label: 'Тип', type: 'select', options: ['плов', 'шашлык', 'лагман', 'самса', 'манты', 'дегустация'] },
       { key: 'price', label: 'Цена ($)', type: 'number' },
@@ -623,11 +624,11 @@ const SECTIONS = {
     title: 'Отдых',
     badge: 'Каталог',
     priceField: 'price',
-    columns: ['image_url', 'name', 'city', 'type', 'price', 'active'],
-    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', price: 'Цена', active: 'Статус' },
+    columns: ['gallery', 'name', 'city', 'type', 'price', 'active'],
+    columnLabels: { gallery: '', name: 'Название', city: 'Город', type: 'Тип', price: 'Цена', active: 'Статус' },
     fields: [
       { key: 'name', label: 'Название', type: 'text', required: true },
-      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'gallery', label: 'Галерея (до 50 фото, макс 100KB)', type: 'gallery' },
       { key: 'city', label: 'Город', type: 'city' },
       { key: 'type', label: 'Тип', type: 'select', options: ['хаммам', 'SPA', 'массаж', 'бассейн', 'йога'] },
       { key: 'price', label: 'Цена ($)', type: 'number' },
@@ -640,11 +641,11 @@ const SECTIONS = {
     title: 'Развлечения',
     badge: 'Каталог',
     priceField: 'price',
-    columns: ['image_url', 'name', 'city', 'type', 'price', 'active'],
-    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', price: 'Цена', active: 'Статус' },
+    columns: ['gallery', 'name', 'city', 'type', 'price', 'active'],
+    columnLabels: { gallery: '', name: 'Название', city: 'Город', type: 'Тип', price: 'Цена', active: 'Статус' },
     fields: [
       { key: 'name', label: 'Название', type: 'text', required: true },
-      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'gallery', label: 'Галерея (до 50 фото, макс 100KB)', type: 'gallery' },
       { key: 'city', label: 'Город', type: 'city' },
       { key: 'type', label: 'Тип', type: 'select', options: ['шоу', 'концерт', 'театр', 'танцы', 'мастер-класс'] },
       { key: 'price', label: 'Цена ($)', type: 'number' },
@@ -657,11 +658,11 @@ const SECTIONS = {
     title: 'Музеи',
     badge: 'Каталог',
     priceField: 'entry_price',
-    columns: ['image_url', 'name', 'city', 'type', 'entry_price', 'active'],
-    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', entry_price: 'Вход', active: 'Статус' },
+    columns: ['gallery', 'name', 'city', 'type', 'entry_price', 'active'],
+    columnLabels: { gallery: '', name: 'Название', city: 'Город', type: 'Тип', entry_price: 'Вход', active: 'Статус' },
     fields: [
       { key: 'name', label: 'Название', type: 'text', required: true },
-      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'gallery', label: 'Галерея (до 50 фото, макс 100KB)', type: 'gallery' },
       { key: 'city', label: 'Город', type: 'city' },
       { key: 'type', label: 'Тип', type: 'select', options: ['исторический', 'художественный', 'краеведческий'] },
       { key: 'entry_price', label: 'Цена входа ($)', type: 'number' },
@@ -673,11 +674,11 @@ const SECTIONS = {
     title: 'Гиды',
     badge: 'Каталог',
     priceField: 'price_day',
-    columns: ['image_url', 'name', 'city', 'languages', 'price_day', 'active'],
-    columnLabels: { image_url: '', name: 'Имя', city: 'Город', languages: 'Языки', price_day: 'Цена/день', active: 'Статус' },
+    columns: ['gallery', 'name', 'city', 'languages', 'price_day', 'active'],
+    columnLabels: { gallery: '', name: 'Имя', city: 'Город', languages: 'Языки', price_day: 'Цена/день', active: 'Статус' },
     fields: [
       { key: 'name', label: 'Имя', type: 'text', required: true },
-      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'gallery', label: 'Галерея (до 50 фото, макс 100KB)', type: 'gallery' },
       { key: 'city', label: 'Город', type: 'city' },
       { key: 'languages', label: 'Языки', type: 'text', placeholder: 'русский, английский' },
       { key: 'price_day', label: 'Цена за день ($)', type: 'number' },
@@ -945,6 +946,15 @@ function renderCell(col, val, row) {
     let imgUrl = val;
     if (!imgUrl && row.gallery && row.gallery.length > 0) {
       imgUrl = row.gallery[0];
+    }
+    return imgUrl 
+      ? `<td><img class="td-img" src="${imgUrl}" onerror="this.style.opacity=0"></td>`
+      : `<td><div class="td-img" style="background:var(--surf3)"></div></td>`;
+  }
+  if (col === 'gallery') {
+    let imgUrl = '';
+    if (val && Array.isArray(val) && val.length > 0) {
+      imgUrl = val[0];
     }
     return imgUrl 
       ? `<td><img class="td-img" src="${imgUrl}" onerror="this.style.opacity=0"></td>`
@@ -1345,14 +1355,14 @@ function buildModuleItem(index, data) {
 const MODULE_TABLE_MAP = {
   flights:       { table: 'flights', nameField: 'route', descField: 'airline', priceField: 'price', imgField: null },
   hotels:        { table: 'hotels', nameField: 'name', descField: 'city', priceField: 'price_from', imgField: 'gallery' },
-  transfers:     { table: 'transfers', nameField: 'name', descField: 'vehicle', priceField: 'price', imgField: null },
-  sights:        { table: 'sights', nameField: 'name', descField: 'city', priceField: 'entry_price', imgField: 'image_url' },
-  restaurants:   { table: 'restaurants', nameField: 'name', descField: 'cuisine', priceField: 'avg_check', imgField: 'image_url' },
-  food:          { table: 'food', nameField: 'name', descField: 'type', priceField: 'price', imgField: 'image_url' },
-  recreation:    { table: 'recreation', nameField: 'name', descField: 'type', priceField: 'price', imgField: 'image_url' },
-  entertainment: { table: 'entertainment', nameField: 'name', descField: 'type', priceField: 'price', imgField: 'image_url' },
-  museums:       { table: 'museums', nameField: 'name', descField: 'type', priceField: 'entry_price', imgField: 'image_url' },
-  guides:        { table: 'guides', nameField: 'name', descField: 'languages', priceField: 'price_day', imgField: 'image_url' }
+  transfers:     { table: 'transfers', nameField: 'name', descField: 'vehicle', priceField: 'price', imgField: 'gallery' },
+  sights:        { table: 'sights', nameField: 'name', descField: 'city', priceField: 'entry_price', imgField: 'gallery' },
+  restaurants:   { table: 'restaurants', nameField: 'name', descField: 'cuisine', priceField: 'avg_check', imgField: 'gallery' },
+  food:          { table: 'food', nameField: 'name', descField: 'type', priceField: 'price', imgField: 'gallery' },
+  recreation:    { table: 'recreation', nameField: 'name', descField: 'type', priceField: 'price', imgField: 'gallery' },
+  entertainment: { table: 'entertainment', nameField: 'name', descField: 'type', priceField: 'price', imgField: 'gallery' },
+  museums:       { table: 'museums', nameField: 'name', descField: 'type', priceField: 'entry_price', imgField: 'gallery' },
+  guides:        { table: 'guides', nameField: 'name', descField: 'languages', priceField: 'price_day', imgField: 'gallery' }
 };
 
 let pickerType = '';
