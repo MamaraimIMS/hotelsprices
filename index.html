@@ -408,8 +408,8 @@ td.primary{color:var(--tx);font-weight:500}
           <div class="stat-sub" id="statActiveSub">в Mini App</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Средняя цена</div>
-          <div class="stat-val" id="statPrice" style="color:var(--sky)">$0</div>
+          <div class="stat-label">Лучшая цена</div>
+          <div class="stat-val" id="statPrice" style="color:var(--grn)">$0</div>
         </div>
       </div>
       
@@ -1085,8 +1085,8 @@ function updateStats() {
   
   const priceField = cfg.priceField;
   const prices = allData.map(r => r[priceField] || 0).filter(p => p > 0);
-  const avgPrice = prices.length ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length) : 0;
-  document.getElementById('statPrice').textContent = '$' + avgPrice;
+  const bestPrice = prices.length ? Math.min(...prices) : 0;
+  document.getElementById('statPrice').textContent = '$' + bestPrice;
 }
 
 // ============================================
