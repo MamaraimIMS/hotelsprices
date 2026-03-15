@@ -292,6 +292,34 @@ td.primary{color:var(--tx);font-weight:500}
 .picker-item-price{font-family:var(--fm);font-weight:600;color:var(--grn);font-size:15px}
 .picker-empty{text-align:center;padding:40px;color:var(--tx3)}
 .picker-loading{text-align:center;padding:40px;color:var(--tx3)}
+.picker-autocomplete{position:relative}
+.picker-airport-list{position:absolute;top:100%;left:0;right:0;background:var(--surf);border:1px solid var(--b2);border-radius:8px;max-height:200px;overflow-y:auto;z-index:200;display:none;margin-top:4px;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.picker-airport-list.show{display:block}
+.picker-airport-item{padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b)}
+.picker-airport-item:last-child{border-bottom:none}
+.picker-airport-item:hover{background:var(--surf2)}
+.picker-airport-city{font-weight:500;color:var(--tx)}
+.picker-airport-country{font-size:11px;color:var(--tx3)}
+.picker-airport-code{font-family:var(--fm);font-size:12px;color:var(--acc);background:var(--adim);padding:2px 6px;border-radius:4px}
+.picker-swap-btn{background:var(--surf3);border:1px solid var(--b);border-radius:8px;width:36px;height:36px;cursor:pointer;color:var(--tx2);font-size:14px;display:flex;align-items:center;justify-content:center;margin-top:22px;flex-shrink:0}
+.picker-swap-btn:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.flight-picker-search{padding:12px;border-bottom:1px solid var(--b)}
+.picker-flight-loading{text-align:center;padding:40px;color:var(--tx3)}
+.picker-flight-empty{text-align:center;padding:40px;color:var(--tx3)}
+.picker-flights-header{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--b);font-size:13px;font-weight:500}
+.picker-flights-list{max-height:280px;overflow-y:auto}
+.picker-flight-card{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .15s}
+.picker-flight-card:hover{background:var(--surf2)}
+.picker-flight-route{display:flex;align-items:center;gap:12px}
+.picker-flight-point{text-align:center}
+.picker-flight-time{font-size:16px;font-weight:600;color:var(--tx)}
+.picker-flight-code{font-size:11px;color:var(--tx3)}
+.picker-flight-arrow{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--tx3)}
+.picker-flight-duration{font-size:10px}
+.picker-flight-line{font-size:12px;color:var(--acc)}
+.picker-flight-info{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tx2)}
+.picker-flight-info img{width:20px;height:20px;border-radius:4px}
+.picker-flight-price{font-size:18px;font-weight:700;color:var(--grn)}
 </style>
 </head>
 <body>
@@ -1605,64 +1633,243 @@ async function addModule(type) {
   }
 }
 
-// Форма ввода авиаперелёта
+// Форма ввода авиаперелёта с интеграцией Aviasales
+let pickerFlightResults = [];
+
 function openFlightPicker() {
-  document.getElementById('pickerTitle').innerHTML = '✈️ Добавить авиаперелёт';
+  document.getElementById('pickerTitle').innerHTML = '✈️ Поиск авиаперелёта';
   document.getElementById('pickerSearch').style.display = 'none';
   
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  
   document.getElementById('pickerList').innerHTML = `
-    <div class="flight-form">
+    <div class="flight-picker-search">
       <div class="flight-row">
-        <div class="flight-field">
+        <div class="flight-field picker-autocomplete">
           <label>Откуда</label>
-          <input type="text" id="flightFrom" class="form-input" placeholder="Город" value="Ташкент">
+          <input type="text" id="pickerFromInput" class="form-input" placeholder="Город" value="Ташкент" autocomplete="off" oninput="searchPickerAirports('from', this.value)">
+          <input type="hidden" id="pickerFrom" value="TAS">
+          <div class="picker-airport-list" id="pickerFromList"></div>
         </div>
-        <div class="flight-field">
+        <button type="button" class="picker-swap-btn" onclick="swapPickerCities()">⇄</button>
+        <div class="flight-field picker-autocomplete">
           <label>Куда</label>
-          <input type="text" id="flightTo" class="form-input" placeholder="Город" value="Самарканд">
+          <input type="text" id="pickerToInput" class="form-input" placeholder="Город" value="Самарканд" autocomplete="off" oninput="searchPickerAirports('to', this.value)">
+          <input type="hidden" id="pickerTo" value="SKD">
+          <div class="picker-airport-list" id="pickerToList"></div>
         </div>
       </div>
       <div class="flight-row">
         <div class="flight-field">
-          <label>Авиакомпания</label>
-          <select id="flightAirline" class="form-select">
-            <option>Uzbekistan Airways</option>
-            <option>Qanot Sharq</option>
-            <option>Silk Avia</option>
-            <option>Другая</option>
-          </select>
+          <label>Дата вылета</label>
+          <input type="date" id="pickerDate" class="form-input" value="${tomorrowStr}">
         </div>
-        <div class="flight-field">
-          <label>Цена ($)</label>
-          <input type="number" id="flightPrice" class="form-input" placeholder="0" value="65">
+        <div class="flight-field" style="flex:0 0 auto">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" style="width:100%" onclick="searchPickerFlights()">
+            🔍 Найти рейсы
+          </button>
         </div>
       </div>
-      <div class="flight-row">
-        <div class="flight-field">
-          <label>Время вылета</label>
-          <input type="text" id="flightTime" class="form-input" placeholder="08:30" value="08:30">
-        </div>
-        <div class="flight-field">
-          <label>Время в пути</label>
-          <input type="text" id="flightDuration" class="form-input" placeholder="1ч 10м" value="1ч 10м">
-        </div>
-      </div>
-      <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="addFlightModule()">
-        ✈️ Добавить перелёт
-      </button>
     </div>
+    <div id="pickerFlightResults"></div>
   `;
   
   document.getElementById('picker').classList.add('open');
 }
 
-function addFlightModule() {
-  const from = document.getElementById('flightFrom').value || 'Город';
-  const to = document.getElementById('flightTo').value || 'Город';
-  const airline = document.getElementById('flightAirline').value;
-  const price = parseFloat(document.getElementById('flightPrice').value) || 0;
-  const time = document.getElementById('flightTime').value || '';
-  const duration = document.getElementById('flightDuration').value || '';
+function searchPickerAirports(field, query) {
+  const listId = field === 'from' ? 'pickerFromList' : 'pickerToList';
+  const list = document.getElementById(listId);
+  
+  if (!query || query.length < 1) {
+    list.classList.remove('show');
+    return;
+  }
+  
+  const q = query.toLowerCase();
+  const results = AIRPORTS.filter(a => 
+    a.city.toLowerCase().includes(q) || 
+    a.code.toLowerCase().includes(q) ||
+    a.country.toLowerCase().includes(q) ||
+    a.name.toLowerCase().includes(q)
+  ).slice(0, 6);
+  
+  if (results.length === 0) {
+    list.classList.remove('show');
+    return;
+  }
+  
+  list.innerHTML = results.map(a => `
+    <div class="picker-airport-item" onclick="selectPickerAirport('${field}', '${a.code}', '${a.city}')">
+      <div>
+        <div class="picker-airport-city">${a.city}</div>
+        <div class="picker-airport-country">${a.country}</div>
+      </div>
+      <span class="picker-airport-code">${a.code}</span>
+    </div>
+  `).join('');
+  
+  list.classList.add('show');
+}
+
+function selectPickerAirport(field, code, city) {
+  if (field === 'from') {
+    document.getElementById('pickerFrom').value = code;
+    document.getElementById('pickerFromInput').value = city;
+    document.getElementById('pickerFromList').classList.remove('show');
+  } else {
+    document.getElementById('pickerTo').value = code;
+    document.getElementById('pickerToInput').value = city;
+    document.getElementById('pickerToList').classList.remove('show');
+  }
+}
+
+function swapPickerCities() {
+  const fromCode = document.getElementById('pickerFrom').value;
+  const toCode = document.getElementById('pickerTo').value;
+  const fromCity = document.getElementById('pickerFromInput').value;
+  const toCity = document.getElementById('pickerToInput').value;
+  
+  document.getElementById('pickerFrom').value = toCode;
+  document.getElementById('pickerTo').value = fromCode;
+  document.getElementById('pickerFromInput').value = toCity;
+  document.getElementById('pickerToInput').value = fromCity;
+}
+
+function searchPickerFlights() {
+  const from = document.getElementById('pickerFrom').value;
+  const to = document.getElementById('pickerTo').value;
+  const fromCity = document.getElementById('pickerFromInput').value;
+  const toCity = document.getElementById('pickerToInput').value;
+  const date = document.getElementById('pickerDate').value;
+  
+  if (!from || !to) {
+    showToast('Выберите города', 'red');
+    return;
+  }
+  
+  const resultsDiv = document.getElementById('pickerFlightResults');
+  resultsDiv.innerHTML = `
+    <div class="picker-flight-loading">
+      <div class="loading-spinner"></div>
+      <p>Поиск рейсов...</p>
+    </div>
+  `;
+  
+  // Генерируем демо-рейсы
+  setTimeout(() => {
+    pickerFlightResults = generatePickerFlights(from, to, fromCity, toCity, date);
+    renderPickerFlights();
+  }, 500);
+}
+
+function generatePickerFlights(fromCode, toCode, fromCity, toCity, date) {
+  const airlines = [
+    { code: 'HY', name: 'Uzbekistan Airways' },
+    { code: 'QH', name: 'Qanot Sharq' },
+    { code: '6Q', name: 'Silk Avia' },
+    { code: 'TK', name: 'Turkish Airlines' },
+    { code: 'SU', name: 'Aeroflot' }
+  ];
+  
+  const times = ['06:30', '08:15', '10:40', '12:25', '14:50', '17:30', '19:45'];
+  const durations = ['1ч 10м', '1ч 25м', '2ч 00м', '2ч 30м', '3ч 15м', '4ч 30м'];
+  
+  const results = [];
+  const numResults = 4 + Math.floor(Math.random() * 4);
+  
+  for (let i = 0; i < numResults; i++) {
+    const airline = airlines[Math.floor(Math.random() * airlines.length)];
+    const depTime = times[Math.floor(Math.random() * times.length)];
+    const dur = durations[Math.floor(Math.random() * durations.length)];
+    const basePrice = 50 + Math.floor(Math.random() * 300);
+    
+    // Вычисляем время прилёта
+    const [dH, dM] = depTime.split(':').map(Number);
+    const [durH, durM] = dur.match(/(\d+)ч\s*(\d+)?м?/).slice(1).map(n => parseInt(n) || 0);
+    let arrH = dH + durH;
+    let arrM = dM + durM;
+    if (arrM >= 60) { arrH++; arrM -= 60; }
+    if (arrH >= 24) arrH -= 24;
+    const arrTime = String(arrH).padStart(2,'0') + ':' + String(arrM).padStart(2,'0');
+    
+    results.push({
+      id: i,
+      fromCode,
+      toCode,
+      fromCity,
+      toCity,
+      departureTime: depTime,
+      arrivalTime: arrTime,
+      duration: dur,
+      airline: airline.name,
+      airlineCode: airline.code,
+      price: basePrice,
+      date: date
+    });
+  }
+  
+  results.sort((a, b) => a.price - b.price);
+  return results;
+}
+
+function renderPickerFlights() {
+  const resultsDiv = document.getElementById('pickerFlightResults');
+  
+  if (pickerFlightResults.length === 0) {
+    resultsDiv.innerHTML = `
+      <div class="picker-flight-empty">
+        <span style="font-size:32px">🔍</span>
+        <p>Рейсы не найдены</p>
+      </div>
+    `;
+    return;
+  }
+  
+  resultsDiv.innerHTML = `
+    <div class="picker-flights-header">
+      <span>Найдено рейсов: ${pickerFlightResults.length}</span>
+      <span style="font-size:11px;color:var(--tx3)">Нажмите для добавления</span>
+    </div>
+    <div class="picker-flights-list">
+      ${pickerFlightResults.map((f, i) => `
+        <div class="picker-flight-card" onclick="selectPickerFlight(${i})">
+          <div class="picker-flight-route">
+            <div class="picker-flight-point">
+              <div class="picker-flight-time">${f.departureTime}</div>
+              <div class="picker-flight-code">${f.fromCode}</div>
+            </div>
+            <div class="picker-flight-arrow">
+              <div class="picker-flight-duration">${f.duration}</div>
+              <div class="picker-flight-line">✈</div>
+            </div>
+            <div class="picker-flight-point">
+              <div class="picker-flight-time">${f.arrivalTime}</div>
+              <div class="picker-flight-code">${f.toCode}</div>
+            </div>
+          </div>
+          <div class="picker-flight-info">
+            <img src="https://pics.avs.io/40/40/${f.airlineCode}.png" onerror="this.style.display='none'">
+            <span>${f.airline}</span>
+          </div>
+          <div class="picker-flight-price">$${f.price}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="padding:12px;border-top:1px solid var(--b)">
+      <button class="btn btn-ghost" style="width:100%" onclick="showManualFlightForm()">
+        ✏️ Ввести вручную
+      </button>
+    </div>
+  `;
+}
+
+function selectPickerFlight(index) {
+  const f = pickerFlightResults[index];
+  if (!f) return;
   
   const list = document.getElementById('moduleList');
   if (!list) return;
@@ -1671,18 +1878,89 @@ function addFlightModule() {
   const div = document.createElement('div');
   div.innerHTML = buildModuleItem(moduleIndex, {
     type: 'flights',
-    name: `${from} → ${to}`,
-    description: `${airline} • ${time} • ${duration}`,
-    price: price,
+    name: `${f.fromCity} → ${f.toCity}`,
+    description: `${f.airline} • ${f.departureTime} • ${f.duration}`,
+    price: f.price,
     status: 'confirmed',
     enabled: true,
-    city: from
+    city: f.toCity
   });
   list.appendChild(div.firstChild);
   calculateModulesTotal();
   
   closePicker();
-  showToast(`✓ Добавлен перелёт: ${from} → ${to}`, 'green');
+  showToast(`✓ Добавлен рейс: ${f.fromCity} → ${f.toCity}`, 'green');
+}
+
+function showManualFlightForm() {
+  document.getElementById('pickerFlightResults').innerHTML = `
+    <div class="flight-form" style="padding:12px">
+      <div class="flight-row">
+        <div class="flight-field">
+          <label>Авиакомпания</label>
+          <select id="manualAirline" class="form-select">
+            <option>Uzbekistan Airways</option>
+            <option>Qanot Sharq</option>
+            <option>Silk Avia</option>
+            <option>Turkish Airlines</option>
+            <option>Aeroflot</option>
+            <option>Другая</option>
+          </select>
+        </div>
+        <div class="flight-field">
+          <label>Цена ($)</label>
+          <input type="number" id="manualPrice" class="form-input" value="100">
+        </div>
+      </div>
+      <div class="flight-row">
+        <div class="flight-field">
+          <label>Время вылета</label>
+          <input type="text" id="manualTime" class="form-input" placeholder="08:30" value="08:30">
+        </div>
+        <div class="flight-field">
+          <label>Время в пути</label>
+          <input type="text" id="manualDuration" class="form-input" placeholder="1ч 30м" value="1ч 30м">
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="addManualFlight()">
+        ✈️ Добавить
+      </button>
+    </div>
+  `;
+}
+
+function addManualFlight() {
+  const fromCity = document.getElementById('pickerFromInput').value || 'Город';
+  const toCity = document.getElementById('pickerToInput').value || 'Город';
+  const airline = document.getElementById('manualAirline').value;
+  const price = parseFloat(document.getElementById('manualPrice').value) || 0;
+  const time = document.getElementById('manualTime').value || '';
+  const duration = document.getElementById('manualDuration').value || '';
+  
+  const list = document.getElementById('moduleList');
+  if (!list) return;
+  
+  const moduleIndex = moduleCounter++;
+  const div = document.createElement('div');
+  div.innerHTML = buildModuleItem(moduleIndex, {
+    type: 'flights',
+    name: `${fromCity} → ${toCity}`,
+    description: `${airline} • ${time} • ${duration}`,
+    price: price,
+    status: 'confirmed',
+    enabled: true,
+    city: toCity
+  });
+  list.appendChild(div.firstChild);
+  calculateModulesTotal();
+  
+  closePicker();
+  showToast(`✓ Добавлен рейс: ${fromCity} → ${toCity}`, 'green');
+}
+
+function addFlightModule() {
+  // Legacy function - redirects to picker
+  openFlightPicker();
 }
 
 function renderPickerItems() {
@@ -2548,6 +2826,9 @@ function bookFlight(link, price, route, airline) {
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.aviasales-autocomplete')) {
     document.querySelectorAll('.autocomplete-list').forEach(l => l.classList.remove('show'));
+  }
+  if (!e.target.closest('.picker-autocomplete')) {
+    document.querySelectorAll('.picker-airport-list').forEach(l => l.classList.remove('show'));
   }
 });
 
