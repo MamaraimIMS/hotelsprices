@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Waylo Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Waylo Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -15,1252 +15,1797 @@
   --ff:"DM Sans",sans-serif;--fm:"DM Mono",monospace
 }
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--ff);font-size:14px}
+
+/* Login */
 #lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999}
-.lcard{background:var(--surf);border:1px solid var(--b2);border-radius:20px;padding:48px 40px;width:360px;text-align:center}
+.lcard{background:var(--surf);border:1px solid var(--b2);border-radius:20px;padding:48px 40px;width:400px;text-align:center}
 .llogo{width:56px;height:56px;background:var(--acc);border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;color:#fff;margin:0 auto 18px}
 .ltitle{font-size:20px;font-weight:600;margin-bottom:5px}
 .lsub{font-size:13px;color:var(--tx3);margin-bottom:26px}
-.linput{width:100%;background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:12px 16px;color:var(--tx);font-size:15px;font-family:var(--ff);outline:none;text-align:center;letter-spacing:4px}
+.linput{width:100%;background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:12px 16px;color:var(--tx);font-size:14px;font-family:var(--ff);outline:none;margin-bottom:10px;text-align:left}
 .linput:focus{border-color:var(--acc)}
-.lbtn{width:100%;margin-top:12px;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--ff)}
-.lbtn:hover{background:var(--acc2)}
-.lerr{font-size:12px;color:var(--red);margin-top:8px;opacity:0;transition:opacity .3s;min-height:16px}
+.linput::placeholder{color:var(--tx3)}
+.lbtn{width:100%;margin-top:8px;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--ff)}
+.lbtn:disabled{opacity:0.5;cursor:not-allowed}
+.lerr{font-size:12px;color:var(--red);margin-top:10px;min-height:18px}
+.lsuccess{font-size:12px;color:var(--grn);margin-top:10px}
+.lhelp{font-size:11px;color:var(--tx3);margin-top:16px;line-height:1.5}
+.lhelp a{color:var(--sky)}
+
+/* Layout */
 #app{display:none;height:100vh;overflow:hidden}
 .shell{display:flex;height:100%}
-.sb{width:230px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--b);display:flex;flex-direction:column;overflow-y:auto}
+.sb{width:240px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--b);display:flex;flex-direction:column;overflow-y:auto}
 .sb::-webkit-scrollbar{width:0}
 .sb-logo{padding:18px 16px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px}
-.sb-mark{width:30px;height:30px;background:var(--acc);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
-.sb-name{font-weight:600;font-size:14px}
-.sb-badge{font-size:9px;font-weight:500;background:var(--adim);color:var(--acc2);border:1px solid rgba(124,109,250,.3);border-radius:4px;padding:1px 5px;letter-spacing:.5px;margin-left:auto}
-.sb-sec{padding:14px 14px 5px;font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:1.4px;text-transform:uppercase}
-.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;margin:1px 6px;border-radius:8px;cursor:pointer;color:var(--tx2);font-size:13px;transition:all .15s}
+.sb-mark{width:32px;height:32px;background:var(--acc);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff}
+.sb-name{font-weight:600;font-size:15px}
+.sb-badge{font-size:9px;background:var(--adim);color:var(--acc2);border-radius:4px;padding:2px 6px;margin-left:auto}
+.sb-sec{padding:16px 14px 6px;font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:1.2px;text-transform:uppercase}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:2px 8px;border-radius:8px;cursor:pointer;color:var(--tx2);font-size:13px;transition:all .15s}
 .ni:hover{background:var(--surf2);color:var(--tx)}
 .ni.on{background:var(--adim);color:var(--acc2);font-weight:500}
-.ni-ico{width:22px;text-align:center;flex-shrink:0}
-.ni-cnt{margin-left:auto;font-size:10px;font-family:var(--fm);background:var(--surf3);color:var(--tx3);border-radius:4px;padding:1px 5px}
-.ni-ext{margin-left:auto;font-size:9px;color:var(--sky)}
-.sb-foot{margin-top:auto;padding:10px;border-top:1px solid var(--b)}
-.logout-btn{width:100%;margin-bottom:7px;padding:7px;background:rgba(239,68,68,.08);color:var(--red);border:1px solid rgba(239,68,68,.18);border-radius:7px;font-family:var(--ff);font-size:12px;cursor:pointer}
-.conn{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--surf2);border-radius:7px;font-size:12px;color:var(--tx2)}
-.cdot{width:6px;height:6px;border-radius:50%;background:var(--grn);box-shadow:0 0 5px var(--grn)}
-.cdot.off{background:var(--tx3);box-shadow:none}
+.ni-ico{width:22px;text-align:center}
+.ni-cnt{margin-left:auto;font-size:10px;font-family:var(--fm);background:var(--surf3);color:var(--tx3);border-radius:4px;padding:2px 6px}
+.sb-foot{margin-top:auto;padding:12px;border-top:1px solid var(--b)}
+.logout-btn{width:100%;margin-bottom:8px;padding:8px;background:rgba(239,68,68,.08);color:var(--red);border:1px solid rgba(239,68,68,.15);border-radius:8px;font-family:var(--ff);font-size:12px;cursor:pointer}
+.conn{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surf2);border-radius:8px;font-size:12px;color:var(--tx2)}
+.cdot{width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 6px var(--grn)}
+.cdot.off{background:var(--red);box-shadow:0 0 6px var(--red)}
+
+/* Main Area */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{padding:0 22px;height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);background:var(--surf);flex-shrink:0}
-.tb-left{display:flex;align-items:center;gap:10px}
-.tb-title{font-weight:600;font-size:15px}
-.content{flex:1;overflow-y:auto;padding:20px 22px}
-.content::-webkit-scrollbar{width:5px}
-.content::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-family:var(--ff);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s}
-.btn-ghost{background:transparent;color:var(--tx2);border:1px solid var(--b)}
-.btn-ghost:hover{background:var(--surf2);color:var(--tx)}
-.btn-primary{background:var(--acc);color:#fff}
+.topbar{padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);background:var(--surf)}
+.tb-title{font-size:17px;font-weight:600}
+.tb-badge{font-size:10px;background:var(--surf3);color:var(--tx3);border-radius:4px;padding:3px 8px;margin-left:10px}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.stat-card{background:var(--surf);border:1px solid var(--b);border-radius:12px;padding:16px 18px}
+.stat-label{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.stat-val{font-size:26px;font-weight:700;font-family:var(--fm)}
+.stat-sub{font-size:11px;color:var(--tx3);margin-top:4px}
+
+/* Toolbar */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:8px 12px;flex:1;max-width:280px}
+.search-box input{background:none;border:none;outline:none;color:var(--tx);font-family:var(--ff);font-size:13px;width:100%}
+.filter-sel{background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:8px 12px;color:var(--tx2);font-family:var(--ff);font-size:13px;cursor:pointer;outline:none}
+.btn{padding:8px 16px;border-radius:8px;font-family:var(--ff);font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.btn-primary{background:var(--acc);color:#fff;border-color:var(--acc)}
 .btn-primary:hover{background:var(--acc2)}
-.btn-sky{background:rgba(56,189,248,.12);color:var(--sky);border:1px solid rgba(56,189,248,.25)}
-.btn-amb{background:rgba(245,158,11,.12);color:var(--amb);border:1px solid rgba(245,158,11,.25)}
-.btn-sm{padding:5px 11px;font-size:12px}
-.btn-danger{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
-.btn-edit{background:rgba(34,197,94,.1);color:var(--grn);border:1px solid rgba(34,197,94,.2)}
-.notice{border-radius:10px;padding:11px 15px;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-size:13px}
-.notice-amb{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.22);color:#d97706}
-.notice-sky{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.22);color:var(--sky)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
-.scard{background:var(--surf);border:1px solid var(--b);border-radius:12px;padding:14px 16px}
-.slabel{font-size:9px;color:var(--tx3);font-weight:600;letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px}
-.sval{font-size:22px;font-weight:600;font-family:var(--fm)}
-.ssub{font-size:11px;color:var(--tx3);margin-top:3px}
-.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:13px;flex-wrap:wrap}
-.sbox{display:flex;align-items:center;gap:7px;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:7px 11px;flex:1;min-width:150px;max-width:240px}
-.sbox input{background:none;border:none;outline:none;color:var(--tx);font-family:var(--ff);font-size:13px;width:100%}
-.sbox input::placeholder{color:var(--tx3)}
-select.fsel{background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:7px 10px;color:var(--tx2);font-family:var(--ff);font-size:13px;outline:none;cursor:pointer}
-.twrap{background:var(--surf);border:1px solid var(--b);border-radius:12px;overflow:hidden}
-.tscroll{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:580px}
-thead tr{background:var(--surf2);border-bottom:1px solid var(--b)}
-th{padding:9px 13px;text-align:left;font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:.7px;text-transform:uppercase;white-space:nowrap}
-tbody tr{border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s}
-tbody tr:last-child{border-bottom:none}
+.btn-success{background:rgba(34,197,94,.12);color:var(--grn);border-color:rgba(34,197,94,.25)}
+.btn-success:hover{background:rgba(34,197,94,.2)}
+.btn-danger{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.2)}
+.btn-ghost{background:var(--surf2);color:var(--tx2);border-color:var(--b)}
+.btn-ghost:hover{background:var(--surf3);color:var(--tx)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+
+/* Table */
+.table-wrap{background:var(--surf);border:1px solid var(--b);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--surf2)}
+th{padding:12px 14px;text-align:left;font-size:10px;font-weight:600;color:var(--tx3);letter-spacing:.6px;text-transform:uppercase}
+tbody tr{border-top:1px solid var(--b);cursor:pointer;transition:background .1s}
 tbody tr:hover{background:var(--surf2)}
-td{padding:9px 13px;font-size:13px;color:var(--tx2);vertical-align:middle}
-td.tdp{color:var(--tx);font-weight:500}
-.td-img{width:42px;height:32px;border-radius:5px;object-fit:cover}
-.td-img-ph{width:42px;height:32px;border-radius:5px;background:var(--surf3);display:flex;align-items:center;justify-content:center;font-size:13px}
-.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
-.bg{background:rgba(34,197,94,.12);color:var(--grn);border:1px solid rgba(34,197,94,.2)}
-.bgray{background:rgba(90,90,114,.15);color:var(--tx3);border:1px solid var(--b)}
-.bsky{background:rgba(56,189,248,.12);color:var(--sky)}
-.bamb{background:rgba(245,158,11,.12);color:var(--amb)}
-.bpink{background:rgba(244,114,182,.12);color:var(--pink)}
-.bacc{background:var(--adim);color:var(--acc2)}
-.pval{font-family:var(--fm);color:var(--grn);font-size:13px;font-weight:500}
-.racts{display:flex;gap:5px;opacity:0;transition:opacity .15s}
-tr:hover .racts{opacity:1}
-.tfoot{padding:9px 14px;border-top:1px solid var(--b);background:var(--surf2);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--tx3)}
-.pager{display:flex;gap:3px}
-.pgb{width:25px;height:25px;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--b);background:var(--surf);color:var(--tx2);font-size:12px;transition:all .15s}
-.pgb:hover,.pgb.act{background:var(--acc);color:#fff;border-color:var(--acc)}
-.empty{text-align:center;padding:44px 24px;color:var(--tx3)}
-.empty-ico{font-size:34px;margin-bottom:10px}
-.ext-wrap{background:var(--surf);border:1px solid var(--b);border-radius:14px;padding:24px}
-.ext-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-.ext-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
-.route-card{background:var(--surf3);border-radius:8px;padding:10px 12px;cursor:pointer}
-.route-card:hover{background:var(--surf2)}
-.flight-card{background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:8px}
-.movl{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
-.movl.open{opacity:1;pointer-events:all}
-.modal{background:var(--surf);border:1px solid var(--b2);border-radius:16px;width:920px;max-width:97vw;max-height:90vh;overflow-y:auto;transform:translateY(10px);transition:transform .2s}
-.movl.open .modal{transform:translateY(0)}
-.modal::-webkit-scrollbar{width:4px}
-.modal::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
-.mhead{padding:18px 22px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surf);z-index:1}
-.mtitle{font-size:15px;font-weight:600}
-.mx{width:27px;height:27px;border-radius:7px;background:var(--surf2);border:none;color:var(--tx2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.mx:hover{background:var(--surf3);color:var(--tx)}
-.mbody{padding:18px 22px}
-.mfoot{padding:12px 22px 18px;border-top:1px solid var(--b);display:flex;justify-content:flex-end;gap:8px}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.ffull{grid-column:1/-1}
-.fg{display:flex;flex-direction:column;gap:4px}
-.flabel{font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:.6px;text-transform:uppercase}
-.fi,.fsel2,.fta{background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:8px 11px;color:var(--tx);font-family:var(--ff);font-size:13px;outline:none;transition:border-color .15s;width:100%}
-.fi:focus,.fsel2:focus,.fta:focus{border-color:var(--acc)}
-.fi::placeholder,.fta::placeholder{color:var(--tx3)}
-.fta{resize:vertical;min-height:72px}
-.fsel2 option{background:var(--surf)}
-.phprev{width:100%;height:105px;border-radius:8px;border:1px solid var(--b);background:var(--surf3);display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:12px;overflow:hidden;margin-bottom:6px}
-.phprev img{width:100%;height:100%;object-fit:cover}
-.ugrid{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.uthumb{width:60px;height:44px;border-radius:5px;object-fit:cover;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
-.uthumb:hover{border-color:var(--acc)}
-.uhint{font-size:11px;color:var(--tx3);padding:3px 0}
-.cfginfo{background:var(--surf2);border-radius:8px;padding:11px;font-size:12px;color:var(--tx3);line-height:1.7;margin-bottom:14px}
-.toast{position:fixed;bottom:22px;right:22px;background:var(--surf);border:1px solid var(--b2);border-radius:10px;padding:10px 16px;font-size:13px;color:var(--tx);display:flex;align-items:center;gap:9px;transform:translateY(60px);opacity:0;transition:all .3s;z-index:3000;pointer-events:none}
+td{padding:12px 14px;font-size:13px;color:var(--tx2)}
+td.primary{color:var(--tx);font-weight:500}
+.td-img{width:44px;height:34px;border-radius:6px;object-fit:cover}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-green{background:rgba(34,197,94,.12);color:var(--grn)}
+.badge-amber{background:rgba(245,158,11,.12);color:var(--amb)}
+.badge-gray{background:rgba(90,90,114,.12);color:var(--tx3)}
+.badge-sky{background:rgba(56,189,248,.12);color:var(--sky)}
+.badge-pink{background:rgba(244,114,182,.12);color:var(--pink)}
+.price{font-family:var(--fm);color:var(--grn);font-weight:500}
+.actions{display:flex;gap:6px;position:relative;z-index:10}
+.actions button{position:relative;z-index:11}
+.table-foot{padding:12px 14px;border-top:1px solid var(--b);background:var(--surf2);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--tx3)}
+.empty{text-align:center;padding:50px;color:var(--tx3)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+
+/* Loading */
+.loading{text-align:center;padding:40px;color:var(--tx3)}
+.spinner{width:32px;height:32px;border:3px solid var(--b);border-top-color:var(--acc);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surf);border:1px solid var(--b2);border-radius:16px;width:700px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:17px;font-weight:600}
+.modal-close{width:32px;height:32px;border-radius:8px;background:var(--surf2);border:1px solid var(--b);color:var(--tx2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:22px}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--b);display:flex;justify-content:flex-end;gap:10px}
+
+/* Form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px}
+.form-input{background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:10px 14px;color:var(--tx);font-family:var(--ff);font-size:14px;outline:none}
+.form-input:focus{border-color:var(--acc)}
+.form-select{background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:10px 14px;color:var(--tx);font-family:var(--ff);font-size:14px;cursor:pointer;outline:none}
+.form-textarea{min-height:80px;resize:vertical}
+.photo-preview{height:120px;background:var(--surf3);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--tx3);overflow:hidden;margin-top:8px}
+.photo-preview img{width:100%;height:100%;object-fit:cover}
+.photo-upload-area{margin-top:6px}
+.photo-actions{display:flex;align-items:center;margin-top:8px}
+.photo-hint{font-size:10px;color:var(--tx3);margin-top:6px}
+.photo-placeholder{font-size:13px;color:var(--tx3)}
+.module-nights{display:flex;align-items:center;gap:2px;min-width:55px}
+.module-nights input{background:var(--surf3);border:1px solid var(--b);border-radius:4px;padding:4px;color:var(--tx);font-family:var(--fm);font-size:12px;text-align:center}
+.module-nights span{color:var(--tx3);font-size:11px}
+
+/* Module Constructor */
+.modules-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--b)}
+.modules-title{font-size:12px;font-weight:600;color:var(--tx);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.modules-title span{color:var(--tx3);font-weight:400}
+.module-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.module-item{display:flex;align-items:center;gap:12px;background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;transition:all .2s}
+.module-item.disabled{opacity:.4}
+.module-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.module-icon.flights{background:rgba(124,109,250,.15)}
+.module-icon.hotels{background:rgba(56,189,248,.15)}
+.module-icon.transfers{background:rgba(245,158,11,.15)}
+.module-icon.sights{background:rgba(139,92,246,.15)}
+.module-icon.restaurants{background:rgba(239,68,68,.15)}
+.module-icon.food{background:rgba(34,197,94,.15)}
+.module-icon.recreation{background:rgba(20,184,166,.15)}
+.module-icon.entertainment{background:rgba(244,114,182,.15)}
+.module-icon.museums{background:rgba(168,162,158,.15)}
+.module-icon.guides{background:rgba(99,102,241,.15)}
+.module-body{flex:1;min-width:0}
+.module-name{background:none;border:none;outline:none;font-weight:600;font-size:13px;color:var(--tx);width:100%;font-family:var(--ff)}
+.module-desc{background:none;border:none;outline:none;font-size:11px;color:var(--tx3);width:100%;margin-top:2px;font-family:var(--ff)}
+.module-price{display:flex;align-items:center;gap:2px;min-width:70px}
+.module-price span{color:var(--tx3);font-size:12px}
+.module-price input{background:none;border:none;outline:none;font-family:var(--fm);font-size:15px;font-weight:600;color:var(--tx);width:50px;text-align:right}
+.module-status{min-width:80px;text-align:center}
+.status-badge{display:inline-block;padding:4px 8px;border-radius:4px;font-size:9px;font-weight:600;letter-spacing:.4px}
+.status-confirmed{background:rgba(34,197,94,.12);color:var(--grn)}
+.status-pending{background:rgba(245,158,11,.12);color:var(--amb)}
+.status-optional{background:rgba(90,90,114,.12);color:var(--tx3)}
+.toggle{position:relative;width:42px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--surf3);border:1px solid var(--b);border-radius:22px;transition:.25s}
+.toggle-slider:before{position:absolute;content:"";height:16px;width:16px;left:2px;bottom:2px;background:var(--tx3);border-radius:50%;transition:.25s}
+.toggle input:checked+.toggle-slider{background:var(--acc);border-color:var(--acc)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px);background:#fff}
+.module-delete{width:28px;height:28px;border-radius:6px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.12);color:var(--red);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.module-delete:hover{background:rgba(239,68,68,.15)}
+.add-modules{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:14px;background:var(--surf3);border-radius:10px;margin-bottom:14px}
+.add-module-btn{padding:10px 8px;background:var(--surf2);border:1px solid var(--b);border-radius:8px;font-size:16px;cursor:pointer;transition:all .15s;text-align:center}
+.add-module-btn:hover{background:var(--surf);border-color:var(--acc);transform:scale(1.05)}
+.add-module-btn .label{display:block;font-size:9px;color:var(--tx3);margin-top:4px}
+.modules-total{padding:16px;background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(56,189,248,.08));border:1px solid rgba(34,197,94,.2);border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+.modules-total-label{font-weight:600;color:var(--tx)}
+.modules-total-value{font-size:28px;font-weight:700;color:var(--grn);font-family:var(--fm)}
+
+/* Rooms & Gallery */
+.room-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:12px;margin-bottom:8px}
+.room-row .room-label{font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:4px}
+.room-row .room-input{background:var(--surf3);border:1px solid var(--b);border-radius:6px;padding:8px 10px;color:var(--tx);font-family:var(--ff);font-size:13px;outline:none;width:100%}
+.room-row .room-input:focus{border-color:var(--acc)}
+.gallery-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.gallery-thumb{position:relative;width:90px;height:68px;border-radius:6px;overflow:hidden;background:var(--surf3);flex-shrink:0}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover}
+.gallery-thumb .remove-btn{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;border:none;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center}
+.gallery-thumb .remove-btn:hover{background:var(--red)}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surf);border:1px solid var(--b2);border-radius:10px;padding:12px 18px;font-size:13px;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all .3s;z-index:3000}
 .toast.show{transform:translateY(0);opacity:1}
-.tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.room-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:7px;align-items:end;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:10px;margin-bottom:6px}
-.room-row .flabel{font-size:9px;font-weight:600;color:var(--tx3);letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:4px}
+.toast-dot{width:8px;height:8px;border-radius:50%}
+
+/* Picker Popup для выбора записей */
+.picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.picker-overlay.open{opacity:1;pointer-events:all}
+.picker-box{background:var(--surf);border:1px solid var(--b2);border-radius:16px;width:600px;max-width:95vw;max-height:80vh;display:flex;flex-direction:column;overflow:hidden}
+.picker-head{padding:16px 20px;border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center}
+.picker-title{font-size:16px;font-weight:600;display:flex;align-items:center;gap:10px}
+.picker-close{width:30px;height:30px;border-radius:8px;background:var(--surf2);border:1px solid var(--b);color:var(--tx2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.picker-search{padding:12px 20px;border-bottom:1px solid var(--b)}
+.picker-search input{width:100%;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:10px 14px;color:var(--tx);font-family:var(--ff);font-size:14px;outline:none}
+.picker-search input:focus{border-color:var(--acc)}
+.picker-list{flex:1;overflow-y:auto;padding:8px}
+.picker-item{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:10px;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.picker-item:hover{background:var(--surf2);border-color:var(--b)}
+.picker-item-img{width:50px;height:38px;border-radius:6px;object-fit:cover;background:var(--surf3);flex-shrink:0}
+.picker-item-body{flex:1;min-width:0}
+.picker-item-name{font-weight:500;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.picker-item-sub{font-size:12px;color:var(--tx3);margin-top:2px}
+.picker-item-price{font-family:var(--fm);font-weight:600;color:var(--grn);font-size:15px}
+.picker-empty{text-align:center;padding:40px;color:var(--tx3)}
+.picker-loading{text-align:center;padding:40px;color:var(--tx3)}
 </style>
 </head>
 <body>
 
+<!-- Login / Setup Screen -->
 <div id="lock">
   <div class="lcard">
     <div class="llogo">W</div>
     <div class="ltitle">Waylo Admin</div>
-    <div class="lsub">Введи пароль для входа</div>
-    <input class="linput" id="lpwd" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
-    <button class="lbtn" onclick="doLogin()">Войти</button>
-    <div class="lerr" id="lerr">Неверный пароль</div>
+    <div class="lsub">Введите пароль для входа</div>
+    
+    <input class="linput" id="inputPassword" type="password" placeholder="Пароль" style="text-align:center;letter-spacing:3px" onkeydown="if(event.key==='Enter')connectSupabase()">
+    
+    <button class="lbtn" id="connectBtn" onclick="connectSupabase()">Войти</button>
+    
+    <div class="lerr" id="loginError"></div>
+    <div class="lsuccess" id="loginSuccess"></div>
   </div>
 </div>
 
+<!-- Main App -->
 <div id="app">
 <div class="shell">
-<div class="sb">
-  <div class="sb-logo">
-    <div class="sb-mark">W</div>
-    <div class="sb-name">Waylo</div>
-    <div class="sb-badge">ADMIN</div>
+  
+  <!-- Sidebar -->
+  <div class="sb">
+    <div class="sb-logo">
+      <div class="sb-mark">W</div>
+      <div class="sb-name">Waylo</div>
+      <div class="sb-badge">ADMIN</div>
+    </div>
+    
+    <div class="sb-sec">Витрина Mini App</div>
+    <div class="ni on" data-sec="top_tours" onclick="switchSection('top_tours')">
+      <span class="ni-ico">⭐</span>Top Tours
+      <span class="ni-cnt" id="cnt-top_tours">0</span>
+    </div>
+    <div class="ni" data-sec="top_destinations" onclick="switchSection('top_destinations')">
+      <span class="ni-ico">📍</span>Top Destinations
+      <span class="ni-cnt" id="cnt-top_destinations">0</span>
+    </div>
+    
+    <div class="sb-sec">Каталог</div>
+    <div class="ni" data-sec="flights" onclick="switchSection('flights')">
+      <span class="ni-ico">✈️</span>Авиабилеты
+      <span class="ni-cnt" id="cnt-flights">0</span>
+    </div>
+    <div class="ni" data-sec="hotels" onclick="switchSection('hotels')">
+      <span class="ni-ico">🏨</span>Отели
+      <span class="ni-cnt" id="cnt-hotels">0</span>
+    </div>
+    <div class="ni" data-sec="transfers" onclick="switchSection('transfers')">
+      <span class="ni-ico">🚗</span>Трансферы
+      <span class="ni-cnt" id="cnt-transfers">0</span>
+    </div>
+    <div class="ni" data-sec="sights" onclick="switchSection('sights')">
+      <span class="ni-ico">🏛️</span>Достопримечательности
+      <span class="ni-cnt" id="cnt-sights">0</span>
+    </div>
+    <div class="ni" data-sec="restaurants" onclick="switchSection('restaurants')">
+      <span class="ni-ico">🍽️</span>Рестораны
+      <span class="ni-cnt" id="cnt-restaurants">0</span>
+    </div>
+    <div class="ni" data-sec="food" onclick="switchSection('food')">
+      <span class="ni-ico">🥘</span>Еда
+      <span class="ni-cnt" id="cnt-food">0</span>
+    </div>
+    <div class="ni" data-sec="recreation" onclick="switchSection('recreation')">
+      <span class="ni-ico">🧘</span>Отдых
+      <span class="ni-cnt" id="cnt-recreation">0</span>
+    </div>
+    <div class="ni" data-sec="entertainment" onclick="switchSection('entertainment')">
+      <span class="ni-ico">🎭</span>Развлечения
+      <span class="ni-cnt" id="cnt-entertainment">0</span>
+    </div>
+    <div class="ni" data-sec="museums" onclick="switchSection('museums')">
+      <span class="ni-ico">🏺</span>Музеи
+      <span class="ni-cnt" id="cnt-museums">0</span>
+    </div>
+    <div class="ni" data-sec="guides" onclick="switchSection('guides')">
+      <span class="ni-ico">👤</span>Гиды
+      <span class="ni-cnt" id="cnt-guides">0</span>
+    </div>
+    
+    <div class="sb-foot">
+      <button class="logout-btn" onclick="logout()">Отключиться</button>
+      <div class="conn">
+        <div class="cdot" id="connDot"></div>
+        <span id="connLabel">Не подключено</span>
+      </div>
+    </div>
   </div>
-  <div class="sb-sec">Каталог</div>
-  <div class="ni" id="ni-flights"     onclick="switchSec('flights')"><span class="ni-ico">&#x2708;</span>Авиабилеты<span class="ni-ext">API</span></div>
-  <div class="ni" id="ni-hotels"      onclick="switchSec('hotels')"><span class="ni-ico">&#x1F3E8;</span>Отели<span class="ni-cnt" id="cnt-hotels">0</span></div>
-  <div class="ni" id="ni-transfers"   onclick="switchSec('transfers')"><span class="ni-ico">&#x1F697;</span>Трансфер<span class="ni-cnt" id="cnt-transfers">0</span></div>
-  <div class="ni" id="ni-sights"      onclick="switchSec('sights')"><span class="ni-ico">&#x1F3DB;</span>Достопримечательности<span class="ni-cnt" id="cnt-sights">0</span></div>
-  <div class="ni" id="ni-restaurants" onclick="switchSec('restaurants')"><span class="ni-ico">&#x1F35C;</span>Рестораны<span class="ni-cnt" id="cnt-restaurants">0</span></div>
-  <div class="ni" id="ni-food"        onclick="switchSec('food')"><span class="ni-ico">&#x1F37D;</span>Еда<span class="ni-cnt" id="cnt-food">0</span></div>
-  <div class="ni" id="ni-recreation"  onclick="switchSec('recreation')"><span class="ni-ico">&#x1F33F;</span>Отдых<span class="ni-cnt" id="cnt-recreation">0</span></div>
-  <div class="ni" id="ni-entertainment" onclick="switchSec('entertainment')"><span class="ni-ico">&#x1F3AA;</span>Развлечения<span class="ni-cnt" id="cnt-entertainment">0</span></div>
-  <div class="ni" id="ni-museums"     onclick="switchSec('museums')"><span class="ni-ico">&#x1F3FA;</span>Музеи<span class="ni-cnt" id="cnt-museums">0</span></div>
-  <div class="sb-sec">Туры</div>
-  <div class="ni on" id="ni-tour_packages" onclick="switchSec('tour_packages')"><span class="ni-ico">&#x1F4E6;</span>Тур-пакеты<span class="ni-cnt" id="cnt-tour_packages">0</span></div>
-  <div class="sb-foot">
-    <button class="logout-btn" onclick="doLogout()">Выйти</button>
-    <div class="conn"><div class="cdot off" id="cdot"></div><span id="clabel">Не подключено</span></div>
+  
+  <!-- Main Content -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-left">
+        <span class="tb-title" id="sectionTitle">Top Tours</span>
+        <span class="tb-badge" id="sectionBadge">Витрина</span>
+      </div>
+      <button class="btn btn-primary" id="addBtn" onclick="openAddModal()">+ Добавить</button>
+    </div>
+    
+    <div class="content">
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Всего</div>
+          <div class="stat-val" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="statActiveLabel">Approved</div>
+          <div class="stat-val" id="statActive" style="color:var(--grn)">0</div>
+          <div class="stat-sub" id="statActiveSub">в Mini App</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Средняя цена</div>
+          <div class="stat-val" id="statPrice" style="color:var(--sky)">$0</div>
+        </div>
+      </div>
+      
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="searchInput" placeholder="Поиск..." oninput="filterData()">
+        </div>
+        <select class="filter-sel" id="filterCity" onchange="filterData()">
+          <option value="">Все города</option>
+          <option>Ташкент</option>
+          <option>Самарканд</option>
+          <option>Бухара</option>
+          <option>Хива</option>
+        </select>
+        <select class="filter-sel" id="filterStatus" onchange="filterData()">
+          <option value="">Все статусы</option>
+          <option value="approved">Approved</option>
+          <option value="pending">Ожидает</option>
+        </select>
+        <button class="btn btn-ghost" onclick="loadSectionData()">🔄 Обновить</button>
+      </div>
+      
+      <!-- Table -->
+      <div class="table-wrap">
+        <table>
+          <thead><tr id="tableHead"></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+        <div class="table-foot">
+          <span id="tableCount">0 записей</span>
+          <span id="tableStatus"></span>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 </div>
 
-<div class="main">
-  <div class="topbar">
-    <div class="tb-left">
-      <div class="tb-title" id="sec-title">Тур-пакеты</div>
-      <span class="badge bgray" id="sec-type">Supabase</span>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-ghost btn-sm" onclick="loadData()">Обновить</button>
-      <button class="btn btn-primary btn-sm" id="add-btn" onclick="openAdd()">+ Добавить</button>
-    </div>
-  </div>
-  <div class="content">
-    <div class="notice notice-amb" id="cfg-notice">
-      Укажи Supabase URL и API Key.
-      <button class="btn btn-sm" onclick="openCfg()" style="margin-left:auto;background:rgba(245,158,11,.15);color:#d97706;border:1px solid rgba(245,158,11,.3)">Настройки</button>
-    </div>
-    <div class="stats" id="stats-row">
-      <div class="scard"><div class="slabel">Записей</div><div class="sval" id="s-total">0</div><div class="ssub">в разделе</div></div>
-      <div class="scard"><div class="slabel">Активных</div><div class="sval" style="color:var(--grn)" id="s-active">0</div><div class="ssub">active=true</div></div>
-      <div class="scard"><div class="slabel">Ср. цена</div><div class="sval" style="color:var(--acc2)" id="s-price">$0</div><div class="ssub">по разделу</div></div>
-      <div class="scard"><div class="slabel">Разделов</div><div class="sval" style="color:var(--sky)">10</div><div class="ssub">в каталоге</div></div>
-    </div>
-    <div class="toolbar" id="toolbar-row">
-      <div class="sbox"><input type="text" id="q-search" placeholder="Поиск..." oninput="applyFilters()"></div>
-      <select class="fsel" id="q-city" onchange="applyFilters()">
-        <option value="">Все города</option>
-        <option>Самарканд</option><option>Бухара</option><option>Хива</option>
-        <option>Ташкент</option><option>Шахрисабз</option><option>Нукус</option>
-      </select>
-      <select class="fsel" id="q-active" onchange="applyFilters()">
-        <option value="">Все статусы</option>
-        <option value="1">Активные</option>
-        <option value="0">Неактивные</option>
-      </select>
-    </div>
-    <div class="twrap" id="table-wrap">
-      <div class="tscroll"><table><thead><tr id="t-head"></tr></thead><tbody id="t-body"></tbody></table></div>
-      <div class="tfoot"><span id="t-count">0 записей</span><div class="pager" id="t-pager"></div></div>
-    </div>
-    <div id="ext-sec" style="display:none"></div>
-  </div>
-</div>
-</div>
-</div>
-
-<div class="movl" id="rec-ovl" onclick="if(event.target===this)closeRec()">
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
   <div class="modal">
-    <div class="mhead"><div class="mtitle" id="rec-title">Добавить</div><button class="mx" onclick="closeRec()">x</button></div>
-    <div class="mbody" id="rec-body"></div>
-    <div class="mfoot"><button class="btn btn-ghost" onclick="closeRec()">Отмена</button><button class="btn btn-primary" onclick="saveRec()">Сохранить</button></div>
-  </div>
-</div>
-
-<div class="movl" id="cfg-ovl" onclick="if(event.target===this)closeCfg()">
-  <div class="modal" style="width:460px">
-    <div class="mhead"><div class="mtitle">Настройки</div><button class="mx" onclick="closeCfg()">x</button></div>
-    <div class="mbody">
-      <div style="font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:8px">Supabase</div>
-      <div class="fg" style="margin-bottom:11px"><label class="flabel">Supabase URL</label><input class="fi" id="cfg-url" placeholder="https://xxxx.supabase.co"></div>
-      <div class="fg" style="margin-bottom:11px"><label class="flabel">Anon API Key</label><input class="fi" id="cfg-key" placeholder="eyJhbGci..."></div>
-      <button class="btn btn-ghost btn-sm" style="margin-bottom:14px;width:100%" onclick="testConn()">🔌 Проверить подключение</button>
-      <div id="cfg-test-res" style="font-size:12px;margin-bottom:14px;display:none;padding:10px;border-radius:8px"></div>
-      <div style="font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:8px">TravelPayouts</div>
-      <div class="cfginfo">Личный кабинет TravelPayouts → Инструменты → Маркер партнёра</div>
-      <div class="fg"><label class="flabel">Партнёрский Marker (для кнопки «Купить»)</label><input class="fi" id="cfg-marker" placeholder="например: 123456" value=""></div>
+    <div class="modal-head">
+      <span class="modal-title" id="modalTitle">Добавить</span>
+      <button class="modal-close" onclick="closeModal()">×</button>
     </div>
-    <div class="mfoot"><button class="btn btn-ghost" onclick="closeCfg()">Отмена</button><button class="btn btn-primary" onclick="saveCfg()">Сохранить</button></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Отмена</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="saveRecord()">Сохранить</button>
+    </div>
   </div>
 </div>
 
-<div class="toast" id="toast"><div class="tdot" id="tdot"></div><span id="tmsg"></span></div>
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-dot" id="toastDot"></div>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- Picker Popup для выбора записей из БД -->
+<div class="picker-overlay" id="picker">
+  <div class="picker-box">
+    <div class="picker-head">
+      <span class="picker-title" id="pickerTitle">Выберите</span>
+      <button class="picker-close" onclick="closePicker()">×</button>
+    </div>
+    <div class="picker-search">
+      <input type="text" id="pickerSearch" placeholder="Поиск..." oninput="filterPickerItems()">
+    </div>
+    <div class="picker-list" id="pickerList"></div>
+  </div>
+</div>
 
 <script>
-var PASS = 'w2';
-// Принудительно сбрасываем старые значения и вшиваем правильные
-localStorage.removeItem('w_url');
-localStorage.removeItem('w_key');
-var SURL = 'https://chhxhcduzjlnoieafved.supabase.co';
-var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNoaHhoY2R1empsbm9pZWFmdmVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMDUwNTIsImV4cCI6MjA4ODg4MTA1Mn0.GIQ0RH4WQTjBfgmJ_g9HcfbyUCd1dYgYGZ8u7WlrEdE';
-var TP_TOKEN = 'ed05c13e61e0b321e7dff5fc015f4bbf';
-var TP_MARKER = localStorage.getItem('tp_marker') || '';
+// ============================================
+// КОНФИГУРАЦИЯ SUPABASE
+// ============================================
+const SUPABASE_URL = 'https://chhxhcduzjlnoieafved.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNoaHhoY2R1empsbm9pZWFmdmVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMDUwNTIsImV4cCI6MjA4ODg4MTA1Mn0.GIQ0RH4WQTjBfgmJ_g9HcfbyUCd1dYgYGZ8u7WlrEdE';
+const ADMIN_PASSWORD = 'w2';
 
-function aviasalesUrl(from, dateOut, to, dateBack, passengers){
-  // Aviasales формат даты: DDMMYY (6 символов)
-  function fmt(d){ var p=d.split('-'); return p[2]+p[1]+p[0].slice(2); }
-  var marker = TP_MARKER ? '?marker='+TP_MARKER : '';
-  if(dateBack){
-    return 'https://www.aviasales.ru/search/'+from+fmt(dateOut)+to+fmt(dateBack)+from+passengers+marker;
-  }
-  return 'https://www.aviasales.ru/search/'+from+fmt(dateOut)+to+passengers+marker;
-}
-var curSec = 'tour_packages';
-var allRows = [], filtered = [], editId = null, curPage = 1, PER = 15;
-var CITIES = ['','Samarkand','Bukhara','Khiva','Tashkent','Shakhrisabz','Nukus'];
-var CITIES_RU = ['','Самарканд','Бухара','Хива','Ташкент','Шахрисабз','Нукус'];
+// Локальные данные (синхронизируются с Supabase при онлайн)
+let localData = {
+  top_tours: [
+    { id: 'tt1', display_title: 'Go Registan', city: 'Самарканд', duration_days: 4, badge_text: 'ПОПУЛЯРНЫЙ', image_url: 'https://uzbekistan.travel/storage/app/media/uploaded-files/1440x810-4.jpg', modules: [], total_price: 0, approved: true },
+    { id: 'tt2', display_title: 'Al Buhari', city: 'Бухара', duration_days: 5, badge_text: 'AI ВЫБОР', image_url: 'https://uzbekistan.travel/storage/app/media/nuzratilla/cropped-images/bahouddin-naqshband-1-0-0-0-0-1583472498.jpg', modules: [], total_price: 0, approved: true }
+  ],
+  top_destinations: [
+    { id: 'td1', display_title: 'Регистан', city: 'Самарканд', rating: 9.8, image_url: 'https://uzbekistan.travel/storage/app/media/uploaded-files/1440x810-4.jpg', modules: [], price: 33, approved: true },
+    { id: 'td2', display_title: 'Ичан-Кала', city: 'Хива', rating: 9.7, image_url: 'https://uzbekistan.travel/storage/app/media/uploaded-files/khiva-1440x810.jpg', modules: [], price: 58, approved: true }
+  ],
+  hotels: [
+    { id: 'h1', name: 'Hyatt Regency Tashkent', city: 'Ташкент', stars: '5', rating: 9.2, price_from: 180, board_type: 'BB', rooms: [{ type: 'Standard', price: 180 }], gallery: ['https://cf.bstatic.com/xdata/images/hotel/max1024x768/261636498.jpg'], active: true },
+    { id: 'h2', name: 'Silk Road Samarkand', city: 'Самарканд', stars: '5', rating: 9.5, price_from: 220, board_type: 'BB', rooms: [{ type: 'Deluxe', price: 220 }], gallery: [], active: true },
+    { id: 'h3', name: 'Hotel Naqshband', city: 'Бухара', stars: '4', rating: 8.9, price_from: 85, board_type: 'HB', rooms: [], gallery: [], active: true },
+    { id: 'h4', name: 'Ichan Qala Hotel', city: 'Хива', stars: '4', rating: 8.7, price_from: 65, board_type: 'BB', rooms: [], gallery: [], active: true }
+  ],
+  flights: [
+    { id: 'f1', route: 'Ташкент → Самарканд', airline: 'Uzbekistan Airways', departure: '08:30', duration: '1ч 10м', price: 65, active: true },
+    { id: 'f2', route: 'Ташкент → Бухара', airline: 'Uzbekistan Airways', departure: '07:15', duration: '1ч 25м', price: 89, active: true }
+  ],
+  transfers: [
+    { id: 'tr1', name: 'Аэропорт → Центр', from_city: 'Ташкент', to_city: 'Ташкент', vehicle: 'седан', price: 15, duration_hours: 0.5, active: true },
+    { id: 'tr2', name: 'Ташкент → Самарканд', from_city: 'Ташкент', to_city: 'Самарканд', vehicle: 'поезд', price: 25, duration_hours: 2, active: true }
+  ],
+  sights: [
+    { id: 's1', name: 'Площадь Регистан', city: 'Самарканд', type: 'UNESCO', entry_price: 8, rating: 9.8, image_url: 'https://uzbekistan.travel/storage/app/media/uploaded-files/1440x810-4.jpg', active: true },
+    { id: 's2', name: 'Ичан-Кала', city: 'Хива', type: 'UNESCO', entry_price: 10, rating: 9.7, image_url: 'https://uzbekistan.travel/storage/app/media/uploaded-files/khiva-1440x810.jpg', active: true },
+    { id: 's3', name: 'Ляби-хауз', city: 'Бухара', type: 'площадь', entry_price: 0, rating: 9.4, image_url: '', active: true }
+  ],
+  restaurants: [
+    { id: 'r1', name: 'Центр плова', city: 'Ташкент', cuisine: 'узбекская', avg_check: 8, rating: 9.3, image_url: '', active: true },
+    { id: 'r2', name: 'Platan', city: 'Самарканд', cuisine: 'узбекская', avg_check: 12, rating: 9.0, image_url: '', active: true }
+  ],
+  food: [
+    { id: 'fo1', name: 'Плов по-самаркандски', city: 'Самарканд', type: 'плов', price: 8, rating: 9.5, image_url: '', active: true }
+  ],
+  recreation: [
+    { id: 're1', name: 'Хаммам традиционный', city: 'Бухара', type: 'хаммам', price: 35, duration_hours: 2, rating: 9.3, active: true }
+  ],
+  entertainment: [
+    { id: 'e1', name: 'Шоу узбекских танцев', city: 'Самарканд', type: 'шоу', price: 25, time: '20:00', rating: 9.4, active: true }
+  ],
+  museums: [
+    { id: 'm1', name: 'Музей Улугбека', city: 'Самарканд', type: 'исторический', entry_price: 4, rating: 9.2, image_url: '', active: true }
+  ],
+  guides: [
+    { id: 'g1', name: 'Тимур Каримов', city: 'Самарканд', languages: 'русский, английский', price_day: 50, rating: 9.6, image_url: '', active: true },
+    { id: 'g2', name: 'Лола Азимова', city: 'Бухара', languages: 'русский, французский', price_day: 45, rating: 9.4, image_url: '', active: true }
+  ]
+}; // Пароль для входа в админку
 
-var CLABEL = {
-  image_url:'Фото', name:'Название', title:'Название', city:'Город',
-  stars:'Stars', tier:'Уровень', price_from:'Цена от', price_peak:'Пик $',
-  total_price:'Цена', avg_check:'Ср.чек', entry_price:'Вход $',
-  rating:'Рейтинг', active:'Статус', duration_days:'Дней',
-  type:'Тип', category:'Категория', cuisine:'Кухня',
-  vehicle:'Авто', capacity:'Мест', board_type:'Питание', price:'Цена'
+// Иконки и названия модулей
+const MODULE_TYPES = {
+  flights:      { icon: '✈️', label: 'Авиабилеты', color: 'flights' },
+  hotels:       { icon: '🏨', label: 'Отели', color: 'hotels' },
+  transfers:    { icon: '🚗', label: 'Трансфер', color: 'transfers' },
+  sights:       { icon: '🏛️', label: 'Экскурсии', color: 'sights' },
+  restaurants:  { icon: '🍽️', label: 'Рестораны', color: 'restaurants' },
+  food:         { icon: '🥘', label: 'Еда', color: 'food' },
+  recreation:   { icon: '🧘', label: 'Отдых', color: 'recreation' },
+  entertainment:{ icon: '🎭', label: 'Развлечения', color: 'entertainment' },
+  museums:      { icon: '🏺', label: 'Музеи', color: 'museums' },
+  guides:       { icon: '👤', label: 'Гиды', color: 'guides' }
 };
 
-var SECS = {
-  flights:  { label:'Авиабилеты', type:'ext' },
-  hotels: { label:'Отели', type:'db', pk:'price_from',
-    cols:['image_url','name','city','stars','board_type','price_from','price_peak','active'],
-    fields:[
-      {k:'name',l:'Название отеля',t:'text',req:1},
-      {k:'city',l:'Город',t:'city'},
-      {k:'address',l:'Адрес',t:'text'},
-      {k:'stars',l:'Звёзды (1-5)',t:'num'},
-      {k:'rooms',l:'Номера',t:'rooms'},
-      {k:'rating',l:'Рейтинг',t:'num'},
-      {k:'room_photos',l:'Фото номеров',t:'room_photos'},
-      {k:'currency',l:'Валюта',t:'sel',o:['USD','EUR','UZS']},
-      {k:'board_type',l:'Тип питания',t:'sel',o:['RO','BB','HB','FB','AI']},
-      {k:'checkin_standard',l:'Check-in стандарт',t:'text',ph:'14:00'},
-      {k:'checkout_standard',l:'Check-out стандарт',t:'text',ph:'12:00'},
-      {k:'amenities',l:'Удобства',t:'text',ph:'Wi-Fi, бассейн, спа, ресторан'},
-      {k:'hotel_rules',l:'Правила отеля',t:'ta',ph:'Введите правила отеля...'},
+// Конфигурация разделов
+const SECTIONS = {
+  top_tours: {
+    title: 'Top Tours',
+    badge: 'Витрина',
+    hasApprove: true,
+    hasModules: true,
+    modulesOnly: true, // Флаг: данные берутся из модулей
+    priceField: 'total_price',
+    columns: ['image_url', 'display_title', 'city', 'duration_days', 'total_price', 'approved'],
+    columnLabels: { image_url: '', display_title: 'Название', city: 'Город', duration_days: 'Дней', total_price: 'Цена', approved: 'Статус' },
+    fields: [
+      { key: 'display_title', label: 'Название тура', type: 'text', required: true, placeholder: 'Золотой Самарканд' },
+      { key: 'badge_text', label: 'Бейдж', type: 'text', placeholder: 'AI ВЫБОР, ПОПУЛЯРНЫЙ' }
     ]
   },
-  transfers: { label:'Трансфер', type:'db', pk:'price',
-    cols:['name','city','type','vehicle','price','capacity','active'],
-    fields:[
-      {k:'name',l:'Маршрут',t:'text',req:1},
-      {k:'city',l:'Город',t:'city'},
-      {k:'type',l:'Тип',t:'sel',o:['аэропорт -> отель','отель -> аэропорт','межгород','экскурсионный','персональный']},
-      {k:'vehicle',l:'Транспорт',t:'sel',o:['Sedan','Minivan','Minibus','Bus','VIP']},
-      {k:'price',l:'Цена ($)',t:'num'},
-      {k:'capacity',l:'Мест',t:'num'},
-      {k:'duration_min',l:'Время в пути (мин)',t:'num'},
-      {k:'distance_km',l:'Расстояние (км)',t:'num'},
-      {k:'from_location',l:'Откуда',t:'text'},
-      {k:'to_location',l:'Куда',t:'text'},
-      {k:'image_url',l:'Фото',t:'photo'},
-      {k:'description',l:'Описание',t:'ta'},
-      {k:'active',l:'Активен',t:'bool'}
+  top_destinations: {
+    title: 'Top Destinations',
+    badge: 'Витрина',
+    hasApprove: true,
+    hasModules: true,
+    modulesOnly: true, // Флаг: данные берутся из модулей
+    priceField: 'price',
+    columns: ['image_url', 'display_title', 'city', 'rating', 'price', 'approved'],
+    columnLabels: { image_url: '', display_title: 'Название', city: 'Город', rating: 'Рейтинг', price: 'Цена', approved: 'Статус' },
+    fields: [
+      { key: 'display_title', label: 'Название', type: 'text', required: true, placeholder: 'Регистан — жемчужина востока' },
+      { key: 'badge_text', label: 'Бейдж', type: 'text', placeholder: 'UNESCO, MUST SEE' }
     ]
   },
-  sights: { label:'Достопримечательности', type:'db', pk:'entry_price',
-    cols:['image_url','name','city','category','entry_price','rating','active'],
-    fields:[
-      {k:'name',l:'Название',t:'text',req:1},
-      {k:'city',l:'Город',t:'city'},
-      {k:'category',l:'Категория',t:'sel',o:['мечеть','медресе','мавзолей','крепость','базар','площадь','парк','дворец']},
-      {k:'entry_price',l:'Цена входа ($)',t:'num'},
-      {k:'rating',l:'Рейтинг',t:'num'},
-      {k:'duration_hours',l:'Часов на осмотр',t:'num'},
-      {k:'address',l:'Адрес',t:'text'},
-      {k:'working_hours',l:'Часы работы',t:'text',ph:'08:00 - 20:00'},
-      {k:'best_time',l:'Лучшее время',t:'text',ph:'Раннее утро'},
-      {k:'guide_needed',l:'Нужен гид',t:'bool'},
-      {k:'image_url',l:'Фото',t:'photo'},
-      {k:'description',l:'Описание',t:'ta'},
-      {k:'history',l:'История',t:'ta'},
-      {k:'active',l:'Активен',t:'bool'}
+  hotels: {
+    title: 'Отели',
+    badge: 'Каталог',
+    priceField: 'price_from',
+    columns: ['image_url', 'name', 'city', 'stars', 'board_type', 'price_from', 'active'],
+    columnLabels: { image_url: '', name: 'Название', city: 'Город', stars: 'Звёзды', board_type: 'Питание', price_from: 'Цена от', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'Название отеля', type: 'text', required: true },
+      { key: 'city', label: 'Город', type: 'city' },
+      { key: 'address', label: 'Адрес', type: 'text' },
+      { key: 'stars', label: 'Звёзды', type: 'select', options: ['1', '2', '3', '4', '5'] },
+      { key: 'rooms', label: 'Номера', type: 'rooms' },
+      { key: 'rating', label: 'Рейтинг', type: 'number' },
+      { key: 'gallery', label: 'Галерея', type: 'gallery' },
+      { key: 'currency', label: 'Валюта', type: 'select', options: ['USD', 'EUR', 'UZS'] },
+      { key: 'board_type', label: 'Тип питания', type: 'select', options: ['RO', 'BB', 'HB', 'FB', 'AI'] },
+      { key: 'checkin_standard', label: 'Check-in', type: 'text', placeholder: '14:00' },
+      { key: 'checkout_standard', label: 'Check-out', type: 'text', placeholder: '12:00' },
+      { key: 'amenities', label: 'Удобства', type: 'text', placeholder: 'Wi-Fi, бассейн, спа' },
+      { key: 'hotel_rules', label: 'Правила', type: 'textarea' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
     ]
   },
-  restaurants: { label:'Рестораны', type:'db', pk:'avg_check',
-    cols:['image_url','name','city','cuisine','avg_check','rating','active'],
-    fields:[
-      {k:'name',l:'Название',t:'text',req:1},
-      {k:'city',l:'Город',t:'city'},
-      {k:'cuisine',l:'Кухня',t:'text',ph:'Узбекская, Европейская...'},
-      {k:'type',l:'Тип заведения',t:'sel',o:['ресторан','кафе','чайхана','столовая','бар','бистро','фаст-фуд']},
-      {k:'avg_check',l:'Средний чек ($)',t:'num'},
-      {k:'rating',l:'Рейтинг',t:'num'},
-      {k:'address',l:'Адрес',t:'text'},
-      {k:'phone',l:'Телефон',t:'text'},
-      {k:'working_hours',l:'Часы работы',t:'text',ph:'09:00 - 23:00'},
-      {k:'seats',l:'Мест',t:'num'},
-      {k:'menu_highlights',l:'Топ блюда',t:'text',ph:'Плов, шашлык, самса'},
-      {k:'halal',l:'Халяль',t:'bool'},
-      {k:'alcohol',l:'Алкоголь',t:'bool'},
-      {k:'booking_required',l:'Нужна бронь',t:'bool'},
-      {k:'delivery',l:'Доставка',t:'bool'},
-      {k:'image_url',l:'Фото',t:'photo'},
-      {k:'description',l:'Описание',t:'ta'},
-      {k:'active',l:'Активен',t:'bool'}
+  flights: {
+    title: 'Авиабилеты',
+    badge: 'Каталог',
+    priceField: 'price',
+    columns: ['route', 'airline', 'departure', 'price', 'active'],
+    columnLabels: { route: 'Маршрут', airline: 'Авиакомпания', departure: 'Вылет', price: 'Цена', active: 'Статус' },
+    fields: [
+      { key: 'route', label: 'Маршрут', type: 'text', required: true, placeholder: 'Ташкент → Самарканд' },
+      { key: 'airline', label: 'Авиакомпания', type: 'select', options: ['Uzbekistan Airways', 'Qanot Sharq', 'Silk Avia'] },
+      { key: 'departure', label: 'Время вылета', type: 'text', placeholder: '08:30' },
+      { key: 'duration', label: 'Время в пути', type: 'text', placeholder: '1ч 10м' },
+      { key: 'price', label: 'Цена ($)', type: 'number' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
     ]
   },
-  food: { label:'Еда', type:'db', pk:'price',
-    cols:['image_url','name','city','category','price','active'],
-    fields:[
-      {k:'name',l:'Блюдо / продукт',t:'text',req:1},
-      {k:'city',l:'Город',t:'city'},
-      {k:'category',l:'Категория',t:'sel',o:['уличная еда','рынок','пекарня','кондитерская','национальное блюдо']},
-      {k:'price',l:'Цена ($)',t:'num'},
-      {k:'address',l:'Где найти',t:'text'},
-      {k:'working_hours',l:'Часы',t:'text'},
-      {k:'image_url',l:'Фото',t:'photo'},
-      {k:'description',l:'Описание',t:'ta'},
-      {k:'active',l:'Активен',t:'bool'}
+  transfers: {
+    title: 'Трансферы',
+    badge: 'Каталог',
+    priceField: 'price',
+    columns: ['name', 'from_city', 'to_city', 'vehicle', 'price', 'active'],
+    columnLabels: { name: 'Маршрут', from_city: 'Откуда', to_city: 'Куда', vehicle: 'Транспорт', price: 'Цена', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'Название', type: 'text', required: true },
+      { key: 'from_city', label: 'Откуда', type: 'city' },
+      { key: 'to_city', label: 'Куда', type: 'city' },
+      { key: 'vehicle', label: 'Транспорт', type: 'select', options: ['седан', 'минивэн', 'автобус', 'поезд'] },
+      { key: 'price', label: 'Цена ($)', type: 'number' },
+      { key: 'duration_hours', label: 'Часов в пути', type: 'number' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
     ]
   },
-  recreation: { label:'Отдых', type:'db', pk:'price',
-    cols:['image_url','name','city','category','price','rating','active'],
-    fields:[
-      {k:'name',l:'Название',t:'text',req:1},
-      {k:'city',l:'Город',t:'city'},
-      {k:'category',l:'Категория',t:'sel',o:['спа','баня','природа','пляж','горы','санаторий','йога','медитация']},
-      {k:'price',l:'Цена ($)',t:'num'},
-      {k:'rating',l:'Рейтинг',t:'num'},
-      {k:'duration_hours',l:'Часов',t:'num'},
-      {k:'address',l:'Адрес',t:'text'},
-      {k:'working_hours',l:'Часы работы',t:'text'},
-      {k:'booking_required',l:'Нужна бронь',t:'bool'},
-      {k:'image_url',l:'Фото',t:'photo'},
-      {k:'description',l:'Описание',t:'ta'},
-      {k:'active',l:'Активен',t:'bool'}
+  sights: {
+    title: 'Достопримечательности',
+    badge: 'Каталог',
+    priceField: 'entry_price',
+    columns: ['image_url', 'name', 'city', 'type', 'entry_price', 'active'],
+    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', entry_price: 'Вход', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'Название', type: 'text', required: true },
+      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'city', label: 'Город', type: 'city' },
+      { key: 'type', label: 'Тип', type: 'select', options: ['UNESCO', 'мавзолей', 'мечеть', 'медресе', 'крепость', 'площадь'] },
+      { key: 'entry_price', label: 'Цена входа ($)', type: 'number' },
+      { key: 'rating', label: 'Рейтинг', type: 'number' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
     ]
   },
-  entertainment: { label:'Развлечения', type:'db', pk:'price',
-    cols:['image_url','name','city','category','price','rating','active'],
-    fields:[
-      {k:'name',l:'Название',t:'text',req:1},
-      {k:'city',l:'Город',t:'city'},
-      {k:'category',l:'Категория',t:'sel',o:['шоу','концерт','квест','аттракцион','кино','театр','клуб','мастер-класс','спорт']},
-      {k:'price',l:'Цена ($)',t:'num'},
-      {k:'rating',l:'Рейтинг',t:'num'},
-      {k:'duration_hours',l:'Часов',t:'num'},
-      {k:'address',l:'Адрес',t:'text'},
-      {k:'working_hours',l:'Часы работы',t:'text'},
-      {k:'min_age',l:'Мин. возраст',t:'num'},
-      {k:'booking_required',l:'Нужна бронь',t:'bool'},
-      {k:'image_url',l:'Фото',t:'photo'},
-      {k:'description',l:'Описание',t:'ta'},
-      {k:'active',l:'Активен',t:'bool'}
+  restaurants: {
+    title: 'Рестораны',
+    badge: 'Каталог',
+    priceField: 'avg_check',
+    columns: ['image_url', 'name', 'city', 'cuisine', 'avg_check', 'active'],
+    columnLabels: { image_url: '', name: 'Название', city: 'Город', cuisine: 'Кухня', avg_check: 'Ср. чек', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'Название', type: 'text', required: true },
+      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'city', label: 'Город', type: 'city' },
+      { key: 'cuisine', label: 'Кухня', type: 'select', options: ['узбекская', 'европейская', 'азиатская', 'смешанная'] },
+      { key: 'avg_check', label: 'Средний чек ($)', type: 'number' },
+      { key: 'rating', label: 'Рейтинг', type: 'number' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
     ]
   },
-  museums: { label:'Музеи', type:'db', pk:'entry_price',
-    cols:['image_url','name','city','type','entry_price','rating','active'],
-    fields:[
-      {k:'name',l:'Название',t:'text',req:1},
-      {k:'city',l:'Город',t:'city'},
-      {k:'type',l:'Тип',t:'sel',o:['исторический','художественный','краеведческий','национальный','интерактивный']},
-      {k:'entry_price',l:'Цена входа ($)',t:'num'},
-      {k:'rating',l:'Рейтинг',t:'num'},
-      {k:'duration_hours',l:'Часов',t:'num'},
-      {k:'address',l:'Адрес',t:'text'},
-      {k:'working_hours',l:'Часы работы',t:'text',ph:'09:00 - 18:00'},
-      {k:'closed_day',l:'Выходной',t:'text',ph:'Понедельник'},
-      {k:'audio_guide',l:'Аудиогид',t:'bool'},
-      {k:'guided_tours',l:'Экскурсии',t:'bool'},
-      {k:'image_url',l:'Фото',t:'photo'},
-      {k:'description',l:'Описание',t:'ta'},
-      {k:'active',l:'Активен',t:'bool'}
+  food: {
+    title: 'Еда',
+    badge: 'Каталог',
+    priceField: 'price',
+    columns: ['image_url', 'name', 'city', 'type', 'price', 'active'],
+    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', price: 'Цена', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'Название', type: 'text', required: true },
+      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'city', label: 'Город', type: 'city' },
+      { key: 'type', label: 'Тип', type: 'select', options: ['плов', 'шашлык', 'лагман', 'самса', 'манты', 'дегустация'] },
+      { key: 'price', label: 'Цена ($)', type: 'number' },
+      { key: 'rating', label: 'Рейтинг', type: 'number' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
     ]
   },
-  tour_packages: { label:'Тур-пакеты', type:'db', pk:'total_price',
-    cols:['image_url','title','city','tier','duration_days','total_price','rating','active'],
-    fields:[
-      {k:'title',l:'Название пакета',t:'text',req:1},
-      {k:'city',l:'Город',t:'city'},
-      {k:'tier',l:'Уровень',t:'sel',o:['budget','standard','premium']},
-      {k:'duration_days',l:'Дней',t:'num'},
-      {k:'total_price',l:'Итоговая цена ($)',t:'num'},
-      {k:'price_per_person',l:'Цена/человек ($)',t:'num'},
-      {k:'rating',l:'Рейтинг',t:'num'},
-      {k:'max_guests',l:'Макс. гостей',t:'num'},
-      {k:'includes_flight',l:'Авиа включен',t:'bool'},
-      {k:'includes_hotel',l:'Отель включен',t:'bool'},
-      {k:'includes_transfer',l:'Трансфер включен',t:'bool'},
-      {k:'includes_guide',l:'Гид включен',t:'bool'},
-      {k:'tag1',l:'Тег 1',t:'text'},
-      {k:'tag2',l:'Тег 2',t:'text'},
-      {k:'image_url',l:'Фото',t:'photo'},
-      {k:'description',l:'Описание',t:'ta'},
-      {k:'active',l:'Активен',t:'bool'}
+  recreation: {
+    title: 'Отдых',
+    badge: 'Каталог',
+    priceField: 'price',
+    columns: ['image_url', 'name', 'city', 'type', 'price', 'active'],
+    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', price: 'Цена', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'Название', type: 'text', required: true },
+      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'city', label: 'Город', type: 'city' },
+      { key: 'type', label: 'Тип', type: 'select', options: ['хаммам', 'SPA', 'массаж', 'бассейн', 'йога'] },
+      { key: 'price', label: 'Цена ($)', type: 'number' },
+      { key: 'duration_hours', label: 'Часов', type: 'number' },
+      { key: 'rating', label: 'Рейтинг', type: 'number' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
+    ]
+  },
+  entertainment: {
+    title: 'Развлечения',
+    badge: 'Каталог',
+    priceField: 'price',
+    columns: ['image_url', 'name', 'city', 'type', 'price', 'active'],
+    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', price: 'Цена', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'Название', type: 'text', required: true },
+      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'city', label: 'Город', type: 'city' },
+      { key: 'type', label: 'Тип', type: 'select', options: ['шоу', 'концерт', 'театр', 'танцы', 'мастер-класс'] },
+      { key: 'price', label: 'Цена ($)', type: 'number' },
+      { key: 'time', label: 'Время', type: 'text', placeholder: '19:00' },
+      { key: 'rating', label: 'Рейтинг', type: 'number' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
+    ]
+  },
+  museums: {
+    title: 'Музеи',
+    badge: 'Каталог',
+    priceField: 'entry_price',
+    columns: ['image_url', 'name', 'city', 'type', 'entry_price', 'active'],
+    columnLabels: { image_url: '', name: 'Название', city: 'Город', type: 'Тип', entry_price: 'Вход', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'Название', type: 'text', required: true },
+      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'city', label: 'Город', type: 'city' },
+      { key: 'type', label: 'Тип', type: 'select', options: ['исторический', 'художественный', 'краеведческий'] },
+      { key: 'entry_price', label: 'Цена входа ($)', type: 'number' },
+      { key: 'rating', label: 'Рейтинг', type: 'number' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
+    ]
+  },
+  guides: {
+    title: 'Гиды',
+    badge: 'Каталог',
+    priceField: 'price_day',
+    columns: ['image_url', 'name', 'city', 'languages', 'price_day', 'active'],
+    columnLabels: { image_url: '', name: 'Имя', city: 'Город', languages: 'Языки', price_day: 'Цена/день', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'Имя', type: 'text', required: true },
+      { key: 'image_url', label: 'Фото', type: 'photo' },
+      { key: 'city', label: 'Город', type: 'city' },
+      { key: 'languages', label: 'Языки', type: 'text', placeholder: 'русский, английский' },
+      { key: 'price_day', label: 'Цена за день ($)', type: 'number' },
+      { key: 'rating', label: 'Рейтинг', type: 'number' },
+      { key: 'experience_years', label: 'Опыт (лет)', type: 'number' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
     ]
   }
 };
 
-// AUTH
-function doLogin() {
-  var v = document.getElementById('lpwd').value;
-  if (v === PASS) {
-    sessionStorage.setItem('wa','1');
-    document.getElementById('lock').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    appInit();
-  } else {
-    var e = document.getElementById('lerr');
-    e.style.opacity = '1';
-    document.getElementById('lpwd').value = '';
-    setTimeout(function(){ e.style.opacity='0'; }, 2000);
-  }
-};
-function doLogout() { sessionStorage.removeItem('wa'); location.reload(); };
-document.getElementById('lpwd').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-if (sessionStorage.getItem('wa') === '1') {
-  document.getElementById('lock').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-}
+// ============================================
+// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+// ============================================
+let currentSection = 'top_tours';
+let allData = [];
+let filteredData = [];
+let editingId = null;
+let moduleCounter = 1000;
+let isConnected = false;
 
-// CONN
-function setConn(ok) {
-  document.getElementById('cdot').className = ok ? 'cdot' : 'cdot off';
-  document.getElementById('clabel').textContent = ok ? 'Supabase connected' : 'Не подключено';
-}
-
-// SUPABASE
-async function sbRequest(url, opts) {
-  var proxies = [
-    url,
-    'https://corsproxy.io/?' + encodeURIComponent(url),
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-    'https://proxy.cors.sh/' + url
-  ];
-  var lastErr = '';
-  for (var i = 0; i < proxies.length; i++) {
-    try {
-      var o = Object.assign({}, opts);
-      if (i > 0) {
-        // прокси — копируем заголовки
-        o = JSON.parse(JSON.stringify(opts));
-      }
-      var r = await Promise.race([
-        fetch(proxies[i], o),
-        new Promise(function(_, reject){ setTimeout(function(){ reject(new Error('timeout')); }, 8000); })
-      ]);
-      if (r) return r;
-    } catch(e) { lastErr = e.message; }
-  }
-  throw new Error('Нет связи с Supabase (' + lastErr + ')');
-}
-
-async function sbFetch(table, o) {
-  o = o || {};
-  var method = o.method || 'GET';
-  var url = SURL + '/rest/v1/' + table + (o.qs||'');
-  var headers = {
-    'apikey': SKEY, 'Authorization': 'Bearer '+SKEY,
-    'Content-Type': 'application/json', 'Accept': 'application/json'
+// ============================================
+// SUPABASE API
+// ============================================
+async function supabaseRequest(table, options = {}) {
+  const { method = 'GET', body, query = '' } = options;
+  
+  const url = `${SUPABASE_URL}/rest/v1/${table}${query}`;
+  
+  const headers = {
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Content-Type': 'application/json',
+    'Prefer': method === 'POST' ? 'return=representation' : 'return=minimal'
   };
-  if (method==='POST') headers['Prefer']='return=representation';
-  var res = await sbRequest(url, {method:method, headers:headers, body:o.body?JSON.stringify(o.body):undefined});
-  if (!res.ok) {
-    var t=await res.text(); var msg=t;
-    try{var j=JSON.parse(t);msg=j.message||j.hint||j.details||t;}catch(e){}
-    if(res.status===404||t.indexOf('does not exist')>-1) return [];
-    if(res.status===401) throw new Error('Неверный API Key (401)');
-    throw new Error('HTTP '+res.status+': '+msg.slice(0,200));
-  }
-  var t=await res.text(); return t?JSON.parse(t):[];
-}
-
-async function pingSupabase() {
+  
   try {
-    var res=await sbRequest(SURL+'/rest/v1/',{headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Accept':'application/json'}});
-    var ok=res.status===200||res.status===400||res.status===404;
-    setConn(ok);
-    if(ok) document.getElementById('cfg-notice').style.display='none';
-  } catch(e){ setConn(false); }
-}
-
-function testConn(){
-  var url=(document.getElementById('cfg-url').value||'').trim().replace(/\/+$/,'');
-  var key=(document.getElementById('cfg-key').value||'').trim();
-  var box=document.getElementById('cfg-test-res');
-  box.style.display='block';
-  function show(msg,ok){
-    box.style.background=ok?'rgba(34,197,94,.08)':'rgba(239,68,68,.08)';
-    box.style.border='1px solid '+(ok?'rgba(34,197,94,.2)':'rgba(239,68,68,.2)');
-    box.style.color=ok?'var(--grn)':'var(--red)';
-    box.innerHTML=msg;
+    const response = await fetch(url, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(error);
+    }
+    
+    if (method === 'GET' || method === 'POST') {
+      return await response.json();
+    }
+    return true;
+  } catch (error) {
+    console.error('Supabase error:', error);
+    throw error;
   }
-  if(!url||!key){show('❌ Заполни URL и Key',false);return;}
-  show('⏳ Проверяю подключение...',false);
-  sbRequest(url+'/rest/v1/',{headers:{'apikey':key,'Authorization':'Bearer '+key,'Accept':'application/json'}})
-  .then(function(r){
-    if(r.status===200||r.status===400||r.status===404){show('✅ Подключено! Статус: '+r.status,true);}
-    else if(r.status===401){show('❌ Неверный API Key (401)',false);}
-    else{show('❌ HTTP '+r.status,false);}
-  }).catch(function(e){show('❌ '+e.message,false);});
 }
 
-// SWITCH
-function switchSec(sec) {
-  curSec = sec; curPage = 1;
-  document.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('on'); });
-  var el = document.getElementById('ni-'+sec); if(el) el.classList.add('on');
-  var s = SECS[sec];
-  document.getElementById('sec-title').textContent = s.label;
-  var isExt = s.type === 'ext';
-  document.getElementById('stats-row').style.display = isExt ? 'none' : 'grid';
-  document.getElementById('toolbar-row').style.display = isExt ? 'none' : 'flex';
-  document.getElementById('table-wrap').style.display = isExt ? 'none' : 'block';
-  document.getElementById('ext-sec').style.display = isExt ? 'block' : 'none';
-  document.getElementById('add-btn').style.display = isExt ? 'none' : 'inline-flex';
-  document.getElementById('sec-type').textContent = isExt ? 'Внешний API' : 'Supabase';
-  document.getElementById('sec-type').className = 'badge ' + (isExt?'bsky':'bgray');
-  if (isExt) renderExt(sec); else loadData();
-};
-
-// LOAD
-async function loadData() {
-  var s = SECS[curSec]; if (!s || s.type==='ext') return;
-  if (!SURL || !SKEY) { allRows=[]; renderTable(); return; }
+// ============================================
+// ПОДКЛЮЧЕНИЕ К SUPABASE
+// ============================================
+async function connectSupabase() {
+  const password = document.getElementById('inputPassword').value;
+  
+  if (password !== ADMIN_PASSWORD) {
+    document.getElementById('loginError').textContent = 'Неверный пароль';
+    return;
+  }
+  
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('loginSuccess').textContent = 'Подключение к Supabase...';
+  document.getElementById('connectBtn').disabled = true;
+  
   try {
-    var data = await sbFetch(curSec, {qs:'?order=id'});
-    allRows = Array.isArray(data) ? data : [];
-    var el = document.getElementById('cnt-'+curSec); if(el) el.textContent = allRows.length;
-    document.getElementById('s-total').textContent = allRows.length;
-    var active = allRows.filter(function(r){return r.active===true;}).length;
-    document.getElementById('s-active').textContent = active;
-    var pk = s.pk; var prices = allRows.map(function(r){return +(r[pk])||0;}).filter(Boolean);
-    document.getElementById('s-price').textContent = '$' + (prices.length ? Math.round(prices.reduce(function(a,b){return a+b;},0)/prices.length) : 0);
-    setConn(true); document.getElementById('cfg-notice').style.display='none';
-    applyFilters();
-  } catch(e) { showToast('Ошибка: '+e.message,'red'); allRows=[]; renderTable(); }
-};
+    await supabaseRequest('top_tours', { query: '?limit=1' });
+    
+    isConnected = true;
+    document.getElementById('loginSuccess').textContent = '✓ Подключено!';
+    
+    setTimeout(() => {
+      document.getElementById('lock').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      updateConnectionStatus();
+      initApp();
+    }, 300);
+  } catch (error) {
+    document.getElementById('loginError').textContent = 'Ошибка подключения к базе';
+    document.getElementById('loginSuccess').textContent = '';
+    document.getElementById('connectBtn').disabled = false;
+  }
+}
 
-function applyFilters() {
-  var q = document.getElementById('q-search').value.toLowerCase();
-  var city = document.getElementById('q-city').value;
-  var af = document.getElementById('q-active').value;
-  filtered = allRows.filter(function(r) {
-    if (q && JSON.stringify(r).toLowerCase().indexOf(q)===-1) return false;
-    if (city && r.city !== city) return false;
-    if (af==='1' && r.active!==true) return false;
-    if (af==='0' && r.active===true) return false;
+function updateConnectionStatus() {
+  const dot = document.getElementById('connDot');
+  const label = document.getElementById('connLabel');
+  
+  if (isConnected) {
+    dot.classList.remove('off');
+    label.textContent = 'Supabase Online';
+  } else {
+    dot.classList.add('off');
+    label.textContent = 'Не подключено';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('waylo_auth');
+  location.reload();
+}
+
+// ============================================
+// ИНИЦИАЛИЗАЦИЯ
+// ============================================
+async function initApp() {
+  // Загрузка счётчиков из Supabase
+  for (const section of Object.keys(SECTIONS)) {
+    try {
+      const data = await supabaseRequest(section, { query: '?select=id' });
+      document.getElementById('cnt-' + section).textContent = data.length;
+    } catch (e) {
+      document.getElementById('cnt-' + section).textContent = '0';
+    }
+  }
+  
+  switchSection('top_tours');
+}
+
+// ============================================
+// ПЕРЕКЛЮЧЕНИЕ РАЗДЕЛОВ
+// ============================================
+function switchSection(section) {
+  currentSection = section;
+  const cfg = SECTIONS[section];
+  
+  // Обновление навигации
+  document.querySelectorAll('.ni').forEach(el => el.classList.remove('on'));
+  document.querySelector(`.ni[data-sec="${section}"]`)?.classList.add('on');
+  
+  // Обновление заголовка
+  document.getElementById('sectionTitle').textContent = cfg.title;
+  document.getElementById('sectionBadge').textContent = cfg.badge;
+  
+  // Обновление статистики
+  document.getElementById('statActiveLabel').textContent = cfg.hasApprove ? 'Approved' : 'Активных';
+  document.getElementById('statActiveSub').textContent = cfg.hasApprove ? 'в Mini App' : 'active=true';
+  
+  // Фильтр статуса
+  document.getElementById('filterStatus').style.display = cfg.hasApprove ? 'block' : 'none';
+  
+  loadSectionData();
+}
+
+async function loadSectionData() {
+  const cfg = SECTIONS[currentSection];
+  
+  // Показываем загрузку
+  document.getElementById('tableBody').innerHTML = `
+    <tr><td colspan="${cfg.columns.length + 1}">
+      <div class="loading">
+        <div class="spinner"></div>
+        Загрузка...
+      </div>
+    </td></tr>`;
+  
+  try {
+    allData = await supabaseRequest(currentSection, { query: '?order=created_at.desc' });
+    document.getElementById('cnt-' + currentSection).textContent = allData.length;
+    updateStats();
+    filterData();
+    document.getElementById('tableStatus').textContent = '✓ Синхронизировано';
+  } catch (error) {
+    document.getElementById('tableBody').innerHTML = `
+      <tr><td colspan="${cfg.columns.length + 1}">
+        <div class="empty">
+          <div class="empty-icon">⚠️</div>
+          <p>Ошибка: ${error.message}</p>
+        </div>
+      </td></tr>`;
+    document.getElementById('tableStatus').textContent = '❌ Ошибка';
+  }
+}
+
+function updateStats() {
+  const cfg = SECTIONS[currentSection];
+  
+  document.getElementById('statTotal').textContent = allData.length;
+  
+  if (cfg.hasApprove) {
+    const approved = allData.filter(r => r.approved).length;
+    document.getElementById('statActive').textContent = approved;
+  } else {
+    const active = allData.filter(r => r.active).length;
+    document.getElementById('statActive').textContent = active;
+  }
+  
+  const priceField = cfg.priceField;
+  const prices = allData.map(r => r[priceField] || 0).filter(p => p > 0);
+  const avgPrice = prices.length ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length) : 0;
+  document.getElementById('statPrice').textContent = '$' + avgPrice;
+}
+
+// ============================================
+// ФИЛЬТРАЦИЯ И ОТОБРАЖЕНИЕ ТАБЛИЦЫ
+// ============================================
+function filterData() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const city = document.getElementById('filterCity').value;
+  const status = document.getElementById('filterStatus').value;
+  const cfg = SECTIONS[currentSection];
+  
+  filteredData = allData.filter(row => {
+    if (search && !JSON.stringify(row).toLowerCase().includes(search)) return false;
+    if (city && row.city !== city) return false;
+    if (cfg.hasApprove) {
+      if (status === 'approved' && !row.approved) return false;
+      if (status === 'pending' && row.approved) return false;
+    }
     return true;
   });
-  curPage=1; renderTable();
-};
+  
+  renderTable();
+}
 
 function renderTable() {
-  var s = SECS[curSec]; var cols = s.cols||[];
-  var start=(curPage-1)*PER; var page=filtered.slice(start,start+PER);
-  document.getElementById('t-head').innerHTML = cols.map(function(c){return '<th>'+(CLABEL[c]||c)+'</th>';}).join('')+'<th></th>';
-  if (!page.length) {
-    document.getElementById('t-body').innerHTML = '<tr><td colspan="'+(cols.length+1)+'"><div class="empty"><div class="empty-ico">--</div><p>Нет данных</p></div></td></tr>';
+  const cfg = SECTIONS[currentSection];
+  const columns = cfg.columns;
+  const labels = cfg.columnLabels;
+  
+  document.getElementById('tableHead').innerHTML = 
+    columns.map(col => `<th>${labels[col] || col}</th>`).join('') + '<th></th>';
+  
+  if (filteredData.length === 0) {
+    document.getElementById('tableBody').innerHTML = `
+      <tr><td colspan="${columns.length + 1}">
+        <div class="empty">
+          <div class="empty-icon">📭</div>
+          <p>Нет данных</p>
+        </div>
+      </td></tr>`;
   } else {
-    document.getElementById('t-body').innerHTML = page.map(function(row){
-      var rid = String(row.id);
-      return '<tr onclick="openEdit(\''+rid+'\')">'+
-        cols.map(function(c){return renderCell(c,row[c]);}).join('')+
-        '<td><div class="racts" onclick="event.stopPropagation()">'+
-        '<button class="btn btn-sm btn-edit" onclick="openEdit(\''+rid+'\')">Edit</button>'+
-        '<button class="btn btn-sm btn-danger" onclick="delRow(\''+rid+'\')">Del</button>'+
-        '</div></td></tr>';
+    document.getElementById('tableBody').innerHTML = filteredData.map(row => {
+      const cells = columns.map(col => renderCell(col, row[col], row)).join('');
+      const approveBtn = cfg.hasApprove && !row.approved 
+        ? `<button class="btn btn-success btn-sm" data-action="approve" data-id="${row.id}">Approve</button>`
+        : (cfg.hasApprove && row.approved ? `<span class="badge badge-green">✓ Live</span>` : '');
+      
+      return `<tr data-row-id="${row.id}">
+        ${cells}
+        <td>
+          <div class="actions">
+            ${approveBtn}
+            <button class="btn btn-ghost btn-sm" data-action="edit" data-id="${row.id}">Edit</button>
+            <button class="btn btn-danger btn-sm" data-action="delete" data-id="${row.id}">Del</button>
+          </div>
+        </td>
+      </tr>`;
     }).join('');
   }
-  document.getElementById('t-count').textContent = filtered.length+' записей';
-  var pages=Math.ceil(filtered.length/PER);
-  document.getElementById('t-pager').innerHTML = pages<=1?'':Array.from({length:pages},function(_,i){
-    return '<div class="pgb'+(i+1===curPage?' act':'')+'" onclick="goPage('+(i+1)+')">'+(i+1)+'</div>';
-  }).join('');
+  
+  document.getElementById('tableCount').textContent = filteredData.length + ' записей';
+  bindTableEvents();
 }
 
-function renderCell(col, val) {
-  if (col==='image_url') return val?'<td><img class="td-img" src="'+val+'" onerror="this.style.opacity=0"></td>':'<td><div class="td-img-ph">img</div></td>';
-  if (col==='active') return '<td><span class="badge '+(val?'bg':'bgray')+'">'+(val?'Активен':'Нет')+'</span></td>';
-  if (col==='tier') { var m={budget:'bamb',standard:'bsky',premium:'bpink',luxury:'bacc'}; return '<td><span class="badge '+(m[val]||'')+'">'+(val||'-')+'</span></td>'; }
-  if (col==='type'||col==='category') return '<td><span class="badge bacc">'+(val||'-')+'</span></td>';
-  if (col==='stars') return '<td>'+(val?'* x'+val:'')+'</td>';
-  var pkeys=['price','total_price','price_from','price_peak','avg_check','entry_price'];
-  if (pkeys.indexOf(col)!==-1) return val!=null?'<td><span class="pval">$'+val+'</span></td>':'<td>-</td>';
-  if (col==='name'||col==='title') return '<td class="tdp">'+(val||'-')+'</td>';
-  return '<td>'+(val!=null?val:'-')+'</td>';
+function renderCell(col, val, row) {
+  if (col === 'image_url') {
+    let imgUrl = val;
+    if (!imgUrl && row.gallery && row.gallery.length > 0) {
+      imgUrl = row.gallery[0];
+    }
+    return imgUrl 
+      ? `<td><img class="td-img" src="${imgUrl}" onerror="this.style.opacity=0"></td>`
+      : `<td><div class="td-img" style="background:var(--surf3)"></div></td>`;
+  }
+  if (col === 'approved') {
+    return `<td><span class="badge ${val ? 'badge-green' : 'badge-amber'}">${val ? '✓ Approved' : 'Ожидает'}</span></td>`;
+  }
+  if (col === 'active') {
+    return `<td><span class="badge ${val ? 'badge-green' : 'badge-gray'}">${val ? 'Активен' : 'Нет'}</span></td>`;
+  }
+  if (col === 'stars') {
+    return `<td>${val ? '★'.repeat(parseInt(val)) : '-'}</td>`;
+  }
+  if (col === 'board_type') {
+    const labels = { RO: 'Без питания', BB: 'Завтрак', HB: 'Полупансион', FB: 'Полный', AI: 'Всё включено' };
+    return `<td><span class="badge badge-sky">${labels[val] || val || '-'}</span></td>`;
+  }
+  if (col === 'type' || col === 'cuisine' || col === 'vehicle') {
+    return `<td><span class="badge badge-sky">${val || '-'}</span></td>`;
+  }
+  if (['price', 'total_price', 'price_from', 'avg_check', 'entry_price', 'price_day'].includes(col)) {
+    return `<td><span class="price">$${val || 0}</span></td>`;
+  }
+  if (col === 'name' || col === 'display_title') {
+    return `<td class="primary">${val || '-'}</td>`;
+  }
+  return `<td>${val !== null && val !== undefined ? val : '-'}</td>`;
 }
 
-function goPage(p){ curPage=p; renderTable(); };
-function draftKey(){ return 'draft_'+curSec; }
-
-function saveDraft(){
-  if(editId) return; // черновик только для новых записей
-  var fields=SECS[curSec].fields||[]; var data={};
-  fields.forEach(function(f){
-    if(f.t==='rooms') data[f.k]=collectRooms();
-    else if(f.t==='room_photos') data[f.k]=collectRoomPhotos();
-    else{ var el=document.getElementById('fi-'+f.k); if(el) data[f.k]=el.value; }
+function bindTableEvents() {
+  document.querySelectorAll('#tableBody tr[data-row-id]').forEach(row => {
+    row.addEventListener('click', function(e) {
+      if (e.target.closest('button') || e.target.closest('.actions')) return;
+      openEditModal(this.dataset.rowId);
+    });
   });
-  localStorage.setItem(draftKey(), JSON.stringify(data));
-}
-
-function loadDraft(){
-  try{ return JSON.parse(localStorage.getItem(draftKey())||'null'); }catch(e){ return null; }
-}
-
-function clearDraft(){ localStorage.removeItem(draftKey()); }
-
-function openAdd(){
-  editId=null;
-  var draft=loadDraft();
-  document.getElementById('rec-title').innerHTML='Добавить — '+SECS[curSec].label+
-    (draft?'<span id="draft-badge" style="margin-left:10px;font-size:11px;background:rgba(245,158,11,.15);color:var(--amb);border:1px solid rgba(245,158,11,.3);border-radius:5px;padding:2px 8px;font-weight:500;cursor:pointer" onclick="clearDraftAndReset()">✏ Черновик сохранён — нажми чтобы очистить</span>':'');
-  buildForm(draft);
-  document.getElementById('rec-ovl').classList.add('open');
-  // вешаем автосохранение на все поля
-  setTimeout(function(){
-    document.querySelectorAll('#rec-body input, #rec-body select, #rec-body textarea').forEach(function(el){
-      el.addEventListener('input', saveDraft);
-      el.addEventListener('change', saveDraft);
+  
+  document.querySelectorAll('[data-action="approve"]').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      approveRecord(this.dataset.id);
     });
-    // наблюдатель за динамическими полями (номера/фото добавляются кнопкой)
-    var obs=new MutationObserver(function(){
-      document.querySelectorAll('#rec-body input, #rec-body select, #rec-body textarea').forEach(function(el){
-        if(!el._draftBound){ el._draftBound=true; el.addEventListener('input',saveDraft); el.addEventListener('change',saveDraft); }
-      });
+  });
+  
+  document.querySelectorAll('[data-action="edit"]').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      openEditModal(this.dataset.id);
     });
-    var body=document.getElementById('rec-body');
-    if(body) obs.observe(body,{childList:true,subtree:true});
-  },100);
+  });
+  
+  document.querySelectorAll('[data-action="delete"]').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      deleteRecord(this.dataset.id);
+    });
+  });
 }
 
-function clearDraftAndReset(){
-  clearDraft();
+// ============================================
+// МОДАЛЬНОЕ ОКНО
+// ============================================
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Добавить';
   buildForm(null);
-  var badge=document.getElementById('draft-badge');
-  if(badge) badge.remove();
-  showToast('Черновик очищен','sky');
-  setTimeout(function(){
-    document.querySelectorAll('#rec-body input, #rec-body select, #rec-body textarea').forEach(function(el){
-      el.addEventListener('input', saveDraft);
-      el.addEventListener('change', saveDraft);
-    });
-  },100);
+  document.getElementById('modal').classList.add('open');
 }
 
-function openEdit(id){ editId=id; var rec=allRows.filter(function(r){return String(r.id)===String(id);})[0]; document.getElementById('rec-title').textContent='Редактировать'; buildForm(rec); document.getElementById('rec-ovl').classList.add('open'); };
-function closeRec(){ document.getElementById('rec-ovl').classList.remove('open'); editId=null; };
+function openEditModal(id) {
+  editingId = id;
+  const record = allData.find(r => r.id === id);
+  document.getElementById('modalTitle').textContent = 'Редактировать';
+  buildForm(record);
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => calculateModulesTotal(), 100);
+}
 
-function buildForm(rec) {
-  var fields=SECS[curSec].fields||[];
-  var h='<div class="fgrid">';
-  fields.forEach(function(f){
-    var val=rec?(rec[f.k]!==undefined?rec[f.k]:''):'';
-    if(f.t==='rooms'){
-      var roomsVal=[];
-      try{ if(val) roomsVal=typeof val==='string'?JSON.parse(val):val; }catch(e){}
-      if(!Array.isArray(roomsVal)||!roomsVal.length) roomsVal=[{type:'',price:'',date_from:'',date_to:''}];
-      h+='<div class="fg ffull"><label class="flabel">Номера</label>';
-      h+='<div id="rooms-list">';
-      roomsVal.forEach(function(r,i){ h+=buildRoomRow(i,r); });
-      h+='</div>';
-      h+='<button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addRoomRow()">+ Добавить номер</button>';
-      h+='</div>';
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  editingId = null;
+}
+
+function buildForm(record) {
+  const cfg = SECTIONS[currentSection];
+  const fields = cfg.fields;
+  
+  let html = '<div class="form-grid">';
+  
+  fields.forEach(field => {
+    const val = record ? (record[field.key] ?? '') : '';
+    
+    if (field.type === 'rooms') {
+      let roomsVal = [];
+      try { if (val) roomsVal = typeof val === 'string' ? JSON.parse(val) : val; } catch(e) {}
+      if (!Array.isArray(roomsVal) || !roomsVal.length) roomsVal = [{ type: '', price: '', date_from: '', date_to: '' }];
+      
+      html += '<div class="form-group full"><label class="form-label">Номера</label>';
+      html += '<div id="rooms-list">';
+      roomsVal.forEach((r, i) => { html += buildRoomRow(i, r); });
+      html += '</div>';
+      html += '<button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addRoomRow()">+ Добавить номер</button>';
+      html += '</div>';
       return;
     }
-    if(f.t==='room_photos'){
-      var photosVal=[];
-      try{
-        if(val){
-          var parsed=typeof val==='string'?JSON.parse(val):val;
-          // поддержка старого формата {1:'url'} и нового [{id,url}]
-          if(Array.isArray(parsed)) photosVal=parsed;
-          else photosVal=Object.keys(parsed).map(function(k){return {id:+k,url:parsed[k]};});
-        }
-      }catch(e){}
-      if(!photosVal.length) photosVal=[{id:1,url:''}];
-      h+='<div class="fg ffull"><label class="flabel">Фото номеров (по ID)</label>';
-      h+='<div id="photos-list" style="display:flex;flex-direction:column;gap:8px">';
-      photosVal.forEach(function(p,i){ h+=buildPhotoRow(i,p); });
-      h+='</div>';
-      h+='<button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addPhotoRow()">+ Добавить фото</button>';
-      h+='</div>';
+    
+    if (field.type === 'gallery') {
+      let galleryVal = [];
+      try { if (val) galleryVal = typeof val === 'string' ? JSON.parse(val) : val; } catch(e) {}
+      
+      html += '<div class="form-group full"><label class="form-label">Галерея (до 50 фото)</label>';
+      html += '<div class="gallery-grid" id="gallery-grid">';
+      if (Array.isArray(galleryVal)) galleryVal.forEach((url, i) => { html += buildGalleryThumb(i, url); });
+      html += '</div>';
+      html += '<label class="btn btn-ghost btn-sm" style="cursor:pointer">📁 Загрузить<input type="file" accept="image/*" multiple style="display:none" onchange="handleGalleryUpload(event)"></label>';
+      html += '<span id="gallery-count" style="font-size:11px;color:var(--tx3);margin-left:10px">' + (galleryVal.length || 0) + '/50</span>';
+      html += '</div>';
       return;
     }
-    var full=(f.t==='ta'||f.t==='photo')?'ffull':'';
-    h+='<div class="fg '+full+'"><label class="flabel">'+f.l+(f.req?' *':'')+'</label>';
-    if(f.t==='text'||f.t==='num'){
-      h+='<input class="fi" id="fi-'+f.k+'" type="'+(f.t==='num'?'number':'text')+'" value="'+(val||'')+'" placeholder="'+(f.ph||'')+'">';
-    }else if(f.t==='city'){
-      h+='<select class="fsel2" id="fi-'+f.k+'">'+CITIES_RU.map(function(c){return '<option'+(c===val?' selected':'')+'>'+c+'</option>';}).join('')+'</select>';
-    }else if(f.t==='sel'){
-      h+='<select class="fsel2" id="fi-'+f.k+'">'+(f.o||[]).map(function(o){return '<option'+(o===val?' selected':'')+'>'+o+'</option>';}).join('')+'</select>';
-    }else if(f.t==='ta'){
-      h+='<textarea class="fta" id="fi-'+f.k+'" placeholder="'+(f.ph||'')+'">'+(val||'')+'</textarea>';
-    }else if(f.t==='bool'){
-      h+='<select class="fsel2" id="fi-'+f.k+'"><option value="true"'+(val===true||val==="true"?' selected':'')+'>Да</option><option value="false"'+(val!==true&&val!=="true"?' selected':'')+'>Нет</option></select>';
-    }else if(f.t==='photo'){
-      h+='<div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:5px">'+
-         '<input class="fi" id="fi-'+f.k+'" type="text" value="'+(val||'')+'" placeholder="https://..." oninput="previewPhoto()">'+
-         '<button class="btn btn-ghost btn-sm" type="button" onclick="findPhotos()">Фото</button></div>'+
-         '<div class="phprev" id="ph-prev">'+(val?'<img src="'+val+'" onerror="this.style.opacity=0">':'нет фото')+'</div>'+
-         '<div id="ph-res"></div>';
+    
+    const fullClass = (field.type === 'photo' || field.type === 'textarea') ? 'full' : '';
+    html += `<div class="form-group ${fullClass}">`;
+    html += `<label class="form-label">${field.label}${field.required ? ' *' : ''}</label>`;
+    
+    if (field.type === 'text' || field.type === 'number') {
+      html += `<input class="form-input" id="field-${field.key}" type="${field.type}" value="${val}" placeholder="${field.placeholder || ''}">`;
+    } else if (field.type === 'city') {
+      html += `<select class="form-select" id="field-${field.key}">
+        <option value="">Выберите</option>
+        <option ${val === 'Ташкент' ? 'selected' : ''}>Ташкент</option>
+        <option ${val === 'Самарканд' ? 'selected' : ''}>Самарканд</option>
+        <option ${val === 'Бухара' ? 'selected' : ''}>Бухара</option>
+        <option ${val === 'Хива' ? 'selected' : ''}>Хива</option>
+      </select>`;
+    } else if (field.type === 'select') {
+      html += `<select class="form-select" id="field-${field.key}">
+        <option value="">Выберите</option>
+        ${(field.options || []).map(o => `<option ${val === o ? 'selected' : ''}>${o}</option>`).join('')}
+      </select>`;
+    } else if (field.type === 'boolean') {
+      html += `<select class="form-select" id="field-${field.key}">
+        <option value="true" ${val === true ? 'selected' : ''}>Да</option>
+        <option value="false" ${val !== true ? 'selected' : ''}>Нет</option>
+      </select>`;
+    } else if (field.type === 'textarea') {
+      html += `<textarea class="form-input form-textarea" id="field-${field.key}" placeholder="${field.placeholder || ''}">${val}</textarea>`;
+    } else if (field.type === 'photo') {
+      html += `<div class="photo-upload-area">`;
+      html += `<div class="photo-preview" id="photoPreview">${val ? `<img src="${val}">` : '<span class="photo-placeholder">📷 Нет фото</span>'}</div>`;
+      html += `<div class="photo-actions">`;
+      html += `<label class="btn btn-ghost btn-sm" style="cursor:pointer">📁 Загрузить фото<input type="file" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)"></label>`;
+      html += `<button type="button" class="btn btn-danger btn-sm" onclick="removePhoto()" style="margin-left:8px">✕ Удалить</button>`;
+      html += `</div>`;
+      html += `<div class="photo-hint">Макс. размер: 100 KB</div>`;
+      html += `<input type="hidden" id="field-${field.key}" value="${val || ''}">`;
+      html += `</div>`;
     }
-    h+='</div>';
+    
+    html += '</div>';
   });
-  h+='</div>';
-  document.getElementById('rec-body').innerHTML=h;
+  
+  html += '</div>';
+  
+  if (cfg.hasModules) {
+    html += buildModulesSection(record?.modules || []);
+  }
+  
+  document.getElementById('modalBody').innerHTML = html;
 }
 
-var ROOM_TYPES=[
-  'Guest room single','Guest room double','Guest room triple',
-  'Executive room single','Executive room double','Executive room triple',
-  'Corner suite single','Corner suite double','Corner suite triple',
-  'Presidential Suite single','Presidential Suite double','Presidential Suite triple'
-];
-
-function buildRoomRow(i,r){
-  var idOpts='';
-  for(var n=1;n<=20;n++) idOpts+='<option value="'+n+'"'+(+r.room_id===n?' selected':'')+'>'+n+'</option>';
-  return '<div class="room-row" id="room-row-'+i+'" style="grid-template-columns:60px 2fr 1fr 1fr 1fr auto">'+
-    '<div><span class="flabel">ID фото</span><select class="fsel2" id="room-id-'+i+'">'+idOpts+'</select></div>'+
-    '<div><span class="flabel">Тип номера</span><input class="fi" id="room-type-'+i+'" type="text" value="'+(r.type||'')+'" placeholder="Введите тип номера..."></div>'+
-    '<div><span class="flabel">Цена ($)</span><input class="fi" id="room-price-'+i+'" type="number" value="'+(r.price||'')+'" placeholder="0"></div>'+
-    '<div><span class="flabel">Сезон с</span><input class="fi" id="room-from-'+i+'" type="date" value="'+(r.date_from||'')+'"></div>'+
-    '<div><span class="flabel">Сезон по</span><input class="fi" id="room-to-'+i+'" type="date" value="'+(r.date_to||'')+'"></div>'+
-    '<div style="padding-bottom:1px"><button type="button" class="btn btn-danger btn-sm" style="padding:6px 10px" onclick="removeRoomRow('+i+')">✕</button></div>'+
-    '</div>';
+function updatePhotoPreview() {
+  const input = document.getElementById('field-image_url');
+  const preview = document.getElementById('photoPreview');
+  if (input && preview) {
+    preview.innerHTML = input.value ? `<img src="${input.value}" onerror="this.parentNode.innerHTML='<span class=photo-placeholder>Ошибка загрузки</span>'">` : '<span class="photo-placeholder">📷 Нет фото</span>';
+  }
 }
 
-var _roomIdx=0;
-function addRoomRow(){
-  var list=document.getElementById('rooms-list'); if(!list)return;
-  // найти максимальный индекс
-  var max=0;
-  list.querySelectorAll('[id^="room-row-"]').forEach(function(el){
-    var n=parseInt(el.id.replace('room-row-',''))||0; if(n>=max)max=n+1;
+function handlePhotoUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  // Проверка размера (макс 100 KB)
+  if (file.size > 100 * 1024) {
+    showToast('Файл слишком большой. Макс: 100 KB', 'red');
+    e.target.value = '';
+    return;
+  }
+  
+  // Проверка типа
+  if (!file.type.startsWith('image/')) {
+    showToast('Выберите изображение', 'red');
+    e.target.value = '';
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const base64 = ev.target.result;
+    
+    // Обновляем hidden input
+    const input = document.getElementById('field-image_url');
+    if (input) input.value = base64;
+    
+    // Обновляем превью
+    const preview = document.getElementById('photoPreview');
+    if (preview) preview.innerHTML = `<img src="${base64}">`;
+    
+    showToast('✓ Фото загружено', 'green');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removePhoto() {
+  const input = document.getElementById('field-image_url');
+  if (input) input.value = '';
+  
+  const preview = document.getElementById('photoPreview');
+  if (preview) preview.innerHTML = '<span class="photo-placeholder">📷 Нет фото</span>';
+}
+
+// ============================================
+// ROOMS
+// ============================================
+function buildRoomRow(i, r) {
+  return `<div class="room-row" id="room-row-${i}">
+    <div><span class="room-label">Тип номера</span><input class="room-input" id="room-type-${i}" type="text" value="${r.type || ''}" placeholder="Standard Double"></div>
+    <div><span class="room-label">Цена ($)</span><input class="room-input" id="room-price-${i}" type="number" value="${r.price || ''}" placeholder="0"></div>
+    <div><span class="room-label">Сезон с</span><input class="room-input" id="room-from-${i}" type="date" value="${r.date_from || ''}"></div>
+    <div><span class="room-label">Сезон по</span><input class="room-input" id="room-to-${i}" type="date" value="${r.date_to || ''}"></div>
+    <div><button type="button" class="btn btn-danger btn-sm" onclick="removeRoomRow(${i})">✕</button></div>
+  </div>`;
+}
+
+function addRoomRow() {
+  const list = document.getElementById('rooms-list');
+  if (!list) return;
+  let max = 0;
+  list.querySelectorAll('[id^="room-row-"]').forEach(el => {
+    const n = parseInt(el.id.replace('room-row-', '')) || 0;
+    if (n >= max) max = n + 1;
   });
-  var div=document.createElement('div');
-  div.innerHTML=buildRoomRow(max,{});
+  const div = document.createElement('div');
+  div.innerHTML = buildRoomRow(max, {});
   list.appendChild(div.firstChild);
 }
 
-function removeRoomRow(i){
-  var row=document.getElementById('room-row-'+i);
-  if(row){
-    var list=document.getElementById('rooms-list');
-    // не удалять если это единственная строка
-    if(list&&list.querySelectorAll('[id^="room-row-"]').length<=1){showToast('Минимум один номер','red');return;}
+function removeRoomRow(i) {
+  const row = document.getElementById('room-row-' + i);
+  if (row) {
+    const list = document.getElementById('rooms-list');
+    if (list && list.querySelectorAll('[id^="room-row-"]').length <= 1) {
+      showToast('Минимум один номер', 'red');
+      return;
+    }
     row.remove();
   }
 }
 
-function collectRooms(){
-  var list=document.getElementById('rooms-list'); if(!list)return[];
-  var rows=[];
-  list.querySelectorAll('[id^="room-row-"]').forEach(function(el){
-    var i=el.id.replace('room-row-','');
-    var id=document.getElementById('room-id-'+i);
-    var t=document.getElementById('room-type-'+i);
-    var p=document.getElementById('room-price-'+i);
-    var f=document.getElementById('room-from-'+i);
-    var o=document.getElementById('room-to-'+i);
-    if(t) rows.push({
-      room_id: id?+id.value:1,
+function collectRooms() {
+  const list = document.getElementById('rooms-list');
+  if (!list) return [];
+  const rows = [];
+  list.querySelectorAll('[id^="room-row-"]').forEach(el => {
+    const i = el.id.replace('room-row-', '');
+    const t = document.getElementById('room-type-' + i);
+    const p = document.getElementById('room-price-' + i);
+    const f = document.getElementById('room-from-' + i);
+    const o = document.getElementById('room-to-' + i);
+    if (t) rows.push({
       type: t.value,
-      price: p?+p.value||0:0,
-      date_from: f?f.value:'',
-      date_to: o?o.value:''
+      price: p ? +p.value || 0 : 0,
+      date_from: f ? f.value : '',
+      date_to: o ? o.value : ''
     });
   });
   return rows;
 }
 
-function buildPhotoRow(i, p){
-  var id=p.id||1; var url=p.url||'';
-  var idOpts='';
-  for(var n=1;n<=20;n++) idOpts+='<option value="'+n+'"'+(n===id?' selected':'')+'>'+n+'</option>';
-  return '<div id="photo-row-'+i+'" style="display:grid;grid-template-columns:80px 1fr auto auto auto;gap:6px;align-items:center;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:8px">'+
-    '<div><span class="flabel" style="display:block;margin-bottom:3px">ID фото</span><select class="fsel2" id="phid-'+i+'">'+idOpts+'</select></div>'+
-    '<input class="fi" id="phurl-'+i+'" type="text" value="'+url+'" placeholder="https://... URL фото" oninput="previewPhotoRow('+i+')">'+
-    '<button class="btn btn-ghost btn-sm" type="button" onclick="findPhotoRowPhotos('+i+')">Найти</button>'+
-    '<div style="width:48px;height:36px;border-radius:5px;overflow:hidden;background:var(--surf3);flex-shrink:0" id="phprev-'+i+'">'+
-    (url?'<img src="'+url+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.opacity=0">':'')+
-    '</div>'+
-    '<button type="button" class="btn btn-danger btn-sm" style="padding:6px 10px" onclick="removePhotoRow('+i+')">✕</button>'+
-    '</div>'+
-    '<div id="phres-'+i+'" style="padding-left:4px"></div>';
+// ============================================
+// GALLERY
+// ============================================
+function buildGalleryThumb(i, url) {
+  return `<div class="gallery-thumb" id="gth-${i}">
+    <img src="${url}" onerror="this.style.opacity=0.3">
+    <button type="button" class="remove-btn" onclick="removeGalleryPhoto(${i})">✕</button>
+  </div>`;
 }
 
-function addPhotoRow(){
-  var list=document.getElementById('photos-list'); if(!list)return;
-  var max=0;
-  list.querySelectorAll('[id^="photo-row-"]').forEach(function(el){
-    var n=parseInt(el.id.replace('photo-row-',''))||0; if(n>=max)max=n+1;
+function removeGalleryPhoto(i) {
+  const el = document.getElementById('gth-' + i);
+  if (el) el.remove();
+  updateGalleryCount();
+}
+
+function updateGalleryCount() {
+  const grid = document.getElementById('gallery-grid');
+  if (!grid) return;
+  const cnt = grid.querySelectorAll('[id^="gth-"]').length;
+  const c = document.getElementById('gallery-count');
+  if (c) c.textContent = cnt + '/50';
+}
+
+function handleGalleryUpload(e) {
+  const files = Array.from(e.target.files);
+  const grid = document.getElementById('gallery-grid');
+  if (!grid) return;
+  
+  files.forEach(file => {
+    if (file.size > 100 * 1024) return;
+    if (!file.type.startsWith('image/')) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      let idx = 0;
+      while (document.getElementById('gth-' + idx)) idx++;
+      const div = document.createElement('div');
+      div.innerHTML = buildGalleryThumb(idx, ev.target.result);
+      grid.appendChild(div.firstChild);
+      updateGalleryCount();
+    };
+    reader.readAsDataURL(file);
   });
-  var div=document.createElement('div');
-  div.innerHTML=buildPhotoRow(max,{id:max+1,url:''});
-  while(div.firstChild) list.appendChild(div.firstChild);
+  e.target.value = '';
 }
 
-function removePhotoRow(i){
-  var list=document.getElementById('photos-list');
-  if(list&&list.querySelectorAll('[id^="photo-row-"]').length<=1){showToast('Минимум одно фото','red');return;}
-  var row=document.getElementById('photo-row-'+i); if(row)row.remove();
-  var res=document.getElementById('phres-'+i); if(res)res.remove();
-}
-
-function previewPhotoRow(i){
-  var inp=document.getElementById('phurl-'+i); if(!inp)return;
-  var p=document.getElementById('phprev-'+i); if(!p)return;
-  p.innerHTML=inp.value?'<img src="'+inp.value+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.opacity=0">':'';
-}
-
-async function findPhotoRowPhotos(i){
-  var ne=document.getElementById('fi-name');
-  var ce=document.getElementById('fi-city');
-  var q=[ne?ne.value:'',ce?ce.value:'','hotel room','Uzbekistan'].filter(Boolean).join(' ');
-  var res=document.getElementById('phres-'+i); if(!res)return;
-  res.innerHTML='<div class="uhint">Ищу фото...</div>';
-  try{
-    var r=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(q)+'&per_page=6&client_id=x8nIR01NbCJlThbG9vyqcmUsFO6-EdQAPetNj04KID8');
-    var d=await r.json();
-    if(!d.results||!d.results.length){res.innerHTML='<div class="uhint">Не найдено</div>';return;}
-    res.innerHTML='<div class="ugrid">'+d.results.map(function(p){
-      var u=p.urls.regular.replace(/'/g,'%27');
-      return '<img class="uthumb" src="'+p.urls.small+'" onclick="pickPhotoRow('+i+',\''+u+'\')">';
-    }).join('')+'</div>';
-  }catch(e){res.innerHTML='<div class="uhint">Ошибка</div>';}
-}
-
-function pickPhotoRow(i,url){
-  var inp=document.getElementById('phurl-'+i); if(inp)inp.value=url;
-  var p=document.getElementById('phprev-'+i);
-  if(p)p.innerHTML='<img src="'+url+'" style="width:100%;height:100%;object-fit:cover">';
-  var res=document.getElementById('phres-'+i); if(res)res.innerHTML='';
-}
-
-function collectRoomPhotos(){
-  var list=document.getElementById('photos-list'); if(!list)return[];
-  var photos=[];
-  list.querySelectorAll('[id^="photo-row-"]').forEach(function(el){
-    var i=el.id.replace('photo-row-','');
-    var idEl=document.getElementById('phid-'+i);
-    var urlEl=document.getElementById('phurl-'+i);
-    if(idEl&&urlEl&&urlEl.value) photos.push({id:+idEl.value,url:urlEl.value});
+function collectGallery() {
+  const grid = document.getElementById('gallery-grid');
+  if (!grid) return [];
+  const urls = [];
+  grid.querySelectorAll('[id^="gth-"] img').forEach(img => {
+    if (img.src) urls.push(img.src);
   });
-  return photos;
+  return urls;
 }
 
-function previewPhoto(){
-  var pf=(SECS[curSec].fields||[]).filter(function(f){return f.t==='photo';})[0];
-  if(!pf)return;
-  var inp=document.getElementById('fi-'+pf.k); if(!inp)return;
-  var p=document.getElementById('ph-prev');
-  if(p) p.innerHTML=inp.value?'<img src="'+inp.value+'" onerror="this.style.opacity=0">':'нет фото';
-};
-
-async function findPhotos(){
-  var ne=document.getElementById('fi-name')||document.getElementById('fi-title');
-  var ce=document.getElementById('fi-city');
-  var q=[ne?ne.value:'',ce?ce.value:'','Uzbekistan'].filter(Boolean).join(' ');
-  var res=document.getElementById('ph-res'); res.innerHTML='<div class="uhint">Ищу фото...</div>';
-  try {
-    var r=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(q)+'&per_page=8&client_id=x8nIR01NbCJlThbG9vyqcmUsFO6-EdQAPetNj04KID8');
-    var d=await r.json();
-    if(!d.results||!d.results.length){res.innerHTML='<div class="uhint">Не найдено</div>';return;}
-    res.innerHTML='<div class="ugrid">'+d.results.map(function(p){var u=p.urls.regular.replace(/'/g,"%27");return '<img class="uthumb" src="'+p.urls.small+'" onclick="pickPhoto(\''+u+'\')">'; }).join('')+'</div>';
-  } catch(e){res.innerHTML='<div class="uhint">Ошибка</div>';}
-};
-
-function pickPhoto(url){
-  var pf=(SECS[curSec].fields||[]).filter(function(f){return f.t==='photo';})[0]; if(!pf)return;
-  var inp=document.getElementById('fi-'+pf.k); if(inp)inp.value=url;
-  var p=document.getElementById('ph-prev'); if(p)p.innerHTML='<img src="'+url+'">';
-};
-
-async function saveRec(){
-  // Проверка подключения
-  if(!SURL||!SKEY){
-    showToast('Укажи Supabase URL и Key в Настройках','red');
-    openCfg();
-    return;
+// ============================================
+// MODULES
+// ============================================
+function buildModulesSection(modules) {
+  let html = '<div class="modules-section">';
+  html += '<div class="modules-title">🧩 Модули <span>(что включено)</span></div>';
+  html += '<div class="module-list" id="moduleList">';
+  if (modules && modules.length) {
+    modules.forEach((mod, i) => { html += buildModuleItem(i, mod); });
   }
-  var fields=SECS[curSec].fields||[]; var body={};
-  fields.forEach(function(f){
-    if(f.t==='rooms'){ body[f.k]=JSON.stringify(collectRooms()); return; }
-    if(f.t==='room_photos'){ body[f.k]=JSON.stringify(collectRoomPhotos()); return; }
-    var el=document.getElementById('fi-'+f.k); if(!el)return;
-    var v=el.value;
-    if(f.t==='num') v=v===''?null:+v;
-    else if(f.t==='bool') v=v==='true';
-    else v=v===''?null:v;
-    if(v!==null) body[f.k]=v;
+  html += '</div>';
+  html += '<div class="add-modules">';
+  Object.keys(MODULE_TYPES).forEach(type => {
+    const t = MODULE_TYPES[type];
+    html += `<button type="button" class="add-module-btn" onclick="addModule('${type}')">${t.icon}<span class="label">${t.label}</span></button>`;
   });
+  html += '</div>';
+  html += `<div class="modules-total"><span class="modules-total-label">💰 Итого:</span><span class="modules-total-value" id="modulesTotal">$0</span></div>`;
+  html += '</div>';
+  return html;
+}
+
+function buildModuleItem(index, data) {
+  const type = MODULE_TYPES[data.type] || { icon: '📦', color: 'guides' };
+  const isEnabled = data.enabled !== false;
+  const statusClass = data.status === 'confirmed' ? 'status-confirmed' : data.status === 'pending' ? 'status-pending' : 'status-optional';
+  
+  // Для отелей показываем поле "ночей"
+  const nightsField = data.type === 'hotels' 
+    ? `<div class="module-nights"><input type="number" data-field="nights" value="${data.nights || 1}" min="1" max="30" style="width:40px" oninput="calculateModulesTotal()"><span>н.</span></div>`
+    : `<input type="hidden" data-field="nights" value="1">`;
+  
+  return `<div class="module-item ${isEnabled ? '' : 'disabled'}" data-index="${index}">
+    <div class="module-icon ${data.type}">${type.icon}</div>
+    <div class="module-body">
+      <input type="text" class="module-name" data-field="name" value="${data.name || ''}" placeholder="Название" readonly>
+      <input type="text" class="module-desc" data-field="description" value="${data.description || ''}" placeholder="Описание" readonly>
+    </div>
+    ${nightsField}
+    <div class="module-price"><span>$</span><input type="number" data-field="price" value="${data.price || 0}" oninput="calculateModulesTotal()"></div>
+    <div class="module-status">
+      <select data-field="status" class="status-badge ${statusClass}" onchange="updateModuleStatus(this)">
+        <option value="confirmed" ${data.status === 'confirmed' ? 'selected' : ''}>CONFIRMED</option>
+        <option value="pending" ${data.status === 'pending' ? 'selected' : ''}>PENDING</option>
+        <option value="optional" ${data.status === 'optional' ? 'selected' : ''}>OPTIONAL</option>
+      </select>
+    </div>
+    <label class="toggle"><input type="checkbox" data-field="enabled" ${isEnabled ? 'checked' : ''} onchange="toggleModuleEnabled(this)"><span class="toggle-slider"></span></label>
+    <button type="button" class="module-delete" onclick="removeModule(${index})">−</button>
+    <input type="hidden" data-field="type" value="${data.type || ''}">
+    <input type="hidden" data-field="city" value="${data.city || ''}">
+    <input type="hidden" data-field="image_url" value="${data.image_url || ''}">
+    <input type="hidden" data-field="rating" value="${data.rating || 0}">
+    <input type="hidden" data-field="room_type" value="${data.room_type || ''}">
+    <input type="hidden" data-field="source_id" value="${data.source_id || ''}">
+  </div>`;
+}
+
+// Маппинг типов модулей к таблицам и полям
+const MODULE_TABLE_MAP = {
+  flights:       { table: 'flights', nameField: 'route', descField: 'airline', priceField: 'price', imgField: null },
+  hotels:        { table: 'hotels', nameField: 'name', descField: 'city', priceField: 'price_from', imgField: 'gallery' },
+  transfers:     { table: 'transfers', nameField: 'name', descField: 'vehicle', priceField: 'price', imgField: null },
+  sights:        { table: 'sights', nameField: 'name', descField: 'city', priceField: 'entry_price', imgField: 'image_url' },
+  restaurants:   { table: 'restaurants', nameField: 'name', descField: 'cuisine', priceField: 'avg_check', imgField: 'image_url' },
+  food:          { table: 'food', nameField: 'name', descField: 'type', priceField: 'price', imgField: 'image_url' },
+  recreation:    { table: 'recreation', nameField: 'name', descField: 'type', priceField: 'price', imgField: 'image_url' },
+  entertainment: { table: 'entertainment', nameField: 'name', descField: 'type', priceField: 'price', imgField: 'image_url' },
+  museums:       { table: 'museums', nameField: 'name', descField: 'type', priceField: 'entry_price', imgField: 'image_url' },
+  guides:        { table: 'guides', nameField: 'name', descField: 'languages', priceField: 'price_day', imgField: 'image_url' }
+};
+
+let pickerType = '';
+let pickerData = [];
+let pickerStep = 1; // 1 = выбор отеля, 2 = выбор номера
+let selectedHotel = null;
+
+async function addModule(type) {
+  pickerType = type;
+  pickerStep = 1;
+  selectedHotel = null;
+  const map = MODULE_TABLE_MAP[type];
+  const t = MODULE_TYPES[type];
+  
+  document.getElementById('pickerTitle').innerHTML = `${t.icon} Выберите: ${t.label}`;
+  document.getElementById('pickerSearch').value = '';
+  document.getElementById('pickerList').innerHTML = '<div class="picker-loading">⏳ Загрузка...</div>';
+  document.getElementById('picker').classList.add('open');
+  
   try {
-    var resp;
-    if(editId){
-      resp=await sbFetch(curSec,{method:'PATCH',body:body,qs:'?id=eq.'+editId});
-      showToast('Сохранено','green');
-    } else {
-      resp=await sbFetch(curSec,{method:'POST',body:body});
-      showToast('Добавлено','green');
+    pickerData = await supabaseRequest(map.table, { query: '?order=created_at.desc&limit=50' });
+    renderPickerItems();
+  } catch (error) {
+    document.getElementById('pickerList').innerHTML = `<div class="picker-empty">❌ Ошибка: ${error.message}</div>`;
+  }
+}
+
+function renderPickerItems() {
+  const map = MODULE_TABLE_MAP[pickerType];
+  const search = document.getElementById('pickerSearch').value.toLowerCase();
+  
+  // Шаг 2 для отелей: показываем номера
+  if (pickerType === 'hotels' && pickerStep === 2 && selectedHotel) {
+    const rooms = selectedHotel.rooms || [];
+    
+    if (rooms.length === 0) {
+      document.getElementById('pickerList').innerHTML = '<div class="picker-empty">📭 Нет номеров в этом отеле</div>';
+      return;
     }
-    closeRec(); clearDraft(); loadData();
-  } catch(e){
-    var msg=e.message||'Неизвестная ошибка';
-    if(msg.toLowerCase().indexOf('failed to fetch')>-1){
-      showToast('Нет связи с Supabase — проверь URL и Key в Настройках','red');
-      setTimeout(openCfg, 800);
-    } else {
-      showToast('Ошибка: '+msg,'red');
+    
+    const filtered = rooms.filter(room => {
+      const type = (room.type || '').toLowerCase();
+      return type.includes(search);
+    });
+    
+    if (filtered.length === 0) {
+      document.getElementById('pickerList').innerHTML = '<div class="picker-empty">📭 Номера не найдены</div>';
+      return;
     }
-    console.error('saveRec error:',e);
-  }
-};
-
-async function delRow(id){
-  if(!confirm('Удалить запись?'))return;
-  try{ await sbFetch(curSec,{method:'DELETE',qs:'?id=eq.'+id}); showToast('Удалено','green'); loadData(); }
-  catch(e){ showToast('Ошибка: '+e.message,'red'); }
-};
-
-function openCfg(){ document.getElementById('cfg-url').value=SURL; document.getElementById('cfg-key').value=SKEY; document.getElementById('cfg-marker').value=TP_MARKER; document.getElementById('cfg-ovl').classList.add('open'); };
-function closeCfg(){ document.getElementById('cfg-ovl').classList.remove('open'); };
-function saveCfg(){
-  var url=document.getElementById('cfg-url').value.trim().replace(/\/+$/,'');
-  var key=document.getElementById('cfg-key').value.trim();
-  var marker=document.getElementById('cfg-marker').value.trim();
-  if(!url||!key){ showToast('Заполни URL и Key','red'); return; }
-  if(!url.startsWith('https://')){ showToast('URL должен начинаться с https://','red'); return; }
-  SURL=url; SKEY=key; TP_MARKER=marker;
-  localStorage.setItem('tp_marker',TP_MARKER);
-  closeCfg();
-  document.getElementById('cfg-notice').style.display='none';
-  showToast('Настройки сохранены','green');
-  pingSupabase();
-  loadData();
-};
-
-// EXT
-function renderExt(sec) {
-  var c=document.getElementById('ext-sec');
-  if(sec==='flights') c.innerHTML=flightsUI();
-}
-
-var FL_CITIES=[
-  ['Ташкент','TAS'],['Самарканд','SKD'],['Бухара','BHK'],['Хива','NCU'],
-  ['Андижан','AZN'],['Фергана','FEG'],['Наманган','NMA'],['Термез','TMJ'],
-  ['Москва','MOW'],['Санкт-Петербург','LED'],['Стамбул','IST'],['Дубай','DXB'],
-  ['Бангкок','BKK'],['Франкфурт','FRA'],['Пекин','PEK'],['Сеул','ICN'],
-  ['Нью-Йорк','JFK'],['Лондон','LHR'],['Париж','CDG'],['Амстердам','AMS'],
-  ['Куала-Лумпур','KUL'],['Сингапур','SIN'],['Доха','DOH'],['Абу-Даби','AUH'],
-  ['Алматы','ALA'],['Бишкек','FRU'],['Тегеран','IKA'],['Дели','DEL']
-];
-
-function flightsUI(){
-  var d=new Date(Date.now()+7*864e5).toISOString().split('T')[0];
-  var ret=new Date(Date.now()+14*864e5).toISOString().split('T')[0];
-  var optsFrom=FL_CITIES.map(function(c){return '<option value="'+c[1]+'"'+(c[1]==='TAS'?' selected':'')+'>'+c[0]+' ('+c[1]+')</option>';}).join('');
-  var optsTo=FL_CITIES.map(function(c){return '<option value="'+c[1]+'"'+(c[1]==='IST'?' selected':'')+'>'+c[0]+' ('+c[1]+')</option>';}).join('');
-  var routes=[
-    ['TAS','IST','Ташкент → Стамбул'],['TAS','DXB','Ташкент → Дубай'],
-    ['TAS','MOW','Ташкент → Москва'],['TAS','LED','Ташкент → СПб'],
-    ['TAS','BKK','Ташкент → Бангкок'],['SKD','IST','Самарканд → Стамбул'],
-    ['TAS','FRA','Ташкент → Франкфурт'],['TAS','DOH','Ташкент → Доха']
-  ];
-  var rhtml=routes.map(function(r){
-    return '<div class="route-card" onclick="setFlight(\''+r[0]+'\',\''+r[1]+'\')" style="cursor:pointer">'+
-      '<div style="font-size:11px;font-weight:600;color:var(--acc2)">'+r[0]+' ⇄ '+r[1]+'</div>'+
-      '<div style="font-size:11px;color:var(--tx3);margin-top:2px">'+r[2]+'</div></div>';
-  }).join('');
-
-  return '<div class="notice notice-sky" style="align-items:center">✈ Авиабилеты — Aviasales (TravelPayouts)</div>'+
-    '<div class="ext-wrap">'+
-    '<div class="ext-header"><div class="ext-icon" style="background:rgba(56,189,248,.12);font-size:24px">✈</div>'+
-    '<div><div style="font-size:16px;font-weight:600">Поиск авиабилетов</div>'+
-    '<div style="font-size:12px;color:var(--tx3)">TravelPayouts · токен подключён</div></div>'+
-    '<div style="margin-left:auto;display:flex;gap:4px;background:var(--surf2);border:1px solid var(--b);border-radius:8px;padding:3px">'+
-    '<button id="fl-oneway" class="btn btn-sm" onclick="flToggleType(\'oneway\')" style="background:var(--acc);color:#fff;border:none">Туда</button>'+
-    '<button id="fl-round" class="btn btn-sm" onclick="flToggleType(\'round\')" style="background:transparent;color:var(--tx2);border:none">Туда-обратно</button>'+
-    '</div></div>'+
-
-    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:12px;align-items:end" id="fl-fields">'+
-    '<div class="fg"><label class="flabel">Откуда</label><select class="fsel2" id="fl-from">'+optsFrom+'</select></div>'+
-    '<div class="fg"><label class="flabel">Куда</label><select class="fsel2" id="fl-to">'+optsTo+'</select></div>'+
-    '<div class="fg"><label class="flabel">Дата туда</label><input class="fi" id="fl-date" type="date" value="'+d+'"></div>'+
-    '<div class="fg" id="fl-ret-wrap"><label class="flabel">Дата обратно</label><input class="fi" id="fl-retdate" type="date" value="'+ret+'" disabled style="opacity:.35"></div>'+
-    '<div class="fg"><label class="flabel">Пассажиры</label><select class="fsel2" id="fl-pass"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>'+
-    '<button class="btn btn-sky" onclick="searchFlights()" style="white-space:nowrap;padding:8px 18px">🔍 Найти</button></div>'+
-
-    '<div style="background:var(--surf2);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px">'+
-    '<div style="font-size:11px;color:var(--tx3);margin-bottom:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Популярные маршруты</div>'+
-    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">'+rhtml+'</div></div>'+
-
-    '<div id="fl-res">'+
-    '<div style="text-align:center;padding:32px;color:var(--tx3)">'+
-    '<div style="font-size:32px;margin-bottom:10px">✈</div>'+
-    '<div style="font-size:14px">Выбери маршрут и нажми <b style="color:var(--tx)">Найти</b></div>'+
-    '</div></div>'+
-    '</div>';
-}
-
-function flToggleType(type){
-  var isRound=(type==='round');
-  var rd=document.getElementById('fl-retdate');
-  var btnO=document.getElementById('fl-oneway');
-  var btnR=document.getElementById('fl-round');
-  if(rd){ rd.disabled=!isRound; rd.style.opacity=isRound?'1':'0.35'; }
-  if(btnO){ btnO.style.background=isRound?'transparent':' var(--acc)'; btnO.style.color=isRound?'var(--tx2)':'#fff'; }
-  if(btnR){ btnR.style.background=isRound?'var(--acc)':'transparent'; btnR.style.color=isRound?'#fff':'var(--tx2)'; }
-}
-
-function setFlight(from,to){
-  var f=document.getElementById('fl-from'); if(f)f.value=from;
-  var t=document.getElementById('fl-to'); if(t)t.value=to;
-}
-
-async function tpFetch(url){
-  var proxies=[
-    function(u){return fetch(u,{headers:{'X-Access-Token':TP_TOKEN,'x-api-key':TP_TOKEN}});},
-    function(u){return fetch('https://corsproxy.io/?'+encodeURIComponent(u));},
-    function(u){return fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(u));},
-    function(u){return fetch('https://thingproxy.freeboard.io/fetch/'+u);}
-  ];
-  for(var i=0;i<proxies.length;i++){
-    try{
-      var r=await proxies[i](url);
-      if(r.ok){var d=await r.json();return d;}
-    }catch(e){}
-  }
-  return null;
-}
-
-function flightFallbackUI(fromText,toText,from,to,date,pass,bookUrl,retDate){
-  var fromShort=fromText.replace(/ \(.*\)/,'');
-  var toShort=toText.replace(/ \(.*\)/,'');
-  var isRound=!!(retDate);
-  var ref={
-    'TAS-IST':{time:'4ч 30м',airlines:'Turkish Airlines, Uzairways',est:'от $180'},
-    'TAS-DXB':{time:'4ч',airlines:'flydubai, Uzairways',est:'от $150'},
-    'TAS-MOW':{time:'4ч 20м',airlines:'Aeroflot, Uzairways',est:'от $200'},
-    'TAS-LED':{time:'5ч',airlines:'Aeroflot, Uzairways',est:'от $220'},
-    'TAS-BKK':{time:'7ч',airlines:'Thai Airways, Uzairways',est:'от $350'},
-    'TAS-FRA':{time:'7ч 30м',airlines:'Lufthansa, Turkish',est:'от $400'},
-    'TAS-DOH':{time:'4ч',airlines:'Qatar Airways',est:'от $160'},
-    'TAS-AMS':{time:'8ч',airlines:'KLM, Turkish',est:'от $420'},
-    'TAS-CDG':{time:'8ч 30м',airlines:'Air France, Turkish',est:'от $430'},
-    'TAS-LHR':{time:'9ч',airlines:'British Airways, Turkish',est:'от $450'},
-    'SKD-IST':{time:'4ч',airlines:'Turkish Airlines',est:'от $200'},
-    'TAS-DEL':{time:'4ч',airlines:'Air India, Uzairways',est:'от $180'},
-    'TAS-PEK':{time:'6ч',airlines:'Air China',est:'от $300'},
-    'TAS-ICN':{time:'7ч',airlines:'Korean Air, Uzairways',est:'от $350'},
-    'TAS-KUL':{time:'7ч 30м',airlines:'AirAsia, Uzairways',est:'от $320'},
-    'TAS-SIN':{time:'8ч',airlines:'Singapore Airlines',est:'от $400'},
-    'TAS-AUH':{time:'4ч',airlines:'Etihad, Uzairways',est:'от $150'},
-    'TAS-ALA':{time:'2ч',airlines:'Air Astana, Uzairways',est:'от $80'},
-    'TAS-FRU':{time:'1ч 30м',airlines:'Avia Traffic',est:'от $60'},
-    'TAS-IKA':{time:'3ч',airlines:'Mahan Air',est:'от $120'}
-  };
-  var key=from+'-'+to;
-  var keyRev=to+'-'+from;
-  var info=ref[key]||ref[keyRev]||{time:'уточняется',airlines:'различные авиакомпании',est:'уточняется'};
-  var arrow=isRound?'⇄':'→';
-  var dateInfo=date+(isRound?' → '+retDate:'');
-  return '<div style="margin-bottom:10px;font-size:11px;color:var(--tx3)">Справочные данные · точные цены — на Aviasales</div>'+
-    '<div class="flight-card" style="cursor:default;align-items:flex-start;flex-direction:column;gap:12px">'+
-    '<div style="display:flex;align-items:center;gap:12px;width:100%">'+
-    '<div style="font-size:26px">✈</div>'+
-    '<div style="flex:1">'+
-    '<div style="font-size:17px;font-weight:700;color:var(--tx)">'+fromShort+' '+arrow+' '+toShort+'</div>'+
-    '<div style="font-size:12px;color:var(--tx3);margin-top:3px">'+from+' '+arrow+' '+to+(isRound?' '+arrow+' '+from:'')+' · '+dateInfo+' · '+pass+' пасс.</div>'+
-    '</div>'+
-    '<div style="text-align:right">'+
-    '<div style="font-size:18px;font-weight:700;color:var(--grn);font-family:var(--fm)">'+info.est+'</div>'+
-    '<div style="font-size:10px;color:var(--tx3)">'+(isRound?'туда-обратно':'в одну сторону')+'</div>'+
-    '</div></div>'+
-    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;width:100%;border-top:1px solid var(--b);padding-top:12px">'+
-    '<div><div style="font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Время в пути</div><div style="font-size:13px;font-weight:500;color:var(--tx)">'+info.time+'</div></div>'+
-    '<div><div style="font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Авиакомпании</div><div style="font-size:12px;color:var(--tx2)">'+info.airlines+'</div></div>'+
-    '<div style="display:flex;align-items:center;justify-content:flex-end">'+
-    '<a href="'+bookUrl+'" target="_blank" class="btn btn-sky" style="font-size:13px;padding:9px 20px">✈ Найти билеты</a>'+
-    '</div></div></div>';
-}
-
-async function searchFlights(){
-  var fromEl=document.getElementById('fl-from');
-  var toEl=document.getElementById('fl-to');
-  var from=fromEl.value.trim().toUpperCase();
-  var to=toEl.value.trim().toUpperCase();
-  var fromText=fromEl.options[fromEl.selectedIndex]?fromEl.options[fromEl.selectedIndex].text:from;
-  var toText=toEl.options[toEl.selectedIndex]?toEl.options[toEl.selectedIndex].text:to;
-  var date=document.getElementById('fl-date').value;
-  var retEl=document.getElementById('fl-retdate');
-  var retDate=retEl&&!retEl.disabled?retEl.value:'';
-  var pass=document.getElementById('fl-pass').value||'1';
-  var res=document.getElementById('fl-res');
-  if(!from||!to||!date){showToast('Заполни все поля','red');return;}
-
-  var isRound=!!(retDate);
-  res.innerHTML='<div style="text-align:center;padding:32px;color:var(--tx3)"><div style="font-size:28px;margin-bottom:10px">✈</div><div>Ищу рейсы '+from+' '+(isRound?'⇄':'→')+' '+to+'...</div></div>';
-
-  var dp=date.split('-');
-  var ym=dp[0]+'-'+dp[1];
-  var bookUrl=aviasalesUrl(from, date, to, isRound?retDate:null, pass);
-  var results=[];
-
-  // Endpoint 1: cheap (с датой)
-  try {
-    var d1=await tpFetch('https://api.travelpayouts.com/v1/prices/cheap?origin='+from+'&destination='+to+'&depart_date='+ym+'&currency=usd&token='+TP_TOKEN);
-    if(d1&&d1.success&&d1.data&&d1.data[to])
-      results=Object.values(d1.data[to]).slice(0,8).map(function(f){return{price:f.price,airline:f.airline||'',transfers:f.transfers!=null?f.transfers:0,date:f.departure_at?f.departure_at.slice(0,10):date,duration:f.duration_to||0};});
-  }catch(e){}
-
-  // Endpoint 2: cheap без даты (любой месяц)
-  if(!results.length){
-    try {
-      var d1b=await tpFetch('https://api.travelpayouts.com/v1/prices/cheap?origin='+from+'&destination='+to+'&currency=usd&token='+TP_TOKEN);
-      if(d1b&&d1b.success&&d1b.data&&d1b.data[to])
-        results=Object.values(d1b.data[to]).slice(0,8).map(function(f){return{price:f.price,airline:f.airline||'',transfers:f.transfers!=null?f.transfers:0,date:f.departure_at?f.departure_at.slice(0,10):date,duration:f.duration_to||0};});
-    }catch(e){}
-  }
-
-  // Endpoint 3: latest prices
-  if(!results.length){
-    try {
-      var d2=await tpFetch('https://api.travelpayouts.com/v2/prices/latest?origin='+from+'&destination='+to+'&period_type=month&one_way=true&currency=usd&limit=8&token='+TP_TOKEN);
-      if(d2&&d2.success&&d2.data&&d2.data.length)
-        results=d2.data.map(function(f){return{price:f.value,airline:f.airline||'',transfers:f.number_of_changes||0,date:f.depart_date||date,duration:0};});
-    }catch(e){}
-  }
-
-  // Endpoint 4: calendar
-  if(!results.length){
-    try {
-      var d3=await tpFetch('https://api.travelpayouts.com/v1/prices/calendar?origin='+from+'&destination='+to+'&depart_date='+ym+'&currency=usd&token='+TP_TOKEN);
-      if(d3&&d3.success&&d3.data&&Object.keys(d3.data).length)
-        results=Object.values(d3.data).slice(0,8).map(function(f){return{price:f.price,airline:f.airline||'',transfers:f.transfers!=null?f.transfers:0,date:f.departure_at?f.departure_at.slice(0,10):date,duration:0};});
-    }catch(e){}
-  }
-
-  // Endpoint 5: month matrix
-  if(!results.length){
-    try {
-      var d4=await tpFetch('https://api.travelpayouts.com/v1/prices/monthly-matrix?origin='+from+'&destination='+to+'&currency=usd&token='+TP_TOKEN);
-      if(d4&&d4.success&&d4.data&&d4.data.length)
-        results=d4.data.slice(0,8).map(function(f){return{price:f.value,airline:'',transfers:0,date:f.date||date,duration:0};});
-    }catch(e){}
-  }
-
-  if(!results.length){
-    res.innerHTML=flightFallbackUI(fromText,toText,from,to,date,pass,bookUrl,retDate);
-    return;
-  }
-
-  var arrow=isRound?'⇄':'→';
-  res.innerHTML=
-    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px">'+
-    '<div style="font-size:12px;color:var(--tx3)">Найдено <b style="color:var(--tx)">'+results.length+'</b> вариантов · '+fromText.split(' ')[0]+' '+arrow+' '+toText.split(' ')[0]+'</div>'+
-    '<a href="'+bookUrl+'" target="_blank" class="btn btn-ghost btn-sm">↗ Aviasales</a>'+
-    '</div>'+
-    results.map(function(f){
-      var dur=f.duration?Math.floor(f.duration/60)+'ч '+f.duration%60+'м':'';
-      var fBookUrl=aviasalesUrl(from, f.date||date, to, isRound?retDate:null, pass);
-      return '<div class="flight-card" style="cursor:default">'+
-        '<div style="font-size:22px;margin-right:8px">✈</div>'+
-        '<div style="flex:1">'+
-        '<div style="font-size:15px;font-weight:600;color:var(--tx)">'+fromText.split(' ')[0]+' → '+toText.split(' ')[0]+'</div>'+
-        '<div style="font-size:11px;color:var(--tx3);margin-top:3px">'+
-        (f.airline?f.airline+' · ':'')+
-        (f.date?f.date:'')+(dur?' · '+dur:'')+
-        '</div></div>'+
-        '<span class="badge '+(f.transfers===0?'bg':'bamb')+'" style="margin-right:12px">'+
-        (f.transfers===0?'Прямой':f.transfers+' пересадка')+'</span>'+
-        '<div style="text-align:right;min-width:90px">'+
-        '<div style="font-size:22px;font-weight:700;color:var(--grn);font-family:var(--fm)">$'+f.price+'</div>'+
-        '<div style="font-size:10px;color:var(--tx3);margin-bottom:5px">за 1 пасс.</div>'+
-        '<a href="'+fBookUrl+'" target="_blank" class="btn btn-sky btn-sm">Купить</a>'+
-        '</div></div>';
+    
+    document.getElementById('pickerList').innerHTML = filtered.map((room, i) => {
+      const roomType = room.type || 'Standard';
+      const roomPrice = room.price || 0;
+      const dates = room.date_from && room.date_to ? `${room.date_from} - ${room.date_to}` : '';
+      
+      return `<div class="picker-item" onclick="selectRoom(${i})">
+        <div class="picker-item-img" style="display:flex;align-items:center;justify-content:center;font-size:20px">🛏️</div>
+        <div class="picker-item-body">
+          <div class="picker-item-name">${roomType}</div>
+          <div class="picker-item-sub">${selectedHotel.name} • ${dates || 'Круглый год'}</div>
+        </div>
+        <div class="picker-item-price">$${roomPrice}<span style="font-size:10px;color:var(--tx3)">/ночь</span></div>
+      </div>`;
     }).join('');
-};
-
-
-function showToast(msg, color) {
-  var cols={green:'#22c55e',red:'#ef4444',sky:'#38bdf8'};
-  document.getElementById('tdot').style.background = cols[color]||cols.sky;
-  document.getElementById('tmsg').textContent = msg;
-  var t=document.getElementById('toast'); t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show');},2800);
+    return;
+  }
+  
+  // Шаг 1: показываем список (отели или другие)
+  const filtered = pickerData.filter(item => {
+    const name = (item[map.nameField] || '').toLowerCase();
+    const desc = (item[map.descField] || '').toLowerCase();
+    return name.includes(search) || desc.includes(search);
+  });
+  
+  if (filtered.length === 0) {
+    document.getElementById('pickerList').innerHTML = '<div class="picker-empty">📭 Нет данных</div>';
+    return;
+  }
+  
+  document.getElementById('pickerList').innerHTML = filtered.map((item, i) => {
+    const name = item[map.nameField] || 'Без названия';
+    const desc = item[map.descField] || '';
+    const price = item[map.priceField] || 0;
+    let imgUrl = '';
+    
+    if (map.imgField === 'gallery' && item.gallery && item.gallery.length) {
+      imgUrl = item.gallery[0];
+    } else if (map.imgField && item[map.imgField]) {
+      imgUrl = item[map.imgField];
+    }
+    
+    // Для отелей показываем количество номеров
+    const roomCount = pickerType === 'hotels' && item.rooms ? ` • ${item.rooms.length} номер(ов)` : '';
+    
+    return `<div class="picker-item" onclick="selectPickerItem(${i})">
+      ${imgUrl ? `<img class="picker-item-img" src="${imgUrl}" onerror="this.style.opacity=0.3">` : '<div class="picker-item-img"></div>'}
+      <div class="picker-item-body">
+        <div class="picker-item-name">${name}</div>
+        <div class="picker-item-sub">${desc}${roomCount}</div>
+      </div>
+      <div class="picker-item-price">${pickerType === 'hotels' ? 'от ' : ''}$${price}</div>
+    </div>`;
+  }).join('');
 }
 
-function appInit() {
-  switchSec('tour_packages');
-  pingSupabase();
+function filterPickerItems() {
+  renderPickerItems();
 }
 
-if(sessionStorage.getItem('wa')==='1') appInit();
+function selectPickerItem(index) {
+  const map = MODULE_TABLE_MAP[pickerType];
+  const search = document.getElementById('pickerSearch').value.toLowerCase();
+  
+  const filtered = pickerData.filter(item => {
+    const name = (item[map.nameField] || '').toLowerCase();
+    const desc = (item[map.descField] || '').toLowerCase();
+    return name.includes(search) || desc.includes(search);
+  });
+  
+  const item = filtered[index];
+  if (!item) return;
+  
+  // Для отелей: переходим к выбору номера
+  if (pickerType === 'hotels') {
+    selectedHotel = item;
+    pickerStep = 2;
+    
+    const t = MODULE_TYPES.hotels;
+    document.getElementById('pickerTitle').innerHTML = `🛏️ Выберите номер: ${item.name}`;
+    document.getElementById('pickerSearch').value = '';
+    renderPickerItems();
+    return;
+  }
+  
+  // Для остальных: сразу добавляем модуль
+  addModuleFromItem(item);
+}
 
+function selectRoom(index) {
+  if (!selectedHotel || !selectedHotel.rooms) return;
+  
+  const search = document.getElementById('pickerSearch').value.toLowerCase();
+  const filtered = selectedHotel.rooms.filter(room => {
+    const type = (room.type || '').toLowerCase();
+    return type.includes(search);
+  });
+  
+  const room = filtered[index];
+  if (!room) return;
+  
+  // Добавляем модуль с данными номера
+  const list = document.getElementById('moduleList');
+  if (!list) return;
+  
+  let imgUrl = '';
+  if (selectedHotel.gallery && selectedHotel.gallery.length) {
+    imgUrl = selectedHotel.gallery[0];
+  }
+  
+  const moduleIndex = moduleCounter++;
+  const div = document.createElement('div');
+  div.innerHTML = buildModuleItem(moduleIndex, {
+    type: 'hotels',
+    name: `${selectedHotel.name} — ${room.type || 'Standard'}`,
+    description: `${selectedHotel.city} • ${selectedHotel.stars || 4}★ • ${selectedHotel.board_type || 'BB'}`,
+    price: room.price || 0,
+    status: 'confirmed',
+    enabled: true,
+    nights: 1,
+    city: selectedHotel.city || '',
+    image_url: imgUrl,
+    rating: selectedHotel.rating || 0,
+    room_type: room.type || 'Standard',
+    source_id: selectedHotel.id
+  });
+  list.appendChild(div.firstChild);
+  calculateModulesTotal();
+  
+  closePicker();
+  showToast(`✓ Добавлено: ${selectedHotel.name} — ${room.type}`, 'green');
+}
 
+function addModuleFromItem(item) {
+  const map = MODULE_TABLE_MAP[pickerType];
+  
+  const name = item[map.nameField] || '';
+  const desc = item[map.descField] || '';
+  const price = item[map.priceField] || 0;
+  
+  let imgUrl = '';
+  if (map.imgField === 'gallery' && item.gallery && item.gallery.length) {
+    imgUrl = item.gallery[0];
+  } else if (map.imgField && item[map.imgField]) {
+    imgUrl = item[map.imgField];
+  }
+  
+  const list = document.getElementById('moduleList');
+  if (!list) return;
+  
+  const moduleIndex = moduleCounter++;
+  const div = document.createElement('div');
+  div.innerHTML = buildModuleItem(moduleIndex, {
+    type: pickerType,
+    name: name,
+    description: desc,
+    price: price,
+    status: 'confirmed',
+    enabled: true,
+    city: item.city || '',
+    image_url: imgUrl,
+    rating: item.rating || 0,
+    source_id: item.id
+  });
+  list.appendChild(div.firstChild);
+  calculateModulesTotal();
+  
+  closePicker();
+  showToast(`✓ Добавлено: ${name}`, 'green');
+}
+
+function closePicker() {
+  document.getElementById('picker').classList.remove('open');
+  pickerType = '';
+  pickerData = [];
+  pickerStep = 1;
+  selectedHotel = null;
+}
+
+function removeModule(index) {
+  const item = document.querySelector(`.module-item[data-index="${index}"]`);
+  if (item) {
+    item.remove();
+    calculateModulesTotal();
+  }
+}
+
+function toggleModuleEnabled(checkbox) {
+  const item = checkbox.closest('.module-item');
+  if (item) {
+    item.classList.toggle('disabled', !checkbox.checked);
+    calculateModulesTotal();
+  }
+}
+
+function updateModuleStatus(select) {
+  select.className = 'status-badge ' + (select.value === 'confirmed' ? 'status-confirmed' : select.value === 'pending' ? 'status-pending' : 'status-optional');
+}
+
+function calculateModulesTotal() {
+  let total = 0;
+  document.querySelectorAll('.module-item').forEach(item => {
+    const enabled = item.querySelector('[data-field="enabled"]');
+    const price = item.querySelector('[data-field="price"]');
+    if (enabled && enabled.checked && price) {
+      total += parseFloat(price.value) || 0;
+    }
+  });
+  const el = document.getElementById('modulesTotal');
+  if (el) el.textContent = '$' + total;
+  
+  const priceField = document.getElementById('field-total_price') || document.getElementById('field-price');
+  if (priceField) priceField.value = total;
+}
+
+function collectModules() {
+  const modules = [];
+  document.querySelectorAll('.module-item').forEach(item => {
+    modules.push({
+      type: item.querySelector('[data-field="type"]')?.value || '',
+      name: item.querySelector('[data-field="name"]')?.value || '',
+      description: item.querySelector('[data-field="description"]')?.value || '',
+      price: parseFloat(item.querySelector('[data-field="price"]')?.value) || 0,
+      status: item.querySelector('[data-field="status"]')?.value || 'confirmed',
+      enabled: item.querySelector('[data-field="enabled"]')?.checked ?? true,
+      // Дополнительные данные для вычислений
+      city: item.querySelector('[data-field="city"]')?.value || '',
+      image_url: item.querySelector('[data-field="image_url"]')?.value || '',
+      rating: parseFloat(item.querySelector('[data-field="rating"]')?.value) || 0,
+      nights: parseInt(item.querySelector('[data-field="nights"]')?.value) || 1,
+      room_type: item.querySelector('[data-field="room_type"]')?.value || '',
+      source_id: item.querySelector('[data-field="source_id"]')?.value || ''
+    });
+  });
+  return modules;
+}
+
+// ============================================
+// SAVE / DELETE / APPROVE
+// ============================================
+async function saveRecord() {
+  const cfg = SECTIONS[currentSection];
+  const record = {};
+  
+  cfg.fields.forEach(field => {
+    if (field.type === 'rooms') {
+      record[field.key] = collectRooms();
+      return;
+    }
+    if (field.type === 'gallery') {
+      record[field.key] = collectGallery();
+      return;
+    }
+    
+    const el = document.getElementById('field-' + field.key);
+    if (!el) return;
+    
+    let val = el.value;
+    
+    // Обработка типов полей
+    if (field.type === 'number') {
+      val = val === '' ? null : parseFloat(val);
+    } else if (field.type === 'boolean') {
+      val = val === 'true';
+    } else if (field.type === 'select' && field.key === 'stars') {
+      // stars должен быть integer
+      val = val === '' ? null : parseInt(val);
+    } else if (field.type === 'select' && val === '') {
+      // Пустой select = null
+      val = null;
+    }
+    
+    record[field.key] = val;
+  });
+  
+  if (currentSection === 'hotels' && record.rooms && record.rooms.length > 0) {
+    const prices = record.rooms.map(r => r.price).filter(p => p > 0);
+    if (prices.length > 0) record.price_from = Math.min(...prices);
+  }
+  
+  if (cfg.hasModules) {
+    record.modules = collectModules();
+    record[cfg.priceField] = record.modules.filter(m => m.enabled).reduce((sum, m) => sum + (m.price || 0), 0);
+    
+    // Для modulesOnly разделов: автоматически вычисляем данные из модулей
+    if (cfg.modulesOnly && record.modules.length > 0) {
+      const enabledModules = record.modules.filter(m => m.enabled);
+      
+      // Город = город первого модуля
+      const firstWithCity = enabledModules.find(m => m.city);
+      if (firstWithCity) record.city = firstWithCity.city;
+      
+      // Фото = фото первого модуля с изображением
+      const firstWithImage = enabledModules.find(m => m.image_url);
+      if (firstWithImage) record.image_url = firstWithImage.image_url;
+      
+      // Количество дней = количество модулей hotels (ночей) + 1
+      const hotelNights = enabledModules.filter(m => m.type === 'hotels').reduce((sum, m) => sum + (m.nights || 1), 0);
+      if (hotelNights > 0) record.duration_days = hotelNights + 1;
+      
+      // Рейтинг = средний рейтинг модулей
+      const ratings = enabledModules.map(m => m.rating).filter(r => r > 0);
+      if (ratings.length > 0) {
+        record.rating = Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10;
+      }
+    }
+  }
+  
+  document.getElementById('saveBtn').disabled = true;
+  document.getElementById('saveBtn').textContent = 'Сохранение...';
+  
+  try {
+    if (editingId) {
+      await supabaseRequest(currentSection, {
+        method: 'PATCH',
+        query: `?id=eq.${editingId}`,
+        body: record
+      });
+      showToast('✓ Сохранено', 'green');
+    } else {
+      await supabaseRequest(currentSection, {
+        method: 'POST',
+        body: record
+      });
+      showToast('✓ Добавлено', 'green');
+    }
+    
+    closeModal();
+    loadSectionData();
+  } catch (error) {
+    showToast('Ошибка: ' + error.message, 'red');
+  } finally {
+    document.getElementById('saveBtn').disabled = false;
+    document.getElementById('saveBtn').textContent = 'Сохранить';
+  }
+}
+
+async function deleteRecord(id) {
+  if (!confirm('Удалить эту запись?')) return;
+  
+  try {
+    await supabaseRequest(currentSection, {
+      method: 'DELETE',
+      query: `?id=eq.${id}`
+    });
+    showToast('Удалено', 'red');
+    loadSectionData();
+  } catch (error) {
+    showToast('Ошибка: ' + error.message, 'red');
+  }
+}
+
+async function approveRecord(id) {
+  try {
+    await supabaseRequest(currentSection, {
+      method: 'PATCH',
+      query: `?id=eq.${id}`,
+      body: { approved: true }
+    });
+    showToast('✓ Approved!', 'green');
+    loadSectionData();
+  } catch (error) {
+    showToast('Ошибка: ' + error.message, 'red');
+  }
+}
+
+// ============================================
+// UTILS
+// ============================================
+function showToast(message, color) {
+  const toast = document.getElementById('toast');
+  const dot = document.getElementById('toastDot');
+  const msg = document.getElementById('toastMsg');
+  
+  dot.style.background = color === 'green' ? 'var(--grn)' : color === 'red' ? 'var(--red)' : 'var(--sky)';
+  msg.textContent = message;
+  
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ============================================
+// АВТОЗАПУСК
+// ============================================
+(function() {
+  const savedAuth = localStorage.getItem('waylo_auth');
+  
+  if (savedAuth === '1') {
+    document.getElementById('loginSuccess').textContent = 'Автоподключение...';
+    
+    supabaseRequest('top_tours', { query: '?limit=1' })
+      .then(() => {
+        isConnected = true;
+        document.getElementById('lock').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        updateConnectionStatus();
+        initApp();
+      })
+      .catch(() => {
+        document.getElementById('loginSuccess').textContent = '';
+        localStorage.removeItem('waylo_auth');
+      });
+  }
+})();
 </script>
 </body>
 </html>
