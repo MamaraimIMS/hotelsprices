@@ -78,6 +78,8 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--ff)
 .btn-primary:hover{background:var(--acc2)}
 .btn-success{background:rgba(34,197,94,.12);color:var(--grn);border-color:rgba(34,197,94,.25)}
 .btn-success:hover{background:rgba(34,197,94,.2)}
+.btn-amber{background:rgba(245,158,11,.12);color:var(--amb);border-color:rgba(245,158,11,.25)}
+.btn-amber:hover{background:rgba(245,158,11,.2)}
 .btn-danger{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.2)}
 .btn-ghost{background:var(--surf2);color:var(--tx2);border-color:var(--b)}
 .btn-ghost:hover{background:var(--surf3);color:var(--tx)}
@@ -165,6 +167,9 @@ td.primary{color:var(--tx);font-weight:500}
 .badge-gray{background:rgba(90,90,114,.12);color:var(--tx3)}
 .badge-sky{background:rgba(56,189,248,.12);color:var(--sky)}
 .badge-pink{background:rgba(244,114,182,.12);color:var(--pink)}
+.badge-blue{background:rgba(59,130,246,.12);color:#3b82f6}
+.badge-red{background:rgba(239,68,68,.12);color:var(--red)}
+.badge-purple{background:rgba(139,92,246,.12);color:#8b5cf6}
 .price{font-family:var(--fm);color:var(--grn);font-weight:500}
 .actions{display:flex;gap:6px;position:relative;z-index:10}
 .actions button{position:relative;z-index:11}
@@ -320,6 +325,16 @@ td.primary{color:var(--tx);font-weight:500}
 .picker-flight-info{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tx2)}
 .picker-flight-info img{width:20px;height:20px;border-radius:4px}
 .picker-flight-price{font-size:18px;font-weight:700;color:var(--grn)}
+.picker-trip-type{display:flex;gap:16px;margin-bottom:12px}
+.picker-radio{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:var(--tx2)}
+.picker-radio input{accent-color:var(--acc)}
+.picker-radio input:checked + span{color:var(--tx);font-weight:500}
+.picker-flight-card.roundtrip{grid-template-columns:1fr auto;padding:14px}
+.roundtrip-flights{display:flex;flex-direction:column;gap:10px}
+.roundtrip-leg{display:flex;align-items:center;gap:10px}
+.roundtrip-label{font-size:9px;font-weight:600;color:var(--acc);background:var(--adim);padding:2px 6px;border-radius:4px;width:50px;text-align:center}
+.roundtrip-airline{font-size:11px;color:var(--tx3);margin-left:auto}
+.roundtrip-price{display:flex;flex-direction:column;align-items:flex-end;justify-content:center}
 </style>
 </head>
 <body>
@@ -402,6 +417,16 @@ td.primary{color:var(--tx);font-weight:500}
     <div class="ni" data-sec="guides" onclick="switchSection('guides')">
       <span class="ni-ico">👤</span>Гиды
       <span class="ni-cnt" id="cnt-guides">0</span>
+    </div>
+    <div class="ni" data-sec="drivers" onclick="switchSection('drivers')">
+      <span class="ni-ico">🚘</span>Водители
+      <span class="ni-cnt" id="cnt-drivers">0</span>
+    </div>
+    
+    <div class="sb-sec">CRM</div>
+    <div class="ni" data-sec="requests" onclick="switchSection('requests')">
+      <span class="ni-ico">📋</span>Заявки
+      <span class="ni-cnt" id="cnt-requests">0</span>
     </div>
     
     <div class="sb-foot">
@@ -871,6 +896,56 @@ const SECTIONS = {
       { key: 'experience_years', label: 'Опыт (лет)', type: 'number' },
       { key: 'active', label: 'Активен', type: 'boolean' }
     ]
+  },
+  drivers: {
+    title: 'Водители',
+    badge: 'Каталог',
+    priceField: 'price_day',
+    columns: ['gallery', 'name', 'city', 'vehicle', 'vehicle_number', 'price_day', 'active'],
+    columnLabels: { gallery: '', name: 'Имя', city: 'Город', vehicle: 'Транспорт', vehicle_number: 'Номер', price_day: 'Цена/день', active: 'Статус' },
+    fields: [
+      { key: 'name', label: 'ФИО', type: 'text', required: true, placeholder: 'Иванов Иван Иванович' },
+      { key: 'gallery', label: 'Фото (водитель + авто)', type: 'gallery' },
+      { key: 'city', label: 'Город', type: 'city' },
+      { key: 'phone', label: 'Телефон', type: 'text', placeholder: '+998 90 123 45 67' },
+      { key: 'vehicle', label: 'Транспорт', type: 'select', options: ['седан', 'минивэн', 'внедорожник', 'микроавтобус', 'автобус'] },
+      { key: 'vehicle_model', label: 'Марка/модель', type: 'text', placeholder: 'Chevrolet Malibu' },
+      { key: 'vehicle_number', label: 'Гос. номер', type: 'text', placeholder: '01 A 123 AB' },
+      { key: 'vehicle_year', label: 'Год выпуска', type: 'number', placeholder: '2022' },
+      { key: 'license_number', label: 'Номер лицензии', type: 'text' },
+      { key: 'languages', label: 'Языки', type: 'text', placeholder: 'русский, узбекский' },
+      { key: 'price_day', label: 'Цена за день ($)', type: 'number' },
+      { key: 'price_hour', label: 'Цена за час ($)', type: 'number' },
+      { key: 'rating', label: 'Рейтинг', type: 'number' },
+      { key: 'experience_years', label: 'Стаж (лет)', type: 'number' },
+      { key: 'notes', label: 'Заметки', type: 'textarea', placeholder: 'Дополнительная информация' },
+      { key: 'active', label: 'Активен', type: 'boolean' }
+    ]
+  },
+  requests: {
+    title: 'Заявки',
+    badge: 'CRM',
+    hasStatus: true,
+    columns: ['request_number', 'client_name', 'phone', 'tour_name', 'travel_date', 'total_price', 'status'],
+    columnLabels: { request_number: '№', client_name: 'Клиент', phone: 'Телефон', tour_name: 'Тур', travel_date: 'Дата', total_price: 'Сумма', status: 'Статус' },
+    fields: [
+      { key: 'request_number', label: 'Номер заявки', type: 'text', required: true, placeholder: 'REQ-001' },
+      { key: 'client_name', label: 'Имя клиента', type: 'text', required: true },
+      { key: 'phone', label: 'Телефон', type: 'text', placeholder: '+998 90 123 45 67' },
+      { key: 'email', label: 'Email', type: 'text' },
+      { key: 'telegram', label: 'Telegram', type: 'text', placeholder: '@username' },
+      { key: 'tour_name', label: 'Название тура', type: 'text' },
+      { key: 'destination', label: 'Направление', type: 'city' },
+      { key: 'travel_date', label: 'Дата поездки', type: 'date' },
+      { key: 'travelers_count', label: 'Кол-во туристов', type: 'number' },
+      { key: 'total_price', label: 'Сумма ($)', type: 'number' },
+      { key: 'paid_amount', label: 'Оплачено ($)', type: 'number' },
+      { key: 'status', label: 'Статус', type: 'select', options: ['новая', 'в работе', 'подтверждена', 'завершена', 'отменена'] },
+      { key: 'source', label: 'Источник', type: 'select', options: ['Telegram', 'Instagram', 'сайт', 'звонок', 'рекомендация'] },
+      { key: 'assigned_to', label: 'Ответственный', type: 'text' },
+      { key: 'notes', label: 'Заметки', type: 'textarea' },
+      { key: 'created_at', label: 'Дата создания', type: 'date' }
+    ]
   }
 };
 
@@ -1158,9 +1233,21 @@ function renderTable() {
   } else {
     document.getElementById('tableBody').innerHTML = filteredData.map(row => {
       const cells = columns.map(col => renderCell(col, row[col], row)).join('');
-      const approveBtn = cfg.hasApprove && !row.approved 
-        ? `<button class="btn btn-success btn-sm" data-action="approve" data-id="${row.id}">Approve</button>`
-        : (cfg.hasApprove && row.approved ? `<span class="badge badge-green">✓ Live</span>` : '');
+      
+      let approveBtn = '';
+      if (cfg.hasApprove) {
+        if (row.approved) {
+          approveBtn = `
+            <button class="btn btn-success btn-sm" data-action="unapprove" data-id="${row.id}" title="Снять с публикации">
+              ✓ Live
+            </button>`;
+        } else {
+          approveBtn = `
+            <button class="btn btn-amber btn-sm" data-action="approve" data-id="${row.id}" title="Опубликовать">
+              Approve
+            </button>`;
+        }
+      }
       
       return `<tr data-row-id="${row.id}">
         ${cells}
@@ -1204,6 +1291,30 @@ function renderCell(col, val, row) {
   if (col === 'active') {
     return `<td><span class="badge ${val ? 'badge-green' : 'badge-gray'}">${val ? 'Активен' : 'Нет'}</span></td>`;
   }
+  if (col === 'status') {
+    const statusColors = {
+      'новая': 'badge-blue',
+      'в работе': 'badge-amber',
+      'подтверждена': 'badge-sky',
+      'завершена': 'badge-green',
+      'отменена': 'badge-red'
+    };
+    return `<td><span class="badge ${statusColors[val] || 'badge-gray'}">${val || '-'}</span></td>`;
+  }
+  if (col === 'request_number') {
+    return `<td><span class="badge badge-purple">${val || '-'}</span></td>`;
+  }
+  if (col === 'phone') {
+    return `<td><a href="tel:${val}" style="color:var(--acc)">${val || '-'}</a></td>`;
+  }
+  if (col === 'travel_date' || col === 'created_at') {
+    if (!val) return `<td>-</td>`;
+    const d = new Date(val);
+    return `<td>${d.toLocaleDateString('ru-RU')}</td>`;
+  }
+  if (col === 'vehicle_number') {
+    return `<td><span class="badge badge-gray">${val || '-'}</span></td>`;
+  }
   if (col === 'stars') {
     return `<td>${val ? '★'.repeat(parseInt(val)) : '-'}</td>`;
   }
@@ -1214,10 +1325,10 @@ function renderCell(col, val, row) {
   if (col === 'type' || col === 'cuisine' || col === 'vehicle') {
     return `<td><span class="badge badge-sky">${val || '-'}</span></td>`;
   }
-  if (['price', 'total_price', 'price_from', 'avg_check', 'entry_price', 'price_day'].includes(col)) {
+  if (['price', 'total_price', 'price_from', 'avg_check', 'entry_price', 'price_day', 'paid_amount'].includes(col)) {
     return `<td><span class="price">$${val || 0}</span></td>`;
   }
-  if (col === 'name' || col === 'display_title') {
+  if (col === 'name' || col === 'display_title' || col === 'client_name' || col === 'tour_name') {
     return `<td class="primary">${val || '-'}</td>`;
   }
   return `<td>${val !== null && val !== undefined ? val : '-'}</td>`;
@@ -1235,6 +1346,13 @@ function bindTableEvents() {
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
       approveRecord(this.dataset.id);
+    });
+  });
+  
+  document.querySelectorAll('[data-action="unapprove"]').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      unapproveRecord(this.dataset.id);
     });
   });
   
@@ -1644,8 +1762,22 @@ function openFlightPicker() {
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = tomorrow.toISOString().split('T')[0];
   
+  const returnDay = new Date();
+  returnDay.setDate(returnDay.getDate() + 8);
+  const returnStr = returnDay.toISOString().split('T')[0];
+  
   document.getElementById('pickerList').innerHTML = `
     <div class="flight-picker-search">
+      <div class="picker-trip-type">
+        <label class="picker-radio">
+          <input type="radio" name="pickerTripType" value="oneway" checked onchange="togglePickerReturnDate()">
+          <span>В одну сторону</span>
+        </label>
+        <label class="picker-radio">
+          <input type="radio" name="pickerTripType" value="roundtrip" onchange="togglePickerReturnDate()">
+          <span>Туда-обратно</span>
+        </label>
+      </div>
       <div class="flight-row">
         <div class="flight-field picker-autocomplete">
           <label>Откуда</label>
@@ -1663,13 +1795,17 @@ function openFlightPicker() {
       </div>
       <div class="flight-row">
         <div class="flight-field">
-          <label>Дата вылета</label>
+          <label>Туда</label>
           <input type="date" id="pickerDate" class="form-input" value="${tomorrowStr}">
+        </div>
+        <div class="flight-field" id="pickerReturnField" style="display:none">
+          <label>Обратно</label>
+          <input type="date" id="pickerReturnDate" class="form-input" value="${returnStr}">
         </div>
         <div class="flight-field" style="flex:0 0 auto">
           <label>&nbsp;</label>
           <button class="btn btn-primary" style="width:100%" onclick="searchPickerFlights()">
-            🔍 Найти рейсы
+            🔍 Найти
           </button>
         </div>
       </div>
@@ -1678,6 +1814,11 @@ function openFlightPicker() {
   `;
   
   document.getElementById('picker').classList.add('open');
+}
+
+function togglePickerReturnDate() {
+  const isRoundtrip = document.querySelector('input[name="pickerTripType"]:checked').value === 'roundtrip';
+  document.getElementById('pickerReturnField').style.display = isRoundtrip ? 'block' : 'none';
 }
 
 function searchPickerAirports(field, query) {
@@ -1745,6 +1886,8 @@ function searchPickerFlights() {
   const fromCity = document.getElementById('pickerFromInput').value;
   const toCity = document.getElementById('pickerToInput').value;
   const date = document.getElementById('pickerDate').value;
+  const isRoundtrip = document.querySelector('input[name="pickerTripType"]:checked')?.value === 'roundtrip';
+  const returnDate = isRoundtrip ? document.getElementById('pickerReturnDate').value : null;
   
   if (!from || !to) {
     showToast('Выберите города', 'red');
@@ -1759,12 +1902,25 @@ function searchPickerFlights() {
     </div>
   `;
   
+  // Сохраняем параметры поиска
+  pickerSearchParams = { from, to, fromCity, toCity, date, returnDate, isRoundtrip };
+  
   // Генерируем демо-рейсы
   setTimeout(() => {
-    pickerFlightResults = generatePickerFlights(from, to, fromCity, toCity, date);
-    renderPickerFlights();
+    const outboundFlights = generatePickerFlights(from, to, fromCity, toCity, date);
+    
+    if (isRoundtrip && returnDate) {
+      const returnFlights = generatePickerFlights(to, from, toCity, fromCity, returnDate);
+      pickerFlightResults = { outbound: outboundFlights, return: returnFlights };
+      renderRoundtripFlights();
+    } else {
+      pickerFlightResults = outboundFlights;
+      renderPickerFlights();
+    }
   }, 500);
 }
+
+let pickerSearchParams = {};
 
 function generatePickerFlights(fromCode, toCode, fromCity, toCity, date) {
   const airlines = [
@@ -1818,8 +1974,9 @@ function generatePickerFlights(fromCode, toCode, fromCity, toCity, date) {
 
 function renderPickerFlights() {
   const resultsDiv = document.getElementById('pickerFlightResults');
+  const flights = Array.isArray(pickerFlightResults) ? pickerFlightResults : [];
   
-  if (pickerFlightResults.length === 0) {
+  if (flights.length === 0) {
     resultsDiv.innerHTML = `
       <div class="picker-flight-empty">
         <span style="font-size:32px">🔍</span>
@@ -1831,11 +1988,11 @@ function renderPickerFlights() {
   
   resultsDiv.innerHTML = `
     <div class="picker-flights-header">
-      <span>Найдено рейсов: ${pickerFlightResults.length}</span>
+      <span>Найдено рейсов: ${flights.length}</span>
       <span style="font-size:11px;color:var(--tx3)">Нажмите для добавления</span>
     </div>
     <div class="picker-flights-list">
-      ${pickerFlightResults.map((f, i) => `
+      ${flights.map((f, i) => `
         <div class="picker-flight-card" onclick="selectPickerFlight(${i})">
           <div class="picker-flight-route">
             <div class="picker-flight-point">
@@ -1867,8 +2024,102 @@ function renderPickerFlights() {
   `;
 }
 
+function renderRoundtripFlights() {
+  const resultsDiv = document.getElementById('pickerFlightResults');
+  const outbound = pickerFlightResults.outbound || [];
+  const returnFlights = pickerFlightResults.return || [];
+  
+  if (outbound.length === 0) {
+    resultsDiv.innerHTML = `
+      <div class="picker-flight-empty">
+        <span style="font-size:32px">🔍</span>
+        <p>Рейсы не найдены</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // Создаём комбинации туда + обратно
+  const combinations = [];
+  outbound.slice(0, 4).forEach((out, oi) => {
+    returnFlights.slice(0, 3).forEach((ret, ri) => {
+      combinations.push({
+        outbound: out,
+        return: ret,
+        totalPrice: out.price + ret.price,
+        outIndex: oi,
+        retIndex: ri
+      });
+    });
+  });
+  
+  // Сортируем по общей цене
+  combinations.sort((a, b) => a.totalPrice - b.totalPrice);
+  
+  resultsDiv.innerHTML = `
+    <div class="picker-flights-header">
+      <span>✈️ Туда-обратно: ${combinations.length} вариантов</span>
+      <span style="font-size:11px;color:var(--tx3)">Нажмите для добавления</span>
+    </div>
+    <div class="picker-flights-list">
+      ${combinations.slice(0, 8).map((c, i) => `
+        <div class="picker-flight-card roundtrip" onclick="selectRoundtripFlight(${c.outIndex}, ${c.retIndex})">
+          <div class="roundtrip-flights">
+            <div class="roundtrip-leg">
+              <span class="roundtrip-label">ТУДА</span>
+              <div class="picker-flight-route">
+                <div class="picker-flight-point">
+                  <div class="picker-flight-time">${c.outbound.departureTime}</div>
+                  <div class="picker-flight-code">${c.outbound.fromCode}</div>
+                </div>
+                <div class="picker-flight-arrow">
+                  <div class="picker-flight-duration">${c.outbound.duration}</div>
+                  <div class="picker-flight-line">→</div>
+                </div>
+                <div class="picker-flight-point">
+                  <div class="picker-flight-time">${c.outbound.arrivalTime}</div>
+                  <div class="picker-flight-code">${c.outbound.toCode}</div>
+                </div>
+              </div>
+              <div class="roundtrip-airline">${c.outbound.airline}</div>
+            </div>
+            <div class="roundtrip-leg">
+              <span class="roundtrip-label">ОБРАТНО</span>
+              <div class="picker-flight-route">
+                <div class="picker-flight-point">
+                  <div class="picker-flight-time">${c.return.departureTime}</div>
+                  <div class="picker-flight-code">${c.return.fromCode}</div>
+                </div>
+                <div class="picker-flight-arrow">
+                  <div class="picker-flight-duration">${c.return.duration}</div>
+                  <div class="picker-flight-line">→</div>
+                </div>
+                <div class="picker-flight-point">
+                  <div class="picker-flight-time">${c.return.arrivalTime}</div>
+                  <div class="picker-flight-code">${c.return.toCode}</div>
+                </div>
+              </div>
+              <div class="roundtrip-airline">${c.return.airline}</div>
+            </div>
+          </div>
+          <div class="picker-flight-price roundtrip-price">
+            <div>$${c.totalPrice}</div>
+            <span style="font-size:10px;color:var(--tx3)">за оба</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="padding:12px;border-top:1px solid var(--b)">
+      <button class="btn btn-ghost" style="width:100%" onclick="showManualFlightForm()">
+        ✏️ Ввести вручную
+      </button>
+    </div>
+  `;
+}
+
 function selectPickerFlight(index) {
-  const f = pickerFlightResults[index];
+  const flights = Array.isArray(pickerFlightResults) ? pickerFlightResults : [];
+  const f = flights[index];
   if (!f) return;
   
   const list = document.getElementById('moduleList');
@@ -1890,6 +2141,49 @@ function selectPickerFlight(index) {
   
   closePicker();
   showToast(`✓ Добавлен рейс: ${f.fromCity} → ${f.toCity}`, 'green');
+}
+
+function selectRoundtripFlight(outIndex, retIndex) {
+  const outbound = pickerFlightResults.outbound[outIndex];
+  const returnFlight = pickerFlightResults.return[retIndex];
+  
+  if (!outbound || !returnFlight) return;
+  
+  const list = document.getElementById('moduleList');
+  if (!list) return;
+  
+  // Добавляем рейс ТУДА
+  const outModuleIndex = moduleCounter++;
+  const outDiv = document.createElement('div');
+  outDiv.innerHTML = buildModuleItem(outModuleIndex, {
+    type: 'flights',
+    name: `${outbound.fromCity} → ${outbound.toCity}`,
+    description: `${outbound.airline} • ${outbound.departureTime} • ${outbound.duration}`,
+    price: outbound.price,
+    status: 'confirmed',
+    enabled: true,
+    city: outbound.toCity
+  });
+  list.appendChild(outDiv.firstChild);
+  
+  // Добавляем рейс ОБРАТНО
+  const retModuleIndex = moduleCounter++;
+  const retDiv = document.createElement('div');
+  retDiv.innerHTML = buildModuleItem(retModuleIndex, {
+    type: 'flights',
+    name: `${returnFlight.fromCity} → ${returnFlight.toCity}`,
+    description: `${returnFlight.airline} • ${returnFlight.departureTime} • ${returnFlight.duration}`,
+    price: returnFlight.price,
+    status: 'confirmed',
+    enabled: true,
+    city: returnFlight.toCity
+  });
+  list.appendChild(retDiv.firstChild);
+  
+  calculateModulesTotal();
+  
+  closePicker();
+  showToast(`✓ Добавлено 2 рейса: туда и обратно`, 'green');
 }
 
 function showManualFlightForm() {
@@ -2339,13 +2633,31 @@ async function deleteRecord(id) {
 }
 
 async function approveRecord(id) {
+  if (!confirm('Опубликовать эту запись в Mini App?')) return;
+  
   try {
     await supabaseRequest(currentSection, {
       method: 'PATCH',
       query: `?id=eq.${id}`,
       body: { approved: true }
     });
-    showToast('✓ Approved!', 'green');
+    showToast('✓ Опубликовано в Mini App!', 'green');
+    loadSectionData();
+  } catch (error) {
+    showToast('Ошибка: ' + error.message, 'red');
+  }
+}
+
+async function unapproveRecord(id) {
+  if (!confirm('Снять с публикации? Запись не будет отображаться в Mini App.')) return;
+  
+  try {
+    await supabaseRequest(currentSection, {
+      method: 'PATCH',
+      query: `?id=eq.${id}`,
+      body: { approved: false }
+    });
+    showToast('✓ Снято с публикации', 'blue');
     loadSectionData();
   } catch (error) {
     showToast('Ошибка: ' + error.message, 'red');
