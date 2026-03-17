@@ -967,7 +967,7 @@ const requestCache = new Map();
 const CACHE_TTL = 30000; // 30 секунд
 
 async function supabaseRequest(table, options = {}) {
-  const { method = 'GET', body, query = '', timeout = 15000, retries = 2 } = options;
+  const { method = 'GET', body, query = '', timeout = 20000, retries = 2, silent = false } = options;
   
   const url = `${SUPABASE_URL}/rest/v1/${table}${query}`;
   const cacheKey = method === 'GET' ? `${table}${query}` : null;
@@ -992,6 +992,7 @@ async function supabaseRequest(table, options = {}) {
   console.log(`[Supabase] ${method} ${table}${query}`);
   
   let lastError;
+  let lastStatus = 0;
   
   for (let attempt = 0; attempt <= retries; attempt++) {
     const controller = new AbortController();
@@ -1006,11 +1007,16 @@ async function supabaseRequest(table, options = {}) {
       });
       
       clearTimeout(timeoutId);
+      lastStatus = response.status;
       
       const responseText = await response.text();
       console.log(`[Supabase] Response: ${response.status}`, responseText.substring(0, 100));
       
       if (!response.ok) {
+        // 404 - таблица не существует, не retry
+        if (response.status === 404 || response.status === 400) {
+          throw new Error(`Table "${table}" not found or invalid query`);
+        }
         throw new Error(`${response.status}: ${responseText}`);
       }
       
@@ -1037,9 +1043,16 @@ async function supabaseRequest(table, options = {}) {
       clearTimeout(timeoutId);
       lastError = error;
       
+      // Не retry для 404/400 ошибок
+      if (lastStatus === 404 || lastStatus === 400) {
+        break;
+      }
+      
       if (error.name === 'AbortError') {
         console.warn(`[Supabase] Timeout (${timeout}ms), attempt ${attempt + 1}/${retries + 1}`);
-        showToast(`Таймаут запроса, попытка ${attempt + 1}...`, 'warning');
+        if (!silent) {
+          showToast(`Таймаут запроса, попытка ${attempt + 1}...`, 'warning');
+        }
       } else {
         console.error(`[Supabase] Error, attempt ${attempt + 1}:`, error.message);
       }
@@ -1052,8 +1065,12 @@ async function supabaseRequest(table, options = {}) {
     }
   }
   
-  showToast('Ошибка подключения к Supabase', 'error');
-  throw lastError || new Error('Request failed after retries');
+  // Показываем toast только если не silent и это не 404
+  if (!silent && lastStatus !== 404 && lastStatus !== 400) {
+    showToast('Ошибка подключения к Supabase', 'error');
+  }
+  
+  throw lastError || new Error('Request failed');
 }
 
 // Очистка кэша
@@ -1118,13 +1135,20 @@ function logout() {
 // ИНИЦИАЛИЗАЦИЯ
 // ============================================
 async function initApp() {
-  // Загрузка счётчиков из Supabase
+  // Загрузка счётчиков из Supabase (silent - без toast)
   for (const section of Object.keys(SECTIONS)) {
     try {
-      const data = await supabaseRequest(section, { query: '?select=id' });
-      document.getElementById('cnt-' + section).textContent = data.length;
+      const cfg = SECTIONS[section];
+      // Пропускаем виджеты
+      if (cfg.isWidget) continue;
+      
+      const data = await supabaseRequest(section, { query: '?select=id', silent: true });
+      const cntEl = document.getElementById('cnt-' + section);
+      if (cntEl) cntEl.textContent = data.length;
     } catch (e) {
-      document.getElementById('cnt-' + section).textContent = '0';
+      const cntEl = document.getElementById('cnt-' + section);
+      if (cntEl) cntEl.textContent = '0';
+      console.log(`[Init] Table ${section} not found or empty`);
     }
   }
   
@@ -1196,7 +1220,7 @@ async function loadSectionData() {
   
   try {
     console.log('[Load] Loading section:', currentSection);
-    allData = await supabaseRequest(currentSection, { query: '?order=created_at.desc' });
+    allData = await supabaseRequest(currentSection, { query: '?order=created_at.desc', silent: true });
     console.log('[Load] Loaded records:', allData.length);
     
     if (!Array.isArray(allData)) {
@@ -1212,21 +1236,26 @@ async function loadSectionData() {
     document.getElementById('tableStatus').textContent = '✓ Синхронизировано';
   } catch (error) {
     console.error('[Load] Error:', error);
+    allData = [];
+    
+    // Проверяем - это ошибка "таблица не найдена" или другая
+    const isNotFound = error.message && (error.message.includes('not found') || error.message.includes('404') || error.message.includes('400'));
+    
     document.getElementById('tableBody').innerHTML = `
       <tr><td colspan="${cfg.columns.length + 1}">
         <div class="empty">
-          <div class="empty-icon">⚠️</div>
-          <p>Ошибка загрузки</p>
-          <p style="font-size:12px;color:var(--tx3)">${error.message}</p>
+          <div class="empty-icon">${isNotFound ? '📋' : '⚠️'}</div>
+          <p>${isNotFound ? 'Таблица не создана' : 'Ошибка загрузки'}</p>
+          <p style="font-size:12px;color:var(--tx3)">${isNotFound ? `Таблица "${currentSection}" не найдена в Supabase` : error.message}</p>
           <p style="font-size:11px;color:var(--tx3);margin-top:10px">
-            Проверьте:<br>
-            1. Таблица "${currentSection}" существует в Supabase<br>
-            2. RLS политики настроены правильно<br>
-            3. API ключ верный
+            ${isNotFound ? 
+              `Создайте таблицу в <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--acc)">Supabase Dashboard</a> → SQL Editor` :
+              `Проверьте подключение к Supabase`
+            }
           </p>
         </div>
       </td></tr>`;
-    document.getElementById('tableStatus').textContent = '❌ Ошибка';
+    document.getElementById('tableStatus').textContent = isNotFound ? '📋 Нет таблицы' : '❌ Ошибка';
   }
 }
 
